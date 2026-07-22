@@ -5,9 +5,8 @@ const fs = require('fs');
 require('dotenv').config();
 const db = require('./db');
 
-// Prevent the process from crashing on unhandled errors
 process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err.message);
+    console.error('Uncaught Exception:', err.stack);
 });
 process.on('unhandledRejection', (reason) => {
     console.error('Unhandled Rejection:', reason);

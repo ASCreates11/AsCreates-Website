@@ -2,26 +2,90 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 
-let sqlite3;
 let db;
 
 if (process.env.TURSO_DATABASE_URL) {
-    sqlite3 = require('@libsql/sqlite3').verbose();
-    let dbUrl = process.env.TURSO_DATABASE_URL;
-    if (process.env.TURSO_AUTH_TOKEN) {
-        dbUrl += (dbUrl.includes('?') ? '&' : '?') + 'authToken=' + process.env.TURSO_AUTH_TOKEN;
-    }
-    db = new sqlite3.Database(dbUrl);
+    const { createClient } = require('@libsql/client');
+    const client = createClient({
+        url: process.env.TURSO_DATABASE_URL,
+        authToken: process.env.TURSO_AUTH_TOKEN
+    });
+
+    db = {
+        get(sql, params, callback) {
+            if (typeof params === 'function') {
+                callback = params;
+                params = [];
+            }
+            params = Array.isArray(params) ? params : (params !== undefined ? [params] : []);
+            client.execute({ sql, args: params })
+                .then(res => {
+                    const row = res.rows && res.rows.length > 0 ? res.rows[0] : undefined;
+                    if (callback) callback(null, row);
+                })
+                .catch(err => {
+                    console.error('Turso DB Error:', err);
+                    if (callback) callback(err);
+                });
+        },
+        all(sql, params, callback) {
+            if (typeof params === 'function') {
+                callback = params;
+                params = [];
+            }
+            params = Array.isArray(params) ? params : (params !== undefined ? [params] : []);
+            client.execute({ sql, args: params })
+                .then(res => {
+                    if (callback) callback(null, res.rows || []);
+                })
+                .catch(err => {
+                    console.error('Turso DB Error:', err);
+                    if (callback) callback(err, []);
+                });
+        },
+        run(sql, params, callback) {
+            if (typeof params === 'function') {
+                callback = params;
+                params = [];
+            }
+            params = Array.isArray(params) ? params : (params !== undefined ? [params] : []);
+            client.execute({ sql, args: params })
+                .then(res => {
+                    if (callback) callback.call({ lastID: Number(res.lastInsertRowid || 0), changes: res.rowsAffected || 0 }, null);
+                })
+                .catch(err => {
+                    if (!err.message || !err.message.includes('duplicate column name')) {
+                        console.error('Turso DB Error:', err.message || err);
+                    }
+                    if (callback) callback.call({ lastID: 0, changes: 0 }, err);
+                });
+        },
+        prepare(sql) {
+            return {
+                run(params, callback) {
+                    params = Array.isArray(params) ? params : (params !== undefined ? [params] : []);
+                    client.execute({ sql, args: params })
+                        .then(res => { if (callback) callback(null); })
+                        .catch(err => { if (callback) callback(err); });
+                },
+                finalize(callback) {
+                    if (callback) callback(null);
+                }
+            };
+        },
+        serialize(fn) {
+            if (fn) fn();
+        },
+        on(event, fn) {}
+    };
 } else {
-    sqlite3 = require('sqlite3').verbose();
+    const sqlite3 = require('sqlite3').verbose();
     const dbPath = path.join(__dirname, 'database.sqlite');
     db = new sqlite3.Database(dbPath);
+    db.on('error', (err) => {
+        console.error('Database error:', err.message || err);
+    });
 }
-
-// Prevent unhandled db error events from crashing the process
-db.on('error', (err) => {
-    console.error('Database connection / query error:', err.message || err);
-});
 
 // Initialize DB schema
 db.serialize(() => {
@@ -137,7 +201,7 @@ db.serialize(() => {
 
     // Seed default home services if empty
     db.get('SELECT COUNT(*) as count FROM home_services', (err, row) => {
-        if (!err && row.count === 0) {
+        if (!err && row && row.count === 0) {
             const defaults = [
                 {
                     title: 'SEO/SEM',
@@ -184,7 +248,7 @@ db.serialize(() => {
 
     // Create default admin user if no users exist
     db.get('SELECT COUNT(*) as count FROM users', (err, row) => {
-        if (!err && row.count === 0) {
+        if (!err && row && row.count === 0) {
             const defaultEmail = 'admin@ascreates.com';
             const defaultPassword = 'password';
             const salt = bcrypt.genSaltSync(10);
@@ -193,12 +257,6 @@ db.serialize(() => {
             console.log('Default admin created: admin@ascreates.com / password');
         }
     });
-
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(__dirname, 'public', 'uploads');
-    if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-    }
 });
 
 module.exports = db;

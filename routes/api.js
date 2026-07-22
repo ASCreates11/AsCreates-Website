@@ -456,44 +456,14 @@ router.get('/admin/media', requireAuth, async (req, res) => {
     }
 });
 
-// Filter out hidden files or non-images if desired, but let's return all files with stats
-const mediaFiles = files
-    .filter(file => !file.startsWith('.'))
-    .map(file => {
-        const filePath = path.join(uploadsDir, file);
-        const stats = fs.statSync(filePath);
-        return {
-            name: file,
-            url: `/uploads/${file}`,
-            size: stats.size,
-            created_at: stats.birthtime
-        };
-    })
-    .sort((a, b) => b.created_at - a.created_at); // Newest first
-
-res.json(mediaFiles);
-    });
-});
-
 // Delete media file
 router.delete('/admin/media/:filename', requireAuth, async (req, res) => {
     try {
         await cloudinary.uploader.destroy(req.params.filename);
         res.json({ success: true });
-    } catch (err) {
+    } catch(err) {
         res.status(500).json({ error: 'Failed to delete file' });
     }
-});
-    }
-
-const filePath = path.join(__dirname, '../public/uploads', filename);
-fs.unlink(filePath, (err) => {
-    if (err) {
-        console.error('Delete error:', err);
-        return res.status(500).json({ error: 'Failed to delete file' });
-    }
-    res.json({ success: true });
-});
 });
 
 // GET /api/admin/settings/media

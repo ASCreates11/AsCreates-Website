@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AS Creates | Digital Agency & Technology Solutions</title>
+    <meta name="description"
+        content="Transforming digital landscapes through technical precision and creative vision. We deliver high-end enterprise solutions that redefine the standard of excellence." />
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png" />
+
+    <!-- Custom Style Sheet -->
+    <link href="index.css" rel="stylesheet" />
+    <script src="js/data.js"></script>
+    <script src="js/socials.js"></script>
+</head>
+
+<body>
+
+    <!-- Promo Popup -->
+    <div id="promoPopup" class="promo-popup-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="Special Offer">
+        <div class="promo-popup-card">
+            <button class="promo-popup-close" id="promoPopupClose" aria-label="Close popup">&times;</button>
+            <a id="promoPopupLink" href="#" class="promo-popup-image-link">
+                <picture>
+                    <source media="(max-width: 768px)" id="promoPopupMobileSource" srcset="">
+                    <img id="promoPopupImage" src="" alt="Special Offer" class="promo-popup-image">
+                </picture>
+            </a>
+        </div>
+    </div>
+
+    <!-- Global Decorative Background Circles -->
+    <div class="bg-decorations">
+        <div class="decor-circle decor-1"></div>
+        <div class="decor-circle decor-2"></div>
+        <div class="decor-circle decor-3"></div>
+        <div class="decor-circle decor-4"></div>
+    </div>
+
+    <!-- Promotion Bar -->
+    <div id="promotionBar" class="promotion-bar" style="display: none;">
+        <div class="promotion-marquee" id="promotionMarquee">
+            <div class="promotion-bar-inner">
+                <span class="promo-text-node"></span>
+                <a href="#" class="promo-link-node promotion-bar-btn"></a>
+            </div>
+            <div class="promotion-bar-inner" aria-hidden="true">
+                <span class="promo-text-node"></span>
+                <a href="#" class="promo-link-node promotion-bar-btn"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="top-nav">
+        <div class="container-wide nav-container">
+            <a class="logo" href="#home">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span>AS Creates</span>
+            </a>
+
+            <nav class="nav-menu">
+                <a class="nav-link active" href="#home">Home</a>
+                <a class="nav-link" href="about.html">About Us</a>
+                <a class="nav-link" href="services.html">Services</a>
+                <a class="nav-link" href="portfolio.html">Portfolio</a>
+                <a class="nav-link" href="contact.html">Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a class="btn btn-primary" href="contact.html" style="padding: 0.6rem 1.5rem;">Let's Connect</a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Overlay & Menu -->
+    <div class="mobile-menu-overlay" id="mobile-overlay"></div>
+    <div class="mobile-menu-drawer" id="mobile-drawer">
+        <div class="mobile-menu-header">
+            <a class="logo" href="#home" style="font-size: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span>AS Creates</span>
+            </a>
+            <button class="mobile-menu-close" id="mobile-close" aria-label="Close Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a class="mobile-nav-link active" href="#home">Home</a></li>
+            <li><a class="mobile-nav-link" href="about.html">About Us</a></li>
+            <li><a class="mobile-nav-link" href="services.html">Services</a></li>
+            <li><a class="mobile-nav-link" href="portfolio.html">Portfolio</a></li>
+            <li><a class="mobile-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+        <a class="btn btn-primary" href="contact.html" style="width: 100%; text-align: center; margin-top: auto;">Get
+            Started</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <main>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="pre-heading">Hey there! Welcome to AS Creates</span>
+                    <h1 class="display-lg hero-title">
+                        We Create <br /> Solutions for <br /> <span>Your Business</span>
+                    </h1>
+                    <p class="body-lg hero-subtitle">
+                        Transforming digital landscapes through technical precision and creative vision. We deliver
+                        high-end enterprise solutions that redefine the standard of excellence.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary" href="contact.html">Get Started</a>
+                        <a class="scroll-down" href="#services">
+                            <span class="scroll-down-circle">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <polyline points="19 12 12 19 5 12" />
+                                </svg>
+                            </span>
+                            <span>Explore More</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="bg-white-flat" id="services">
+            <div class="container">
+                <div class="section-header">
+                    <span class="pre-heading">What We Do Best</span>
+                    <h2 class="headline-md">We Provide the Best Services</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="grid-12">
+                    <div class="services-grid" id="homeServicesGrid">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="bg-dark-navy" id="about">
+            <!-- Subtle Dark Mode Background Circle -->
+            <div class="decor-circle"
+                style="left: -128px; bottom: 0; width: 384px; height: 384px; background-color: rgba(255, 255, 255, 0.03); filter: blur(100px); z-index: 1;">
+            </div>
+
+            <div class="container grid-12" style="position: relative; z-index: 10;">
+                <div class="process-media">
+                    <div class="process-image-outer" data-media-section="how_we_work">
+                        <div class="process-image-inner">
+                            <!-- Carousel slides -->
+                            <img id="howWeWorkImage" alt="Modern developer setup workspace"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGw56MeMb4mUcaT7fImYIIOwPCVqnBib1ucBG5RohTrpiKSELjptP21GLOb1-qMZ9aWgqANO4X0BBDcY5E9RgXu-iVKW9V4rRDME8ahwao0AMTDSxFysbRTUDwJVOCssLjXH7DShQ7_OgaY6AVBJLrYpKz2R5aQM0oPC7IfoNXROjE9OmfvU7GAgULgfd97B_zbYrshnyxM8GvfjoUdMWgYdslFNd6vw9SeyrgTwUnt08GeeVDzU-B51SkD8aLGsvZOYq3j7erH64" 
+                                class="carousel-slide active" />
+                            <img alt="Team collaboration" 
+                                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=60" 
+                                class="carousel-slide" />
+                            <img alt="Business analytics" 
+                                src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&auto=format&fit=crop&q=60" 
+                                class="carousel-slide" />
+                            <img alt="Creative workspace" 
+                                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&auto=format&fit=crop&q=60" 
+                                class="carousel-slide" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-info">
+                    <span class="pre-heading">How We Work</span>
+                    <h2 class="headline-md">Simple Solutions!</h2>
+                    <p class="body-md process-intro">Our streamlined four-step delivery process ensures clarity, speed,
+                        and exceptional quality at every phase of development.</p>
+
+                    <div class="steps-list">
+                        <!-- Step 1 -->
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-text">
+                                <h4>Contact us</h4>
+                                <p>Initiate the partnership with a detailed brief of your vision.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-text">
+                                <h4>Consult</h4>
+                                <p>Technical scoping and creative direction alignment with our experts.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-text">
+                                <h4>Place order</h4>
+                                <p>Finalize requirements and lock in the project timeline and roadmap.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-text">
+                                <h4>Payment</h4>
+                                <p>Secure transaction and official commencement of production cycles.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="process-actions">
+                        <a class="btn btn-white" href="contact.html">Get Started</a>
+                        <a class="btn btn-outline-white" href="services.html">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Agency Section -->
+        <section class="bg-white-flat">
+            <!-- Shading Circle for Depth -->
+            <div class="decor-circle"
+                style="right: -64px; top: 25%; width: 288px; height: 288px; background-color: rgba(62, 85, 177, 0.05); filter: blur(80px); z-index: 1;">
+            </div>
+
+            <div class="container grid-12" style="position: relative; z-index: 10;">
+                <div class="agency-content">
+                    <span class="pre-heading">Our Identity</span>
+                    <h2 class="headline-md">Our Agency</h2>
+                    <p class="body-md agency-text">
+                        AS Creates operates at the frontier of digital transformation. Founded on the principles of
+                        engineering excellence and aesthetic minimalism, we help brands navigate the complex web
+                        landscape.
+                    </p>
+                    <p class="body-md agency-text">
+                        Our multidisciplined team brings together decades of collective experience in high-performance
+                        web development and strategic marketing.
+                    </p>
+                    <a class="btn btn-primary" href="about.html">Read More</a>
+                </div>
+
+                <div class="agency-media">
+                    <div class="agency-image-wrapper" data-media-section="our_agency">
+                        <img id="agencyImage" alt="Modern creative design studio space mockup"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4-qdgFkDhN2ky_HPP_PGLs8Fc-TOVod5l-yyPgtQlKE2s5-b5h_ygFhF5C8uG3r5eEPqzInA5MlsbLcaSDDEofU6S2Ges0og6LepjtaI-RKy_nFJycFg4S9rKyvaZ416ufGhbT0sOW2etNx-wCg_-aIyB_8saH_o2KsxlPMEC21lhtVDZy7o7yZP0o2Nuql4q0rgNVpkSa-ZQsDGhX4j6qCn0SincbclqHnVqW7HG-dNiRQ9XmrPCKTMoXgI2Coh_85h2wPZCy1w" />
+                    </div>
+                    <div class="agency-media-shadow-glow"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Founders Section -->
+        <section class="bg-surface-tint-shaded" id="team">
+            <!-- Decorative circle for background continuity -->
+            <div class="decor-circle"
+                style="left: 40px; top: 10%; width: 128px; height: 128px; background-color: rgba(75, 87, 170, 0.05); filter: blur(60px); z-index: 1;">
+            </div>
+
+            <div class="container">
+                <div class="section-header">
+                    <span class="pre-heading">The Dream Team</span>
+                    <h2 class="headline-md">Meet the Visionaries</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="grid-12">
+                    <div class="founders-grid" id="foundersGridHome">
+
+                        <!-- Founder 1 -->
+                        <div class="founder-card" id="founderCardSriyankaHome">
+                            <div class="founder-img-container">
+                                <img alt="Js Sriyanka Sargam Rout, Founder & CEO at AS Creates"
+                                    src="Images/riya.jpeg" />
+                            </div>
+                            <h3 class="headline-sm">Js Sriyanka Sargam Rout</h3>
+                            <p class="founder-role">Founder & CEO</p>
+                            <p class="founder-bio">Passionate about turning ideas into impactful creations.</p>
+                        </div>
+
+                        <!-- Center POV Box -->
+                        <div class="pov-box" id="povBoxHome">
+                            <div class="pov-content" id="povContentSriyankaHome">
+                                <span class="pov-pre-heading">Shaping the Future</span>
+                                <h3 class="pov-title">Purpose-Driven Vision</h3>
+                                <p class="pov-text">"Hi, I'm JS Sriyanka Sargam Rout, the CEO & Founder of AS Creates. I started AS Creates with a vision to bring creativity, innovation, and meaningful solutions together. I believe in building ideas that create value, inspire growth, and leave a lasting impact. Through dedication, passion, and a commitment to excellence, I continue to lead AS Creates toward creating work that reflects quality, trust, and purpose."</p>
+                            </div>
+                            <div class="pov-content" id="povContentAsishHome">
+                                <span class="pov-pre-heading">Architecting Scale</span>
+                                <h3 class="pov-title">Transforming Ideas into Reality</h3>
+                                <p class="pov-text">"Hi, I'm Asish Nayak, the CTO of AS Creates. I lead the technological vision of the company, focusing on innovation, efficiency, and scalable solutions. I believe technology is a powerful tool for transforming ideas into reality and creating meaningful impact. Through strategic thinking, continuous learning, and a commitment to excellence, I work to ensure AS Creates stays at the forefront of innovation and delivers solutions that drive growth and success."</p>
+                            </div>
+                        </div>
+
+                        <!-- Founder 2 -->
+                        <div class="founder-card" id="founderCardAsishHome">
+                            <div class="founder-img-container">
+                                <img alt="Asish Nayak, CTO at AS Creates" src="Images/Asish.jpeg" />
+                            </div>
+                            <h3 class="headline-sm">Asish Nayak</h3>
+                            <p class="founder-role">CTO</p>
+                            <p class="founder-bio">Passionate about leveraging technology to build innovative and impactful solutions.</p>
+                        </div>
+
+                    </div>
+                    <!-- Team Members Grid -->
+                    <div id="teamMembersGridHome" class="team-members-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="bg-white-flat testimonials-section">
+            <!-- Floating Circles -->
+            <div class="decor-circle"
+                style="left: -64px; top: 40%; width: 192px; height: 192px; background-color: rgba(62, 85, 177, 0.05); filter: blur(80px); z-index: 1;">
+            </div>
+            <div class="decor-circle"
+                style="right: -80px; bottom: 10%; width: 320px; height: 320px; background-color: rgba(75, 87, 170, 0.05); filter: blur(100px); z-index: 1;">
+            </div>
+
+            <div class="container" style="position: relative; z-index: 10;">
+                <div class="section-header">
+                    <span class="pre-heading">Love From Clients</span>
+                    <h2 class="headline-md">What Clients Say</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="grid-12">
+                    <div class="testimonial-slider-container" style="position: relative; grid-column: span 12; width: 100%;">
+                        <!-- Left Arrow (Vertical Middle) -->
+                        <button type="button" onclick="scrollTestimonials(-1)" class="testimonial-nav-btn prev-btn" aria-label="Previous Review">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        </button>
+                        
+                        <div class="testimonials-grid" id="testimonialsGrid">
+
+                        <!-- Testimonial 1 -->
+                        <div class="testimonial-card">
+                            <div class="quote-icon">
+                                <svg viewBox="0 0 32 32">
+                                    <path
+                                        d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z"
+                                        fill="currentColor" />
+                                </svg>
+                            </div>
+                            <p class="body-md testimonial-text">"AS Creates transformed our digital footprint. Their
+                                technical precision in web development is unmatched, delivering a platform that exceeded
+                                our KPIs."</p>
+                            <div class="testimonial-author">
+                                <div class="author-img">
+                                    <img alt="Johanna Doe portrait"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwtFiO87PW0TBrkCLHdOrv4bVDkJJXUOn2lyqQAAnIUHvYN3sUTY_KQM0pKo82njCHVw_NPFJj4Gmbm9FQ3dGbLS19QdOKHCCKIZu-v-q7j5I1pMsA5iaBcPh3jgmCCLfCr0LMxhGsUwIHp2v4ZTn-bjTptJpR3BtKnbk8cxdbeAlzXDgezHqs9KzKIxKHYeJV4PO6L8wBFpIBOYv0jJsozsPubPI8dKL2xc3prZYvpokK8dTROO9RgCKxSv4UCGFMNF9EJo5a8B8" />
+                                </div>
+                                <div class="author-details">
+                                    <h4>Johanna Doe</h4>
+                                    <p>BrandName CEO</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+                        <div class="testimonial-card">
+                            <div class="quote-icon">
+                                <svg viewBox="0 0 32 32">
+                                    <path
+                                        d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z"
+                                        fill="currentColor" />
+                                </svg>
+                            </div>
+                            <p class="body-md testimonial-text">"The level of strategic insight they brought to our
+                                viral marketing campaign was incredible. We saw a 300% increase in user engagement
+                                within a month."</p>
+                            <div class="testimonial-author">
+                                <div class="author-img">
+                                    <img alt="Michael Chen portrait"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs-zW4lXvj9N99lT3jR7M2u9I7m8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8" />
+                                </div>
+                                <div class="author-details">
+                                    <h4>Michael Chen</h4>
+                                    <p>TechLogistics Director</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 3 -->
+                        <div class="testimonial-card">
+                            <div class="quote-icon">
+                                <svg viewBox="0 0 32 32">
+                                    <path
+                                        d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z"
+                                        fill="currentColor" />
+                                </svg>
+                            </div>
+                            <p class="body-md testimonial-text">"Working with their CTO and design team was a seamless
+                                experience. They didn't just build a site; they built a scalable solution for our global
+                                future."</p>
+                            <div class="testimonial-author">
+                                <div class="author-img">
+                                    <img alt="Sarah Jenkins portrait"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs-zW4lXvj9N99lT3jR7M2u9I7m8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8rW5v9X8" />
+                                </div>
+                                <div class="author-details">
+                                    <h4>Sarah Jenkins</h4>
+                                    <p>FinStream Ops VP</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                        
+                        <!-- Right Arrow (Vertical Middle) -->
+                        <button type="button" onclick="scrollTestimonials(1)" class="testimonial-nav-btn next-btn" aria-label="Next Review">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Glimpse Section -->
+        <section class="bg-dark-navy" id="portfolio">
+            <!-- Contrasting circle overlay -->
+            <div class="decor-circle"
+                style="right: 0; top: 0; width: 288px; height: 288px; background-color: rgba(255, 255, 255, 0.02); filter: blur(80px); z-index: 1;">
+            </div>
+
+            <div class="container" style="position: relative; z-index: 10;">
+                <div class="portfolio-header">
+                    <div class="portfolio-header-text">
+                        <span class="pre-heading">Our Masterpieces</span>
+                        <h2 class="headline-md">Portfolio Glimpse</h2>
+                        <p class="body-md">A curated selection of high-impact digital products delivered for industry
+                            leaders.</p>
+                    </div>
+                    <a class="btn btn-outline-white" href="portfolio.html">View All Work</a>
+                </div>
+
+                <div class="grid-12">
+                    <div class="portfolio-grid" id="featuredPortfolioGrid">
+                        <div class="col-span-full py-12 text-center text-outline">Loading featured projects...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="cta-section">
+            <div class="cta-skew-overlay"></div>
+            <div class="cta-decor-1"></div>
+
+            <div class="container cta-container">
+                <span class="pre-heading cta-pre-heading">Let's Build Something Great</span>
+                <h2 class="display-lg">Ready to Scale?</h2>
+                <p class="body-lg">Join hundreds of successful businesses that have transformed their digital presence
+                    with AS Creates.</p>
+                <a class="btn btn-white" href="contact.html">Start Your Project Today</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer" id="contact">
+        <div class="footer-decor"></div>
+
+        <div class="container-wide">
+            <div class="footer-top grid-12">
+
+                <!-- Brand Info -->
+                <div class="footer-brand">
+                    <a class="footer-logo" href="#home">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                        <span>AS Creates</span>
+                    </a>
+                    <p class="footer-desc">
+                        AS Creates Digital Excellence. Engineering future-proof digital solutions for the global
+                        marketplace.
+                    </p>
+                    <div class="social-links"><!-- populated by js/socials.js --></div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-links-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Start</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div class="footer-links-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Billing and Payment</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <ul class="footer-contact-list">
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a8 8 0 00-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 00-8-8z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <span>Salipur, Cuttack, odisha</span>
+                        </li>
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+                            </svg>
+                            <span>+91 8018977085</span>
+                        </li>
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <path d="M22 6l-10 7L2 6" />
+                            </svg>
+                            <span><a href="mailto:AScreates1105@gmail.com">AScreates1105@outlook.com</a></span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>© <span id="currentYear"></span> AS Creates. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Legals</a>
+                    <a href="#">Policies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hydrate Dynamic Data -->
+    <script>
+        (async () => {
+            // Hydrate team
+            try {
+                const res = await fetch('/api/team');
+                const team = await res.json();
+                const founders = (team || []).filter(t => t.is_founder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+                const members = (team || []).filter(t => !t.is_founder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+                const suffix = document.getElementById('foundersGridHome') ? 'Home' : '';
+                
+                const t1 = founders[0];
+                const t2 = founders[1];
+                const card1 = document.getElementById('founderCardSriyanka' + suffix);
+                const card2 = document.getElementById('founderCardAsish' + suffix);
+                const pov1 = document.getElementById('povContentSriyanka' + suffix);
+                const pov2 = document.getElementById('povContentAsish' + suffix);
+
+                if (card1 && t1) {
+                    card1.querySelector('img').src = t1.image_url;
+                    card1.querySelector('img').alt = t1.name + ', ' + t1.role + ' at AS Creates';
+                    card1.querySelector('.headline-sm').innerText = t1.name;
+                    card1.querySelector('.founder-role').innerText = t1.role;
+                    card1.querySelector('.founder-bio').innerText = t1.bio;
+                }
+                if (card2 && t2) {
+                    card2.querySelector('img').src = t2.image_url;
+                    card2.querySelector('img').alt = t2.name + ', ' + t2.role + ' at AS Creates';
+                    card2.querySelector('.headline-sm').innerText = t2.name;
+                    card2.querySelector('.founder-role').innerText = t2.role;
+                    card2.querySelector('.founder-bio').innerText = t2.bio;
+                }
+                if (pov1 && t1) {
+                    pov1.querySelector('.pov-pre-heading').innerText = t1.pov_pre_heading;
+                    pov1.querySelector('.pov-title').innerText = t1.pov_title;
+                    pov1.querySelector('.pov-text').innerText = '"' + t1.pov_text + '"';
+                }
+                if (pov2 && t2) {
+                    pov2.querySelector('.pov-pre-heading').innerText = t2.pov_pre_heading;
+                    pov2.querySelector('.pov-title').innerText = t2.pov_title;
+                    pov2.querySelector('.pov-text').innerText = '"' + t2.pov_text + '"';
+                }
+                
+                // Render team members in a 4-per-row grid below founders
+                const membersGrid = document.getElementById('teamMembersGrid' + suffix);
+                if (membersGrid && members.length > 0) {
+                    membersGrid.innerHTML = '';
+                    const visibleCount = 4;
+                    members.forEach((t, index) => {
+                        const card = document.createElement('div');
+                        card.className = 'team-member-card';
+                        card.innerHTML = '<img class="member-img" alt="' + t.name + ', ' + t.role + ' at AS Creates" src="' + (t.image_url || t.photo || '') + '" onerror="this.style.display=\'none\'" /><h4>' + t.name + '</h4><p class="member-role">' + t.role + '</p><p class="member-bio">' + (t.bio || '') + '</p>';
+                        if (index >= visibleCount) {
+                            card.style.display = 'none';
+                            card.dataset.hidden = 'true';
+                        }
+                        membersGrid.appendChild(card);
+                    });
+                    
+                    if (members.length > visibleCount) {
+                        const toggleBtn = document.createElement('button');
+                        toggleBtn.className = 'btn btn-secondary';
+                        toggleBtn.style.cssText = 'padding: 10px 24px; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; justify-self: center; width: auto;';
+                        toggleBtn.innerHTML = 'Show More';
+                        
+                        let isExpanded = false;
+                        toggleBtn.addEventListener('click', () => {
+                            const hiddenCards = membersGrid.querySelectorAll('[data-hidden="true"]');
+                            isExpanded = !isExpanded;
+                            hiddenCards.forEach(card => {
+                                card.style.display = isExpanded ? 'flex' : 'none';
+                            });
+                            toggleBtn.innerHTML = isExpanded ? 'Show Less' : 'Show More';
+                        });
+                        
+                        const btnWrapper = document.createElement('div');
+                        btnWrapper.style.cssText = 'grid-column: span 12; display: flex; justify-content: center; margin-top: 1.5rem;';
+                        btnWrapper.appendChild(toggleBtn);
+                        membersGrid.parentNode.insertBefore(btnWrapper, membersGrid.nextSibling);
+                    }
+                }
+            } catch (err) {
+                console.warn('Dream Team hydration failed:', err);
+            }
+
+            // Hydrate site images
+            try {
+                const res = await fetch('/api/site-images');
+                const images = await res.json();
+                
+                if (window.hydrateSectionImage) {
+                    window.hydrateSectionImage('agencyImage', images.agency_image);
+                    window.hydrateSectionImage('howWeWorkImage', images.how_we_work_image);
+                    window.hydrateSectionImage('aboutStoryImage', images.about_story_image);
+                    window.hydrateSectionImage('servicesMethodologyImage', images.services_methodology_image);
+                } else {
+                    const agencyImg = document.getElementById('agencyImage');
+                    if (agencyImg && images.agency_image) {
+                        agencyImg.src = images.agency_image.url;
+                        agencyImg.alt = images.agency_image.alt;
+                    }
+
+                    const howWeWorkImg = document.getElementById('howWeWorkImage');
+                    if (howWeWorkImg && images.how_we_work_image) {
+                        howWeWorkImg.src = images.how_we_work_image.url;
+                        howWeWorkImg.alt = images.how_we_work_image.alt;
+                    }
+
+                    const aboutStoryImg = document.getElementById('aboutStoryImage');
+                    if (aboutStoryImg && images.about_story_image) {
+                        aboutStoryImg.src = images.about_story_image.url;
+                        aboutStoryImg.alt = images.about_story_image.alt;
+                    }
+
+                    const servicesMethodologyImg = document.getElementById('servicesMethodologyImage');
+                    if (servicesMethodologyImg && images.services_methodology_image) {
+                        servicesMethodologyImg.src = images.services_methodology_image.url;
+                        servicesMethodologyImg.alt = images.services_methodology_image.alt;
+                    }
+                }
+            } catch (err) {
+                console.warn('Site images hydration failed:', err);
+            }
+
+            // Hydrate testimonials
+            try {
+                const res = await fetch('/api/testimonials');
+                const list = await res.json();
+                const grid = document.getElementById('testimonialsGrid');
+                if (grid && list && list.length > 0) {
+                    grid.innerHTML = '';
+                    list.forEach((item, index) => {
+                        const delay = index * 100;
+                        const card = document.createElement('div');
+                        card.className = 'testimonial-card';
+                        card.style.animationDelay = `${delay}ms`;
+                        const stars = '★'.repeat(item.rating || 5);
+                        card.innerHTML = `
+                            <div class="quote-icon">
+                                <svg viewBox="0 0 32 32">
+                                    <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z" fill="currentColor" />
+                                </svg>
+                            </div>
+                            <p class="body-md testimonial-text">"${item.quote || ''}"</p>
+                            <div style="color: var(--color-warning); font-size: 13px; margin-bottom: 8px;">${stars}</div>
+                            <div class="testimonial-author">
+                                <div class="author-img">
+                                    <img alt="${item.name || 'Client'} portrait" src="${item.avatar || ''}" onerror="this.style.display='none'" />
+                                </div>
+                                <div class="author-details">
+                                    <h4>${item.name || 'Anonymous'}</h4>
+                                    <p>${item.role || ''}</p>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                    
+                    startTestimonialAutoplay();
+                    grid.addEventListener('scroll', stopTestimonialAutoplay, { passive: true });
+                }
+            } catch (err) {
+                console.warn('Testimonials hydration failed:', err);
+            }
+
+            // Hydrate featured portfolio projects
+            try {
+                const res = await fetch('/api/portfolio');
+                const projects = await res.json();
+                const grid = document.getElementById('featuredPortfolioGrid');
+                if (grid && projects && projects.length > 0) {
+                    // Filter featured projects, or take top 3 if none featured
+                    let featured = projects.filter(p => p.is_featured);
+                    if (featured.length < 3) {
+                        const notFeatured = projects.filter(p => !p.is_featured);
+                        featured = featured.concat(notFeatured.slice(0, 3 - featured.length));
+                    } else if (featured.length > 3) {
+                        featured = featured.slice(0, 3);
+                    }
+
+                    grid.innerHTML = '';
+                    featured.forEach(proj => {
+                        const card = document.createElement('a');
+                        // Make entire card clickable and link to portfolio detail page
+                        card.href = `portfolio.html?id=${proj.id}`;
+                        card.className = 'portfolio-card';
+                        card.style.display = 'block';
+                        card.style.textDecoration = 'none';
+                        card.style.color = 'inherit';
+                        card.style.cursor = 'pointer';
+                        
+                        card.innerHTML = `
+                            <div class="portfolio-img-container">
+                                <img alt="${proj.title}" src="${proj.image_url}" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60'" />
+                            </div>
+                            <h3 style="margin-top: 1rem;">${proj.title}</h3>
+                            <p>${proj.description}</p>
+                        `;
+                        grid.appendChild(card);
+                    });
+                } else if (grid) {
+                     grid.innerHTML = `<div class="col-span-full py-12 text-center text-outline">No portfolio projects uploaded.</div>`;
+                }
+            } catch (err) {
+                console.warn('Portfolio hydration failed:', err);
+            }
+        })();
+
+        let scrollDirection = 1; // 1 for right, -1 for left
+        let testimonialInterval;
+        function scrollTestimonials(direction) {
+            stopTestimonialAutoplay();
+            const grid = document.getElementById('testimonialsGrid');
+            if (!grid) return;
+            const cardWidth = 380 + 30;
+            grid.scrollBy({
+                left: direction * cardWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        function startTestimonialAutoplay() {
+            stopTestimonialAutoplay();
+            testimonialInterval = setInterval(() => {
+                const grid = document.getElementById('testimonialsGrid');
+                if (!grid) return;
+                
+                const cardWidth = 380 + 30;
+                
+                if (scrollDirection === 1) {
+                    if (grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 25) {
+                        scrollDirection = -1;
+                        grid.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+                    } else {
+                        grid.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                    }
+                } else {
+                    if (grid.scrollLeft <= 15) {
+                        scrollDirection = 1;
+                        grid.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                    } else {
+                        grid.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+                    }
+                }
+            }, 3500);
+        }
+
+        function stopTestimonialAutoplay() {
+            if (testimonialInterval) clearInterval(testimonialInterval);
+        }
+
+    </script>
+
+    <!-- Custom JavaScript -->
+    <script src="index.js"></script>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

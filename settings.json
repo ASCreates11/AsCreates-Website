@@ -1,0 +1,431 @@
+{
+  "general": {
+    "siteName": "AS Creates",
+    "tagline": "Digital Agency & Technology Solutions",
+    "description": "Transforming digital landscapes through technical precision and creative vision.",
+    "maintenance": true,
+    "contactForm": true,
+    "isDeployed": true
+  },
+  "promo": {
+    "enabled": false,
+    "text": "",
+    "btnText": "",
+    "btnUrl": "",
+    "speed": 60,
+    "popup": {
+      "enabled": false,
+      "link_url": "",
+      "desktop_image": "/uploads/1784638826385-761788975.png",
+      "mobile_image": "/uploads/1784638826606-344104841.png"
+    }
+  },
+  "socials": [
+    {
+      "name": "Facebook",
+      "url": "https://facebook.com/ascreates",
+      "icon": "facebook",
+      "visible": true
+    },
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/ascreates",
+      "icon": "instagram",
+      "visible": true
+    },
+    {
+      "name": "Threads",
+      "url": "https://threads.net/@ascreates",
+      "icon": "threads",
+      "visible": true
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://linkedin.com/company/ascreates",
+      "icon": "linkedin",
+      "visible": true
+    },
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com/@ascreates",
+      "icon": "youtube",
+      "visible": true
+    },
+    {
+      "name": "Reddit",
+      "url": "https://reddit.com/user/ascreates",
+      "icon": "reddit",
+      "visible": true
+    },
+    {
+      "name": "WhatsApp Business",
+      "url": "https://wa.me/918018977085",
+      "icon": "whatsappbusiness",
+      "visible": true
+    },
+    {
+      "name": "X (Twitter)",
+      "url": "https://x.com/ascreates",
+      "icon": "x",
+      "visible": false
+    },
+    {
+      "name": "TikTok",
+      "url": "https://tiktok.com/@ascreates",
+      "icon": "tiktok",
+      "visible": false
+    },
+    {
+      "name": "Pinterest",
+      "url": "https://pinterest.com/ascreates",
+      "icon": "pinterest",
+      "visible": false
+    },
+    {
+      "name": "Behance",
+      "url": "https://behance.net/ascreates",
+      "icon": "behance",
+      "visible": false
+    },
+    {
+      "name": "Dribbble",
+      "url": "https://dribbble.com/ascreates",
+      "icon": "dribbble",
+      "visible": false
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/ascreates",
+      "icon": "github",
+      "visible": false
+    },
+    {
+      "name": "Upwork",
+      "url": "https://upwork.com/ag/ascreates",
+      "icon": "upwork",
+      "visible": false
+    },
+    {
+      "name": "Fiverr",
+      "url": "https://fiverr.com/ascreates",
+      "icon": "fiverr",
+      "visible": false
+    },
+    {
+      "name": "Freelancer",
+      "url": "https://freelancer.com/u/ascreates",
+      "icon": "freelancer",
+      "visible": false
+    },
+    {
+      "name": "PeoplePerHour",
+      "url": "https://peopleperhour.com/ascreates",
+      "icon": "peopleperhour",
+      "visible": false
+    },
+    {
+      "name": "Guru",
+      "url": "https://guru.com/freelancers/ascreates",
+      "icon": "guru",
+      "visible": false
+    },
+    {
+      "name": "Contra",
+      "url": "https://contra.com/ascreates",
+      "icon": "contra",
+      "visible": false
+    },
+    {
+      "name": "Google Business Profile",
+      "url": "https://business.google.com/ascreates",
+      "icon": "google",
+      "visible": false
+    },
+    {
+      "name": "Bing Places",
+      "url": "https://bingplaces.com/ascreates",
+      "icon": "bing",
+      "visible": false
+    },
+    {
+      "name": "Apple Business Connect",
+      "url": "https://businessconnect.apple.com/ascreates",
+      "icon": "apple",
+      "visible": false
+    },
+    {
+      "name": "Clutch",
+      "url": "https://clutch.co/profile/ascreates",
+      "icon": "clutch",
+      "visible": false
+    },
+    {
+      "name": "GoodFirms",
+      "url": "https://goodfirms.co/ascreates",
+      "icon": "goodfirms",
+      "visible": false
+    },
+    {
+      "name": "DesignRush",
+      "url": "https://designrush.com/agencies/ascreates",
+      "icon": "designrush",
+      "visible": false
+    },
+    {
+      "name": "TechBehemoths",
+      "url": "https://techbehemoths.com/ascreates",
+      "icon": "techbehemoths",
+      "visible": false
+    },
+    {
+      "name": "Agency Spotter",
+      "url": "https://agencyspotter.com/ascreates",
+      "icon": "agencyspotter",
+      "visible": false
+    },
+    {
+      "name": "Sortlist",
+      "url": "https://sortlist.com/ascreates",
+      "icon": "sortlist",
+      "visible": false
+    },
+    {
+      "name": "UpCity",
+      "url": "https://upcity.com/ascreates",
+      "icon": "upcity",
+      "visible": false
+    },
+    {
+      "name": "Crunchbase",
+      "url": "https://crunchbase.com/organization/ascreates",
+      "icon": "crunchbase",
+      "visible": false
+    },
+    {
+      "name": "Wellfound (AngelList)",
+      "url": "https://wellfound.com/company/ascreates",
+      "icon": "wellfound",
+      "visible": false
+    },
+    {
+      "name": "Product Hunt",
+      "url": "https://producthunt.com/@ascreates",
+      "icon": "producthunt",
+      "visible": false
+    },
+    {
+      "name": "Indie Hackers",
+      "url": "https://indiehackers.com/ascreates",
+      "icon": "indiehackers",
+      "visible": false
+    },
+    {
+      "name": "Telegram",
+      "url": "https://t.me/ascreates",
+      "icon": "telegram",
+      "visible": false
+    },
+    {
+      "name": "Yelp",
+      "url": "https://yelp.com/biz/ascreates",
+      "icon": "yelp",
+      "visible": false
+    },
+    {
+      "name": "Hotfrog",
+      "url": "https://hotfrog.com/ascreates",
+      "icon": "hotfrog",
+      "visible": false
+    },
+    {
+      "name": "Justdial",
+      "url": "https://justdial.com/ascreates",
+      "icon": "justdial",
+      "visible": false
+    },
+    {
+      "name": "IndiaMART",
+      "url": "https://indiamart.com/ascreates",
+      "icon": "indiamart",
+      "visible": false
+    },
+    {
+      "name": "Sulekha",
+      "url": "https://sulekha.com/ascreates",
+      "icon": "sulekha",
+      "visible": false
+    },
+    {
+      "name": "Alignable",
+      "url": "https://alignable.com/ascreates",
+      "icon": "alignable",
+      "visible": false
+    },
+    {
+      "name": "Meetup",
+      "url": "https://meetup.com/ascreates",
+      "icon": "meetup",
+      "visible": false
+    },
+    {
+      "name": "Trustpilot",
+      "url": "https://trustpilot.com/review/ascreates",
+      "icon": "trustpilot",
+      "visible": false
+    },
+    {
+      "name": "Capterra",
+      "url": "https://capterra.com/p/ascreates",
+      "icon": "capterra",
+      "visible": false
+    },
+    {
+      "name": "G2",
+      "url": "https://g2.com/products/ascreates",
+      "icon": "g2",
+      "visible": false
+    },
+    {
+      "name": "SourceForge",
+      "url": "https://sourceforge.net/ascreates",
+      "icon": "sourceforge",
+      "visible": false
+    },
+    {
+      "name": "SaaSHub",
+      "url": "https://saashub.com/ascreates",
+      "icon": "saashub",
+      "visible": false
+    },
+    {
+      "name": "F6S",
+      "url": "https://f6s.com/ascreates",
+      "icon": "f6s",
+      "visible": false
+    },
+    {
+      "name": "StartupBlink",
+      "url": "https://startupblink.com/ascreates",
+      "icon": "startupblink",
+      "visible": false
+    },
+    {
+      "name": "Polywork",
+      "url": "https://polywork.com/ascreates",
+      "icon": "polywork",
+      "visible": false
+    },
+    {
+      "name": "Peerlist",
+      "url": "https://peerlist.io/ascreates",
+      "icon": "peerlist",
+      "visible": false
+    },
+    {
+      "name": "Wix Marketplace",
+      "url": "https://wix.com/ascreates",
+      "icon": "wix",
+      "visible": false
+    },
+    {
+      "name": "Shopify Partners",
+      "url": "https://shopify.com/partners/ascreates",
+      "icon": "shopify",
+      "visible": false
+    },
+    {
+      "name": "Webflow Experts",
+      "url": "https://webflow.com/experts/ascreates",
+      "icon": "webflow",
+      "visible": false
+    },
+    {
+      "name": "Squarespace Experts",
+      "url": "https://squarespace.com/experts/ascreates",
+      "icon": "squarespace",
+      "visible": false
+    }
+  ],
+  "contact": {
+    "address": "Sisua, Salipur, Cuttack, Odisha, India",
+    "coords": "Trisama Motors, Cuttack Chandbali, Bahabalpur, Market Salipur Odisha 754202 IN, High Way, Sisua, Odisha 754202",
+    "mapLink": "https://www.google.com/maps/dir//Trisama+Motors,+Cuttack+Chandbali,+Bahabalpur,+Market+Salipur+Odisha+754202+IN,+High+Way,+Sisua,+Odisha+754202/@20.4831593,86.0738173,17z/data=!4m17!1m7!3m6!1s0x3a196f2db25f82b1:0x300f8697411b796d!2sTrisama+Motors!8m2!3d20.4831593!4d86.0763922!16s%2Fg%2F11s1y22wd7!4m8!1m0!1m5!1m1!1s0x3a196f2db25f82b1:0x300f8697411b796d!2m2!1d86.0763922!2d20.4831593!3e9?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D",
+    "showMap": true,
+    "zoom": 14,
+    "markerLabel": "AS Creates HQ",
+    "email": "Ascreates1105@outlook.com",
+    "phone": "+91 8018977085"
+  },
+  "contactFormConfig": {
+    "fields": {
+      "mobile": {
+        "label": "Mobile Number",
+        "show": true,
+        "required": false
+      }
+    },
+    "services": [
+      {
+        "id": "web-dev",
+        "name": "Web Development",
+        "show": true
+      },
+      {
+        "id": "ui-ux",
+        "name": "UI/UX Design",
+        "show": true
+      },
+      {
+        "id": "marketing",
+        "name": "SEO/SEM Marketing",
+        "show": false
+      },
+      {
+        "id": "consulting",
+        "name": "Strategy Consulting",
+        "show": false
+      },
+      {
+        "id": "custom",
+        "name": "Others",
+        "show": true
+      }
+    ]
+  },
+  "media": {
+    "how_we_work": {
+      "image": "",
+      "video": "",
+      "videoType": "",
+      "autoplay": false,
+      "showImage": true,
+      "images": []
+    },
+    "our_agency": {
+      "image": "/uploads/1784576345876-85004521.jpeg",
+      "video": "",
+      "videoType": "",
+      "autoplay": true,
+      "showImage": true,
+      "images": [
+        "/uploads/1784576345876-85004521.jpeg",
+        "/uploads/1784576338683-993990640.png"
+      ]
+    },
+    "our_journey": {
+      "image": "/uploads/1784576338683-993990640.png",
+      "video": "https://yout",
+      "videoType": "youtube",
+      "autoplay": true,
+      "showImage": true,
+      "images": []
+    },
+    "methodology": {
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBTe5AJrz90tmOjxmQm1hRVGQgeE9xeT0xOJjqAXtsxMwA6LFRz96JN5gLms3S1fuhyRQWWa1Ri4WPzglxzP0lDWX8908x6s_hq8J99DDzJHrGgxXhwnRbY4oiaVv9yo_9lCn6EDOxtzEbuF7WFRUowfUg39HQWE7I08mzMbV0vTIMRcxAYDUFhf_TIh8gp4Rn05FRG6qAjWb1P0zPAJsbrDn_6w5bL7JA_YovLzar4CdbmtB214L814DOqmVRg4MqkIPwcqAB7n-o",
+      "video": "",
+      "videoType": "",
+      "autoplay": true,
+      "showImage": true
+    }
+  }
+}

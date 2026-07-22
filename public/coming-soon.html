@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - AS Creates</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1a1b22;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .maintenance-card {
+            text-align: center;
+            max-width: 500px;
+            padding: 56px 48px;
+            background: rgba(18, 18, 22, 0.65); /* Darker and more opaque for better contrast */
+            backdrop-filter: blur(24px);       /* Stronger blur */
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Crisper edge */
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        .maintenance-icon {
+            font-size: 56px;
+            margin-bottom: 24px;
+            display: inline-block;
+            animation: pulse 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1) translateY(0); }
+            50% { opacity: 0.85; transform: scale(1.05) translateY(-6px); }
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+        p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9); /* Much brighter than the old grey */
+            margin-bottom: 32px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        }
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #20c997; /* Launch green color */
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: blink 2s ease-in-out infinite;
+            box-shadow: 0 0 12px rgba(32, 201, 151, 0.8);
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; box-shadow: 0 0 12px rgba(32, 201, 151, 0.8); }
+            50% { opacity: 0.4; box-shadow: 0 0 4px rgba(32, 201, 151, 0.2); }
+        }
+        .footer-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 32px;
+        }
+        a { color: #6c8cff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        
+        .video-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1a1b22;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+        #fallback-card {
+            position: relative;
+            z-index: 101;
+            transition: opacity 0.5s ease;
+        }
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="video-wrapper" class="video-wrapper">
+        <video id="maintenance-video" autoplay loop muted playsinline>
+        </video>
+    </div>
+
+    <div class="maintenance-card" id="fallback-card">
+        <button id="close-card-btn" class="close-btn" aria-label="Close">&times;</button>
+        <div class="maintenance-icon">&#x1F680;</div>
+        <h1>Coming Soon!</h1>
+        <p>We're launching soon! Our website is currently under construction. Check back in a bit for something amazing.</p>
+        <p><span class="status-dot"></span>Pre-launch phase</p>
+        <div class="footer-text">
+            &copy; 2026 <a href="/">AS Creates</a>. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        var video = document.getElementById('maintenance-video');
+        var wrapper = document.getElementById('video-wrapper');
+        var fallbackCard = document.getElementById('fallback-card');
+        var closeBtn = document.getElementById('close-card-btn');
+        var hideTimeout;
+
+        var desktopVideoSrc = "/Video/coming%20soon.mp4";
+        var mobileVideoSrc = "/Video/coming%20soon%20mobile.mp4";
+        var currentVideoSrc = "";
+
+        function updateVideoSource() {
+            var isPortrait = window.matchMedia("(orientation: portrait)").matches;
+            var isMobileOrTab = window.innerWidth <= 1024 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            var newSrc = (isPortrait && isMobileOrTab) ? mobileVideoSrc : desktopVideoSrc;
+            
+            if (currentVideoSrc !== newSrc) {
+                var wasPlaying = !video.paused;
+                currentVideoSrc = newSrc;
+                video.src = newSrc;
+                video.load();
+                if (wasPlaying) {
+                    var playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(function(error) { console.log('Autoplay prevented'); });
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('resize', updateVideoSource);
+        updateVideoSource();
+        
+        function triggerFallbackMode() {
+            wrapper.style.display = 'none';
+            clearTimeout(hideTimeout);
+            fallbackCard.style.display = 'block';
+            fallbackCard.style.opacity = '1';
+            closeBtn.style.display = 'none';
+        }
+
+        function checkFallback() {
+            if (video.networkState === 3) { 
+                triggerFallbackMode();
+            }
+        }
+
+        function hideCard() {
+            fallbackCard.style.opacity = '0';
+            setTimeout(function() {
+                fallbackCard.style.display = 'none';
+            }, 500);
+        }
+
+        closeBtn.addEventListener('click', function() {
+            clearTimeout(hideTimeout);
+            hideCard();
+        });
+
+        hideTimeout = setTimeout(hideCard, 4000);
+        setTimeout(checkFallback, 1000);
+        video.onerror = triggerFallbackMode;
+    </script>
+</body>
+</html>

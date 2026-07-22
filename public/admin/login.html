@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AS Creates | Admin Login</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+</head>
+<body class="login-page" id="loginPage" style="opacity: 0; transition: opacity 0.3s ease;">
+
+    <!-- Atmospheric Background Blobs -->
+    <div class="login-blob login-blob-1" aria-hidden="true"></div>
+    <div class="login-blob login-blob-2" aria-hidden="true"></div>
+    <div class="login-blob login-blob-3" aria-hidden="true"></div>
+
+    <!-- Rotating Ring Decoration -->
+    <div class="login-ring" aria-hidden="true"></div>
+
+    <!-- Main Login Area -->
+    <main class="login-main" role="main">
+        <div class="login-card" role="region" aria-label="Admin Login">
+
+            <div class="login-card-inner">
+
+                <!-- Brand Header -->
+                <div class="login-brand">
+                    <div class="login-brand-icon" aria-hidden="true">
+                        <span class="material-symbols-outlined filled">shield_person</span>
+                    </div>
+                    <h1>AS Creates</h1>
+                    <p>Administrative Control Panel</p>
+                </div>
+
+                <!-- Status Alert -->
+                <div id="loginAlert" class="login-alert" role="alert" aria-live="polite"></div>
+
+                <!-- Login Form -->
+                <form id="loginForm" novalidate autocomplete="off">
+
+                    <div class="form-group">
+                        <label class="form-label" for="adminEmail">Email Address</label>
+                        <div class="form-input-wrap">
+                            <span class="form-input-icon material-symbols-outlined" aria-hidden="true">alternate_email</span>
+                            <input
+                                class="form-input"
+                                id="adminEmail"
+                                name="email"
+                                type="email"
+                                placeholder="admin@ascreates.com"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adminPassword">Password</label>
+                        <div class="form-input-wrap">
+                            <span class="form-input-icon material-symbols-outlined" aria-hidden="true">lock</span>
+                            <input
+                                class="form-input"
+                                id="adminPassword"
+                                name="password"
+                                type="password"
+                                placeholder="••••••••••"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button
+                                class="form-input-btn"
+                                type="button"
+                                id="togglePassword"
+                                aria-label="Toggle password visibility"
+                                title="Show / hide password"
+                            >
+                                <span class="material-symbols-outlined" id="toggleIcon">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="btn-login" type="submit" id="loginSubmitBtn">
+                        <span id="loginBtnText">Sign In to Dashboard</span>
+                        <span class="material-symbols-outlined arrow-icon" id="loginBtnIcon">arrow_forward</span>
+                    </button>
+
+                </form>
+
+                <!-- Secure Indicator -->
+                <div class="login-secure" aria-label="Secure connection active">
+                    <span class="material-symbols-outlined filled" style="font-size:16px;" aria-hidden="true">verified_user</span>
+                    <span>Secure Session</span>
+                    <div class="pulse-dot" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="login-footer">
+        <p>&copy; 2026 AS Creates Digital Agency &mdash; All rights reserved.</p>
+    </footer>
+
+    <script>
+    /* ============================================================
+       AS Creates Admin — Login Page Logic
+       ============================================================ */
+    document.addEventListener('DOMContentLoaded', async () => {
+
+        // Reveal page after auth check (prevents flash)
+        const page = document.getElementById('loginPage');
+
+        // --- Auth check ---
+        try {
+            const res = await fetch('/api/admin/check-auth', { credentials: 'same-origin' });
+            const data = await res.json();
+            if (data.authenticated) {
+                window.location.replace('dashboard.html');
+                return;
+            }
+        } catch (_) {
+            // server may not be running during design-only phase, proceed normally
+        }
+
+        page.style.opacity = '1';
+
+        // --- Element refs ---
+        const form         = document.getElementById('loginForm');
+        const emailInput   = document.getElementById('adminEmail');
+        const passInput    = document.getElementById('adminPassword');
+        const toggleBtn    = document.getElementById('togglePassword');
+        const toggleIcon   = document.getElementById('toggleIcon');
+        const submitBtn    = document.getElementById('loginSubmitBtn');
+        const btnText      = document.getElementById('loginBtnText');
+        const btnIcon      = document.getElementById('loginBtnIcon');
+        const alertBox     = document.getElementById('loginAlert');
+
+        // --- Password toggle ---
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passInput.type === 'password';
+            passInput.type = isPassword ? 'text' : 'password';
+            toggleIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+        });
+
+        // --- Input micro-animation ---
+        [emailInput, passInput].forEach(input => {
+            input.addEventListener('focus', () => {
+                input.closest('.form-input-wrap').style.transform = 'scale(1.01)';
+                input.closest('.form-input-wrap').style.transition = 'transform 0.2s ease';
+            });
+            input.addEventListener('blur', () => {
+                input.closest('.form-input-wrap').style.transform = 'scale(1)';
+            });
+        });
+
+        // --- Show alert helper ---
+        function showAlert(message, type = 'error') {
+            alertBox.textContent  = message;
+            alertBox.className    = `login-alert ${type}`;
+            alertBox.style.display = 'block';
+        }
+        function hideAlert() { alertBox.style.display = 'none'; }
+
+        // --- Set button loading state ---
+        function setLoading(loading) {
+            if (loading) {
+                submitBtn.disabled = true;
+                btnText.textContent = 'Signing In…';
+                btnIcon.textContent = 'sync';
+                btnIcon.classList.add('animate-spin');
+            } else {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Sign In to Dashboard';
+                btnIcon.textContent = 'arrow_forward';
+                btnIcon.classList.remove('animate-spin');
+            }
+        }
+
+        // --- Form submit ---
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAlert();
+
+            const email    = emailInput.value.trim();
+            const password = passInput.value;
+
+            if (!email || !password) {
+                showAlert('Please fill in all fields.', 'error');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ email, password }),
+                    credentials: 'same-origin'
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    showAlert('Login successful! Redirecting…', 'success');
+                    sessionStorage.setItem('admin_session_active', 'true');
+                    setTimeout(() => window.location.href = 'dashboard.html', 900);
+                } else {
+                    throw new Error(data.error || 'Invalid credentials. Please try again.');
+                }
+            } catch (err) {
+                showAlert(err.message, 'error');
+                setLoading(false);
+            }
+        });
+
+    });
+    </script>
+</body>
+</html>

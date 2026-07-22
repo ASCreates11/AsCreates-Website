@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>About Us | AS Creates</title>
+    <meta name="description"
+        content="Learn more about AS Creates, our mission, core values, and the expert team driving technical precision and creative vision." />
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png" />
+
+    <!-- Custom Style Sheet -->
+    <link href="index.css" rel="stylesheet" />
+    <script src="js/data.js"></script>
+    <script src="js/socials.js"></script>
+</head>
+
+<body>
+    <!-- Promotion Bar -->
+    <div id="promotionBar" class="promotion-bar" style="display: none;">
+        <div class="promotion-marquee" id="promotionMarquee">
+            <div class="promotion-bar-inner">
+                <span class="promo-text-node"></span>
+                <a href="#" class="promo-link-node promotion-bar-btn"></a>
+            </div>
+            <div class="promotion-bar-inner" aria-hidden="true">
+                <span class="promo-text-node"></span>
+                <a href="#" class="promo-link-node promotion-bar-btn"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Decorative Background Circles -->
+    <div class="bg-decorations">
+        <div class="decor-circle decor-1"></div>
+        <div class="decor-circle decor-2"></div>
+        <div class="decor-circle decor-3"></div>
+        <div class="decor-circle decor-4"></div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="top-nav">
+        <div class="container-wide nav-container">
+            <a class="logo" href="index.html#home">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span>AS Creates</span>
+            </a>
+
+            <nav class="nav-menu">
+                <a class="nav-link" href="index.html#home">Home</a>
+                <a class="nav-link active" href="about.html">About Us</a>
+                <a class="nav-link" href="services.html">Services</a>
+                <a class="nav-link" href="portfolio.html">Portfolio</a>
+                <a class="nav-link" href="contact.html">Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a class="btn btn-primary" href="contact.html" style="padding: 0.6rem 1.5rem;">Let's Connect</a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Overlay & Menu -->
+    <div class="mobile-menu-overlay" id="mobile-overlay"></div>
+    <div class="mobile-menu-drawer" id="mobile-drawer">
+        <div class="mobile-menu-header">
+            <a class="logo" href="index.html#home" style="font-size: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span>AS Creates</span>
+            </a>
+            <button class="mobile-menu-close" id="mobile-close" aria-label="Close Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a class="mobile-nav-link" href="index.html#home">Home</a></li>
+            <li><a class="mobile-nav-link active" href="about.html">About Us</a></li>
+            <li><a class="mobile-nav-link" href="services.html">Services</a></li>
+            <li><a class="mobile-nav-link" href="portfolio.html">Portfolio</a></li>
+            <li><a class="mobile-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+        <a class="btn btn-primary" href="contact.html"
+            style="width: 100%; text-align: center; margin-top: auto;">Let's Connect</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <main>
+
+        <!-- About Hero Section -->
+        <section class="about-hero">
+            <div class="container">
+                <span class="pre-heading">Who We Are</span>
+                <h1 class="display-lg">About <span style="color: var(--color-primary);">AS Creates</span></h1>
+                <p class="body-lg hero-subtitle" style="max-width: 800px; margin: 24px auto 0;">
+                    We are a multidisciplined team of design visionaries, technical architects, and digital marketers.
+                    Together, we build scalable platforms and high-impact campaigns that drive business growth.
+                </p>
+            </div>
+        </section>
+
+        <!-- Our Story Section -->
+        <section class="bg-white-flat" id="story">
+            <div class="container grid-12">
+                <div class="agency-content">
+                    <span class="pre-heading" style="margin-left: 0;">Our Journey</span>
+                    <h2 class="headline-md">The <span style="color: var(--color-primary);">AS Creates</span> Story</h2>
+                    <p class="body-md agency-text">
+                        AS Creates operates at the frontier of digital transformation. Founded on the principles of
+                        engineering excellence and aesthetic minimalism, we help brands navigate the complex web
+                        landscape.
+                    </p>
+                    <p class="body-md agency-text">
+                        Our multidisciplined team brings together decades of collective experience in high-performance
+                        web development and strategic marketing, delivering custom architectures designed to scale.
+                    </p>
+                </div>
+
+                <div class="agency-media">
+                    <div class="agency-image-wrapper" data-media-section="our_journey" style="transform: rotate(2deg);">
+                        <img id="aboutStoryImage" alt="Modern creative design studio space mockup"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4-qdgFkDhN2ky_HPP_PGLs8Fc-TOVod5l-yyPgtQlKE2s5-b5h_ygFhF5C8uG3r5eEPqzInA5MlsbLcaSDDEofU6S2Ges0og6LepjtaI-RKy_nFJycFg4S9rKyvaZ416ufGhbT0sOW2etNx-wCg_-aIyB_8saH_o2KsxlPMEC21lhtVDZy7o7yZP0o2Nuql4q0rgNVpkSa-ZQsDGhX4j6qCn0SincbclqHnVqW7HG-dNiRQ9XmrPCKTMoXgI2Coh_85h2wPZCy1w" />
+                    </div>
+                    <div class="agency-media-shadow-glow"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Values Section -->
+        <section class="bg-surface-tint-shaded" id="values">
+            <div class="container">
+                <div class="section-header">
+                    <span class="pre-heading">Our Core Pillars</span>
+                    <h2 class="headline-md">Values We Stand For</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="grid-12">
+                    <div class="value-grid">
+
+                        <!-- Value 1: Precision -->
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="22" y1="12" x2="18" y2="12" />
+                                    <line x1="6" y1="12" x2="2" y2="12" />
+                                    <line x1="12" y1="6" x2="12" y2="2" />
+                                    <line x1="12" y1="22" x2="12" y2="18" />
+                                </svg>
+                            </div>
+                            <h3 class="headline-sm">Technical Precision</h3>
+                            <p>We build with pixel-perfect standards and architect fast, reliable, and clean solutions
+                                ready for global scalability.</p>
+                        </div>
+
+                        <!-- Value 2: Creative Vision -->
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                                    <path
+                                        d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" />
+                                </svg>
+                            </div>
+                            <h3 class="headline-sm">Creative Vision</h3>
+                            <p>We design immersive experiences that capture brand identity, leaving lasting visual
+                                expressions that engage users.</p>
+                        </div>
+
+                        <!-- Value 3: Commitment -->
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                            </div>
+                            <h3 class="headline-sm">Absolute Clarity</h3>
+                            <p>Clear communication, structured scoping, and reliable milestones. We believe our clients
+                                deserve full insight at every step.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Founders Section -->
+        <section class="bg-white-flat" id="team">
+            <!-- Decorative circle for background continuity -->
+            <div class="decor-circle"
+                style="left: 40px; top: 10%; width: 128px; height: 128px; background-color: rgba(75, 87, 170, 0.05); filter: blur(60px); z-index: 1;">
+            </div>
+
+            <div class="container">
+                <div class="section-header">
+                    <span class="pre-heading">The Dream Team</span>
+                    <h2 class="headline-md">Meet the Visionaries</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="grid-12">
+                    <div class="founders-grid" id="foundersGrid">
+
+                        <!-- Founder 1 -->
+                        <div class="founder-card" id="founderCardSriyanka">
+                            <div class="founder-img-container">
+                                <img alt="Js Sriyanka Sargam Rout, Founder & CEO at AS Creates"
+                                    src="Images/riya.jpeg" />
+                            </div>
+                            <h3 class="headline-sm">Js Sriyanka Sargam Rout</h3>
+                            <p class="founder-role">Founder & CEO</p>
+                            <p class="founder-bio">Passionate about turning ideas into impactful creations.</p>
+                        </div>
+
+                        <!-- Center POV Box -->
+                        <div class="pov-box" id="povBox">
+                            <div class="pov-content" id="povContentSriyanka">
+                                <span class="pov-pre-heading">Shaping the Future</span>
+                                <h3 class="pov-title">Purpose-Driven Vision</h3>
+                                <p class="pov-text">"Hi, I’m JS Sriyanka Sargam Rout, the CEO & Founder of AS Creates. I
+                                    started AS Creates with a vision to bring creativity, innovation, and meaningful
+                                    solutions together. I believe in building ideas that create value, inspire growth,
+                                    and leave a lasting impact. Through dedication, passion, and a commitment to
+                                    excellence, I continue to lead AS Creates toward creating work that reflects
+                                    quality, trust, and purpose."</p>
+                            </div>
+                            <div class="pov-content" id="povContentAsish">
+                                <span class="pov-pre-heading">Architecting Scale</span>
+                                <h3 class="pov-title">Transforming Ideas into Reality</h3>
+                                <p class="pov-text">"Hi, I’m Asish Nayak, the CTO of AS Creates. I lead the
+                                    technological vision of the company, focusing on innovation, efficiency, and
+                                    scalable solutions. I believe technology is a powerful tool for transforming ideas
+                                    into reality and creating meaningful impact. Through strategic thinking, continuous
+                                    learning, and a commitment to excellence, I work to ensure AS Creates stays at the
+                                    forefront of innovation and delivers solutions that drive growth and success."</p>
+                            </div>
+                        </div>
+
+                        <!-- Founder 2 -->
+                        <div class="founder-card" id="founderCardAsish">
+                            <div class="founder-img-container">
+                                <img alt="Asish Nayak, CTO at AS Creates" src="Images/Asish.jpeg" />
+                            </div>
+                            <h3 class="headline-sm">Asish Nayak</h3>
+                            <p class="founder-role">CTO</p>
+                            <p class="founder-bio">Architect of high-performance technical infrastructures and
+                                distributed web systems.</p>
+                        </div>
+
+                    </div>
+                    <!-- Extra members grid appended here -->
+                    <div id="teamMembersGrid" class="team-members-grid"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer" id="contact">
+        <div class="footer-decor"></div>
+
+        <div class="container-wide">
+            <div class="footer-top grid-12">
+
+                <!-- Brand Info -->
+                <div class="footer-brand">
+                    <a class="footer-logo" href="index.html#home">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                        <span>AS Creates</span>
+                    </a>
+                    <p class="footer-desc">
+                        AS Creates Digital Excellence. Engineering future-proof digital solutions for the global
+                        marketplace.
+                    </p>
+                    <div class="social-links"><!-- populated by js/socials.js --></div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-links-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Start</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div class="footer-links-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Billing and Payment</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <ul class="footer-contact-list">
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a8 8 0 00-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 00-8-8z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <span>Salipur, Cuttack, odisha</span>
+                        </li>
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+                            </svg>
+                            <span>+91 8018977085</span>
+                        </li>
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <path d="M22 6l-10 7L2 6" />
+                            </svg>
+                            <span><a href="mailto:AScreates1105@gmail.com">AScreates1105@outlook.com</a></span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 AS Creates. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Legals</a>
+                    <a href="#">Policies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hydrate Dynamic Data -->
+    <script>
+        (async () => {
+            // Hydrate team
+            try {
+                const res = await fetch('/api/team');
+                const team = await res.json();
+                const founders = (team || []).filter(t => t.is_founder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+                const members = (team || []).filter(t => !t.is_founder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+                const suffix = document.getElementById('foundersGridHome') ? 'Home' : '';
+                
+                const t1 = founders[0];
+                const t2 = founders[1];
+                const card1 = document.getElementById('founderCardSriyanka' + suffix);
+                const card2 = document.getElementById('founderCardAsish' + suffix);
+                const pov1 = document.getElementById('povContentSriyanka' + suffix);
+                const pov2 = document.getElementById('povContentAsish' + suffix);
+
+                if (card1 && t1) {
+                    card1.querySelector('img').src = t1.image_url;
+                    card1.querySelector('img').alt = t1.name + ', ' + t1.role + ' at AS Creates';
+                    card1.querySelector('.headline-sm').innerText = t1.name;
+                    card1.querySelector('.founder-role').innerText = t1.role;
+                    card1.querySelector('.founder-bio').innerText = t1.bio;
+                }
+                if (card2 && t2) {
+                    card2.querySelector('img').src = t2.image_url;
+                    card2.querySelector('img').alt = t2.name + ', ' + t2.role + ' at AS Creates';
+                    card2.querySelector('.headline-sm').innerText = t2.name;
+                    card2.querySelector('.founder-role').innerText = t2.role;
+                    card2.querySelector('.founder-bio').innerText = t2.bio;
+                }
+                if (pov1 && t1) {
+                    pov1.querySelector('.pov-pre-heading').innerText = t1.pov_pre_heading;
+                    pov1.querySelector('.pov-title').innerText = t1.pov_title;
+                    pov1.querySelector('.pov-text').innerText = '"' + t1.pov_text + '"';
+                }
+                if (pov2 && t2) {
+                    pov2.querySelector('.pov-pre-heading').innerText = t2.pov_pre_heading;
+                    pov2.querySelector('.pov-title').innerText = t2.pov_title;
+                    pov2.querySelector('.pov-text').innerText = '"' + t2.pov_text + '"';
+                }
+                
+                // Render team members in a 4-per-row grid below founders
+                const membersGrid = document.getElementById('teamMembersGrid');
+                if (membersGrid && members.length > 0) {
+                    membersGrid.innerHTML = '';
+                    members.forEach(t => {
+                        const card = document.createElement('div');
+                        card.className = 'team-member-card';
+                        card.innerHTML = '<img class="member-img" alt="' + t.name + ', ' + t.role + ' at AS Creates" src="' + (t.image_url || t.photo || '') + '" onerror="this.style.display=\'none\'" /><h4>' + t.name + '</h4><p class="member-role">' + t.role + '</p><p class="member-bio">' + (t.bio || '') + '</p>';
+                        membersGrid.appendChild(card);
+                    });
+                }
+            } catch (err) {
+                console.warn('Dream Team hydration failed:', err);
+            }
+
+            // Hydrate site images from media API
+            // Section media (video/image) is handled by index.js via data-media-section attributes
+            // Fallback: if index.js didn't run, use static images
+            try {
+                const aboutStoryImg = document.getElementById('aboutStoryImage');
+                if (aboutStoryImg && !aboutStoryImg.src.includes('data-media-section')) {
+                    // Image is already set in HTML, index.js will override if media settings exist
+                }
+            } catch (err) {
+                console.warn('Site images hydration failed:', err);
+            }
+        })();
+    </script>
+
+    <!-- Custom JavaScript -->
+    <script src="index.js"></script>
+</body>
+
+</html>

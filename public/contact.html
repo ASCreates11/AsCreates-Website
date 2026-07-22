@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Contact Us | AS Creates</title>
+    <meta name="description"
+        content="Get in touch with AS Creates. Send us a message, find our address, phone number, and support channels to start your next digital project." />
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png" />
+
+    <!-- Custom Style Sheet -->
+    <link href="index.css" rel="stylesheet" />
+    <script src="js/data.js"></script>
+    <script src="js/socials.js"></script>
+</head>
+
+<body>
+    <!-- Promotion Bar -->
+    <div id="promotionBar" class="promotion-bar" style="display: none;">
+        <div class="promotion-marquee" id="promotionMarquee">
+            <div class="promotion-bar-inner">
+                <span class="promo-text-node"></span>
+                <a href="#" class="promo-link-node promotion-bar-btn"></a>
+            </div>
+            <div class="promotion-bar-inner" aria-hidden="true">
+                <span class="promo-text-node"></span>
+                <a href="#" class="promo-link-node promotion-bar-btn"></a>
+            </div>
+        </div>
+    </div>
+    <!-- Global Decorative Background Circles -->
+    <div class="bg-decorations">
+        <div class="decor-circle decor-1"></div>
+        <div class="decor-circle decor-2"></div>
+        <div class="decor-circle decor-3"></div>
+        <div class="decor-circle decor-4"></div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="top-nav">
+        <div class="container-wide nav-container">
+            <a class="logo" href="index.html#home">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span>AS Creates</span>
+            </a>
+
+            <nav class="nav-menu">
+                <a class="nav-link" href="index.html#home">Home</a>
+                <a class="nav-link" href="about.html">About Us</a>
+                <a class="nav-link" href="services.html">Services</a>
+                <a class="nav-link" href="portfolio.html">Portfolio</a>
+                <a class="nav-link active" href="contact.html">Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a class="btn btn-primary" href="contact.html" style="padding: 0.6rem 1.5rem;">Let's Connect</a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Overlay & Menu -->
+    <div class="mobile-menu-overlay" id="mobile-overlay"></div>
+    <div class="mobile-menu-drawer" id="mobile-drawer">
+        <div class="mobile-menu-header">
+            <a class="logo" href="index.html#home" style="font-size: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span>AS Creates</span>
+            </a>
+            <button class="mobile-menu-close" id="mobile-close" aria-label="Close Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a class="mobile-nav-link" href="index.html#home">Home</a></li>
+            <li><a class="mobile-nav-link" href="about.html">About Us</a></li>
+            <li><a class="mobile-nav-link" href="services.html">Services</a></li>
+            <li><a class="mobile-nav-link" href="portfolio.html">Portfolio</a></li>
+            <li><a class="mobile-nav-link active" href="contact.html">Contact</a></li>
+        </ul>
+        <a class="btn btn-primary" href="contact.html" style="width: 100%; text-align: center; margin-top: auto;">Let's
+            Connect</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <main style="padding-bottom: var(--spacing-section-gap-desktop);">
+
+        <!-- Contact Hero Section -->
+        <section class="contact-hero">
+            <div class="container">
+                <span class="pre-heading">Get In Touch</span>
+                <h1 class="display-lg">Let's build the <span style="color: var(--color-primary);">future</span>
+                    together.</h1>
+                <p class="body-lg hero-subtitle" style="max-width: 800px; margin: 24px auto 0;">
+                    Have a project in mind or just want to say hello? Our team is ready to help you navigate the digital
+                    landscape with precision and creativity.
+                </p>
+            </div>
+        </section>
+
+        <!-- Main Content Layout -->
+        <section style="padding: 40px 0;">
+            <div class="container grid-12">
+
+                <!-- Contact Form Card -->
+                <div class="contact-form-card" style="grid-column: span 7;">
+                    <h2 class="headline-md">Send us a Message</h2>
+                    <form class="space-y-6" id="contactForm">
+                        <div class="form-group-grid">
+                            <div class="form-field">
+                                <label>Full Name</label>
+                                <input name="name" placeholder="John Doe" required type="text" />
+                            </div>
+                            <div class="form-field">
+                                <label>Email Address</label>
+                                <input name="email" placeholder="john@example.com" required type="email" />
+                            </div>
+                        </div>
+                        <div class="form-field" id="mobileFieldWrapper" style="margin-bottom: 24px;">
+                            <label>Mobile Number</label>
+                            <div style="display: flex; gap: 8px;">
+                                <select id="countryCodeSelect" style="width: 130px; flex-shrink: 0;">
+                                    <option value="+93">+93 (AF) Afghanistan</option>
+                                    <option value="+355">+355 (AL) Albania</option>
+                                    <option value="+213">+213 (DZ) Algeria</option>
+                                    <option value="+376">+376 (AD) Andorra</option>
+                                    <option value="+244">+244 (AO) Angola</option>
+                                    <option value="+1268">+1 268 (AG) Antigua and Barbuda</option>
+                                    <option value="+54">+54 (AR) Argentina</option>
+                                    <option value="+374">+374 (AM) Armenia</option>
+                                    <option value="+297">+297 (AW) Aruba</option>
+                                    <option value="+61">+61 (AU) Australia</option>
+                                    <option value="+43">+43 (AT) Austria</option>
+                                    <option value="+994">+994 (AZ) Azerbaijan</option>
+                                    <option value="+1-242">+1 242 (BS) Bahamas</option>
+                                    <option value="+973">+973 (BH) Bahrain</option>
+                                    <option value="+880">+880 (BD) Bangladesh</option>
+                                    <option value="+1-345">+1 345 (BB) Barbados</option>
+                                    <option value="+375">+375 (BY) Belarus</option>
+                                    <option value="+32">+32 (BE) Belgium</option>
+                                    <option value="+501">+501 (BZ) Belize</option>
+                                    <option value="+229">+229 (BJ) Benin</option>
+                                    <option value="+1-809">+1 809 (BM) Bermuda</option>
+                                    <option value="+975">+975 (BT) Bhutan</option>
+                                    <option value="+387">+387 (BA) Bosnia and Herzegovina</option>
+                                    <option value="+267">+267 (BW) Botswana</option>
+                                    <option value="+55">+55 (BR) Brazil</option>
+                                    <option value="+1-869">+1 869 (VI) British Virgin Islands</option>
+                                    <option value="+673">+673 (BN) Brunei</option>
+                                    <option value="+359">+359 (BG) Bulgaria</option>
+                                    <option value="+226">+226 (BF) Burkina Faso</option>
+                                    <option value="+257">+257 (BI) Burundi</option>
+                                    <option value="+855">+855 (KH) Cambodia</option>
+                                    <option value="+237">+237 (CM) Cameroon</option>
+                                    <option value="+1">+1 (CA) Canada</option>
+                                    <option value="+238">+238 (CV) Cape Verde</option>
+                                    <option value="+345">+345 (KY) Cayman Islands</option>
+                                    <option value="+236">+236 (CF) Central African Republic</option>
+                                    <option value="+235">+235 (TD) Chad</option>
+                                    <option value="+56">+56 (CL) Chile</option>
+                                    <option value="+86">+86 (CN) China</option>
+                                    <option value="+61">+61 (CX) Christmas Island</option>
+                                    <option value="+61">+61 (CC) Cocos (Keeling) Islands</option>
+                                    <option value="+57">+57 (CO) Colombia</option>
+                                    <option value="+269">+269 (KM) Comoros</option>
+                                    <option value="+242">+242 (CG) Congo (Brazzaville)</option>
+                                    <option value="+243">+243 (CD) Congo (Kinshasa)</option>
+                                    <option value="+682">+682 (CK) Cook Islands</option>
+                                    <option value="+506">+506 (CR) Costa Rica</option>
+                                    <option value="+385">+385 (HR) Croatia</option>
+                                    <option value="+53">+53 (CU) Cuba</option>
+                                    <option value="+599">+599 (CW) Curaçao</option>
+                                    <option value="+357">+357 (CY) Cyprus</option>
+                                    <option value="+420">+420 (CZ) Czech Republic</option>
+                                    <option value="+45">+45 (DK) Denmark</option>
+                                    <option value="+253">+253 (DJ) Djibouti</option>
+                                    <option value="+1-767">+1 767 (DM) Dominica</option>
+                                    <option value="+593">+593 (EC) Ecuador</option>
+                                    <option value="+20">+20 (EG) Egypt</option>
+                                    <option value="+503">+503 (SV) El Salvador</option>
+                                    <option value="+240">+240 (GQ) Equatorial Guinea</option>
+                                    <option value="+291">+291 (ER) Eritrea</option>
+                                    <option value="+372">+372 (EE) Estonia</option>
+                                    <option value="+266">+266 (SZ) Eswatini</option>
+                                    <option value="+679">+679 (FJ) Fiji</option>
+                                    <option value="+358">+358 (FI) Finland</option>
+                                    <option value="+33">+33 (FR) France</option>
+                                    <option value="+594">+594 (GF) French Guiana</option>
+                                    <option value="+689">+689 (PF) French Polynesia</option>
+                                    <option value="+241">+241 (GA) Gabon</option>
+                                    <option value="+220">+220 (GM) Gambia</option>
+                                    <option value="+995">+995 (GE) Georgia</option>
+                                    <option value="+49">+49 (DE) Germany</option>
+                                    <option value="+233">+233 (GH) Ghana</option>
+                                    <option value="+350">+350 (GI) Gibraltar</option>
+                                    <option value="+30">+30 (GR) Greece</option>
+                                    <option value="+299">+299 (GL) Greenland</option>
+                                    <option value="+1-473">+1 473 (GD) Grenada</option>
+                                    <option value="+590">+590 (GP) Guadeloupe</option>
+                                    <option value="+1-671">+1 671 (GU) Guam</option>
+                                    <option value="+502">+502 (GT) Guatemala</option>
+                                    <option value="+44-1481">+44 1481 (GG) Guernsey</option>
+                                    <option value="+224">+224 (GN) Guinea</option>
+                                    <option value="+245">+245 (GW) Guinea‑Bissau</option>
+                                    <option value="+595">+595 (PY) Guyana</option>
+                                    <option value="+509">+509 (HT) Haiti</option>
+                                    <option value="+504">+504 (HN) Honduras</option>
+                                    <option value="+852">+852 (HK) Hong Kong</option>
+                                    <option value="+36">+36 (HU) Hungary</option>
+                                    <option value="+354">+354 (IS) Iceland</option>
+                                    <option value="+91" selected>+91 (IN) India</option>
+                                    <option value="+62">+62 (ID) Indonesia</option>
+                                    <option value="+98">+98 (IR) Iran</option>
+                                    <option value="+964">+964 (IQ) Iraq</option>
+                                    <option value="+353">+353 (IE) Ireland</option>
+                                    <option value="+441624">+44 1624 (IM) Isle of Man</option>
+                                    <option value="+972">+972 (IL) Israel</option>
+                                    <option value="+39">+39 (IT) Italy</option>
+                                    <option value="+1-876">+1 876 (JM) Jamaica</option>
+                                    <option value="+81">+81 (JP) Japan</option>
+                                    <option value="+44-1534">+44 1534 (JE) Jersey</option>
+                                    <option value="+962">+962 (JO) Jordan</option>
+                                    <option value="+7">+7 (KZ) Kazakhstan</option>
+                                    <option value="+254">+254 (KE) Kenya</option>
+                                    <option value="+686">+686 (KI) Kiribati</option>
+                                    <option value="+965">+965 (KW) Kuwait</option>
+                                    <option value="+996">+996 (KG) Kyrgyzstan</option>
+                                    <option value="+856">+856 (LA) Laos</option>
+                                    <option value="+371">+371 (LV) Latvia</option>
+                                    <option value="+961">+961 (LB) Lebanon</option>
+                                    <option value="+266">+266 (LS) Lesotho</option>
+                                    <option value="+231">+231 (LR) Liberia</option>
+                                    <option value="+218">+218 (LY) Libya</option>
+                                    <option value="+423">+423 (LI) Liechtenstein</option>
+                                    <option value="+370">+370 (LT) Lithuania</option>
+                                    <option value="+352">+352 (LU) Luxembourg</option>
+                                    <option value="+853">+853 (MO) Macau</option>
+                                    <option value="+389">+389 (MK) North Macedonia</option>
+                                    <option value="+261">+261 (MG) Madagascar</option>
+                                    <option value="+265">+265 (MW) Malawi</option>
+                                    <option value="+60">+60 (MY) Malaysia</option>
+                                    <option value="+960">+960 (MV) Maldives</option>
+                                    <option value="+223">+223 (ML) Mali</option>
+                                    <option value="+356">+356 (MT) Malta</option>
+                                    <option value="+692">+692 (MH) Marshall Islands</option>
+                                    <option value="+596">+596 (MQ) Martinique</option>
+                                    <option value="+222">+222 (MR) Mauritania</option>
+                                    <option value="+230">+230 (MU) Mauritius</option>
+                                    <option value="+262">+262 (YT) Mayotte</option>
+                                    <option value="+52">+52 (MX) Mexico</option>
+                                    <option value="+691">+691 (FM) Micronesia</option>
+                                    <option value="+373">+373 (MD) Moldova</option>
+                                    <option value="+377">+377 (MC) Monaco</option>
+                                    <option value="+976">+976 (MN) Mongolia</option>
+                                    <option value="+382">+382 (ME) Montenegro</option>
+                                    <option value="+1-664">+1 664 (MS) Montserrat</option>
+                                    <option value="+212">+212 (MA) Morocco</option>
+                                    <option value="+258">+258 (MZ) Mozambique</option>
+                                    <option value="+95">+95 (MM) Myanmar</option>
+                                    <option value="+264">+264 (NA) Namibia</option>
+                                    <option value="+674">+674 (NR) Nauru</option>
+                                    <option value="+977">+977 (NP) Nepal</option>
+                                    <option value="+31">+31 (NL) Netherlands</option>
+                                    <option value="+599">+599 (BQ) Netherlands Antilles</option>
+                                    <option value="+687">+687 (NC) New Caledonia</option>
+                                    <option value="+64">+64 (NZ) New Zealand</option>
+                                    <option value="+505">+505 (NI) Nicaragua</option>
+                                    <option value="+227">+227 (NE) Niger</option>
+                                    <option value="+234">+234 (NG) Nigeria</option>
+                                    <option value="+683">+683 (NU) Niue</option>
+                                    <option value="+850">+850 (KP) North Korea</option>
+                                    <option value="+1-670">+1 670 (MP) Northern Mariana Islands</option>
+                                    <option value="+47">+47 (NO) Norway</option>
+                                    <option value="+968">+968 (OM) Oman</option>
+                                    <option value="+92">+92 (PK) Pakistan</option>
+                                    <option value="+680">+680 (PW) Palau</option>
+                                    <option value="+970">+970 (PS) Palestine</option>
+                                    <option value="+507">+507 (PA) Panama</option>
+                                    <option value="+675">+675 (PG) Papua New Guinea</option>
+                                    <option value="+595">+595 (PY) Paraguay</option>
+                                    <option value="+51">+51 (PE) Peru</option>
+                                    <option value="+63">+63 (PH) Philippines</option>
+                                    <option value="+64">+64 (PN) Pitcairn Islands</option>
+                                    <option value="+48">+48 (PL) Poland</option>
+                                    <option value="+351">+351 (PT) Portugal</option>
+                                    <option value="+1-787">+1 787 (PR) Puerto Rico</option>
+                                    <option value="+974">+974 (QA) Qatar</option>
+                                    <option value="+40">+40 (RO) Romania</option>
+                                    <option value="+7">+7 (RU) Russia</option>
+                                    <option value="+250">+250 (RW) Rwanda</option>
+                                    <option value="+590">+590 (BL) Saint Barthélemy</option>
+                                    <option value="+290">+290 (SH) Saint Helena</option>
+                                    <option value="+1-869">+1 869 (KN) Saint Kitts & Nevis</option>
+                                    <option value="+1-758">+1 758 (LC) Saint Lucia</option>
+                                    <option value="+590">+590 (MF) Saint Martin</option>
+                                    <option value="+508">+508 (PM) Saint Pierre & Miquelon</option>
+                                    <option value="+1-784">+1 784 (VC) Saint Vincent & Grenadines</option>
+                                    <option value="+685">+685 (WS) Samoa</option>
+                                    <option value="+378">+378 (SM) San Marino</option>
+                                    <option value="+239">+239 (ST) Sao Tome & Principe</option>
+                                    <option value="+966">+966 (SA) Saudi Arabia</option>
+                                    <option value="+221">+221 (SN) Senegal</option>
+                                    <option value="+381">+381 (RS) Serbia</option>
+                                    <option value="+248">+248 (SC) Seychelles</option>
+                                    <option value="+232">+232 (SL) Sierra Leone</option>
+                                    <option value="+65">+65 (SG) Singapore</option>
+                                    <option value="+1-721">+1 721 (SX) Sint Maarten</option>
+                                    <option value="+421">+421 (SK) Slovakia</option>
+                                    <option value="+386">+386 (SI) Slovenia</option>
+                                    <option value="+677">+677 (SB) Solomon Islands</option>
+                                    <option value="+252">+252 (SO) Somalia</option>
+                                    <option value="+27">+27 (ZA) South Africa</option>
+                                    <option value="+82">+82 (KR) South Korea</option>
+                                    <option value="+211">+211 (SS) South Sudan</option>
+                                    <option value="+34">+34 (ES) Spain</option>
+                                    <option value="+94">+94 (LK) Sri Lanka</option>
+                                    <option value="+249">+249 (SD) Sudan</option>
+                                    <option value="+597">+597 (SR) Suriname</option>
+                                    <option value="+47-79">+47 79 (SJ) Svalbard & Jan Mayen</option>
+                                    <option value="+268">+268 (SZ) Swaziland</option>
+                                    <option value="+46">+46 (SE) Sweden</option>
+                                    <option value="+41">+41 (CH) Switzerland</option>
+                                    <option value="+1-869">+1 869 (TC) Turks & Caicos Islands</option>
+                                    <option value="+255">+255 (TZ) Tanzania</option>
+                                    <option value="+66">+66 (TH) Thailand</option>
+                                    <option value="+228">+228 (TG) Togo</option>
+                                    <option value="+690">+690 (TK) Tokelau</option>
+                                    <option value="+676">+676 (TO) Tonga</option>
+                                    <option value="+1-868">+1 868 (TT) Trinidad & Tobago</option>
+                                    <option value="+216">+216 (TN) Tunisia</option>
+                                    <option value="+90">+90 (TR) Turkey</option>
+                                    <option value="+993">+993 (TM) Turkmenistan</option>
+                                    <option value="+1-340">+1 340 (VI) U.S. Virgin Islands</option>
+                                    <option value="+256">+256 (UG) Uganda</option>
+                                    <option value="+380">+380 (UA) Ukraine</option>
+                                    <option value="+971">+971 (AE) United Arab Emirates</option>
+                                    <option value="+44">+44 (GB) United Kingdom</option>
+                                    <option value="+1">+1 (US) United States</option>
+                                    <option value="+598">+598 (UY) Uruguay</option>
+                                    <option value="+998">+998 (UZ) Uzbekistan</option>
+                                    <option value="+678">+678 (VU) Vanuatu</option>
+                                    <option value="+379">+379 (VA) Vatican City</option>
+                                    <option value="+58">+58 (VE) Venezuela</option>
+                                    <option value="+84">+84 (VN) Vietnam</option>
+                                    <option value="+681">+681 (WF) Wallis & Futuna</option>
+                                    <option value="+212">+212 (EH) Western Sahara</option>
+                                    <option value="+967">+967 (YE) Yemen</option>
+                                    <option value="+260">+260 (ZM) Zambia</option>
+                                    <option value="+263">+263 (ZW) Zimbabwe</option>
+                                </select>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const select = document.getElementById('countryCodeSelect');
+  if (select) {
+    for (const opt of select.options) {
+      const parts = opt.text.split(' ');
+      opt.text = parts.slice(0,2).join(' ');
+    }
+  }
+});
+</script>
+                                <input name="mobile" placeholder="12345 67890" style="flex: 1;" type="tel" />
+                            </div>
+                        </div>
+                        <div class="form-field" style="margin-bottom: 24px;">
+                            <label>Service Interest</label>
+                            <select name="service" id="serviceSelect">
+                                <option value="Web Development">Web Development</option>
+                                <option value="UI/UX Design">UI/UX Design</option>
+                                <option value="SEO/SEM Marketing">SEO/SEM Marketing</option>
+                                <option value="Strategy Consulting">Strategy Consulting</option>
+                                <option value="Custom Bespoke Requirements">Custom Bespoke Requirements</option>
+                            </select>
+                        </div>
+                        <div class="form-field" id="customServiceField" style="display: none; margin-bottom: 24px;">
+                            <label>Please Specify Your Custom Requirement</label>
+                            <input name="customService" placeholder="e.g. Mobile Application, Brand Identity..." type="text" />
+                        </div>
+                        <div class="form-field" style="margin-bottom: 32px;">
+                            <label>Message</label>
+                            <textarea name="message" placeholder="Tell us about your project goals..." required rows="5"></textarea>
+                        </div>
+                        
+                        <!-- Dynamic Alert Box -->
+                        <div id="formStatus" style="display: none; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 15px; font-weight: 500; text-align: center; border: 1px solid transparent;"></div>
+
+                        <button class="btn btn-primary" id="submitBtn" style="width: 100%;" type="submit">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Info Column -->
+                <div class="info-cards-col" style="grid-column: span 5;">
+
+                    <!-- Timings Card -->
+                    <div class="timings-card">
+                        <span class="hq-card-decor" style="background-color: var(--color-primary-container);"></span>
+                        <h3>
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            Working Hours
+                        </h3>
+                        <div class="timings-list">
+                            <div class="timing-row">
+                                <span class="timing-day">Monday - Friday</span>
+                                <span class="timing-time">9:00 AM - 6:00 PM</span>
+                            </div>
+                            <div class="timing-row">
+                                <span class="timing-day">Saturday</span>
+                                <span class="timing-time">10:00 AM - 4:00 PM</span>
+                            </div>
+                            <div class="timing-row">
+                                <span class="timing-day">Sunday</span>
+                                <span class="timing-time" style="color: var(--color-accent-creative); font-weight: 600;">Closed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Direct Contact Details -->
+                    <div class="direct-details-card">
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </div>
+                            <div class="detail-text">
+                                <label>Email Us</label>
+                                <a href="mailto:Ascreates1105@outlook.com">Ascreates1105@outlook.com</a>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                                    <line x1="12" y1="18" x2="12.01" y2="18" />
+                                </svg>
+                            </div>
+                            <div class="detail-text">
+                                <label>Call Us</label>
+                                <a href="tel:+918018977085">+91 8018977085</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="social-connect-card">
+                        <h3>Connect with us</h3>
+                        <div class="social-connect-grid"><!-- populated by js/socials.js --></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section class="container map-section" style="margin-top: 40px;">
+            <div class="map-container">
+                <!-- Interactive Google Map centered on Salipur, Cuttack, Odisha, India -->
+                <iframe class="maps-iframe"
+                    title="AS Creates Headquarters Location Map"
+                    src="https://maps.google.com/maps?q=Salipur,Cuttack,Odisha,India&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0; display:block;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                
+                <!-- Our Headquarters Card Overlay -->
+                <div class="map-hq-card">
+                    <span class="hq-card-decor"></span>
+                    <h3 class="headline-sm">Our Headquarters</h3>
+                    <p class="maps-address">Salipur, Cuttack, Odisha, India</p>
+                    <a class="maps-link" href="https://maps.google.com/?q=Salipur,Cuttack,Odisha,India" target="_blank">
+                        View on Maps
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="margin-left: 4px;">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ CTA Section -->
+        <section class="container" style="margin-top: 80px;">
+            <div class="faq-cta-card">
+                <h2 class="headline-md">Quick Question?</h2>
+                <p>Maybe we've already answered it. Check out our support channels or look at FAQs for technical scopes
+                    and milestones.</p>
+                <a class="btn btn-secondary" href="services.html#methodology">Browse Methodology</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer" id="contact">
+        <div class="footer-decor"></div>
+
+        <div class="container-wide">
+            <div class="footer-top grid-12">
+
+                <!-- Brand Info -->
+                <div class="footer-brand">
+                    <a class="footer-logo" href="index.html#home">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                        <span>AS Creates</span>
+                    </a>
+                    <p class="footer-desc">
+                        AS Creates Digital Excellence. Engineering future-proof digital solutions for the global
+                        marketplace.
+                    </p>
+                    <div class="social-links"><!-- populated by js/socials.js --></div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-links-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Start</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div class="footer-links-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Billing and Payment</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <ul class="footer-contact-list">
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a8 8 0 00-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 00-8-8z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <span>Salipur, Cuttack, odisha</span>
+                        </li>
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+                            </svg>
+                            <span>+91 8018977085</span>
+                        </li>
+                        <li class="footer-contact-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <path d="M22 6l-10 7L2 6" />
+                            </svg>
+                            <span><a href="mailto:AScreates1105@gmail.com">AScreates1105@outlook.com</a></span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 AS Creates. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Legals</a>
+                    <a href="#">Policies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript -->
+    <script src="index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const form = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const formStatus = document.getElementById('formStatus');
+            const serviceSelect = document.getElementById('serviceSelect');
+            const customServiceField = document.getElementById('customServiceField');
+            const customServiceInput = form ? form.querySelector('[name="customService"]') : null;
+
+            // Load form configurations dynamically
+            try {
+                const res = await fetch('/api/settings');
+                const settings = await res.json();
+                if (settings.contactFormConfig) {
+                    const fields = settings.contactFormConfig.fields || {};
+                    const mobileShow = fields.mobile ? !!fields.mobile.show : true;
+                    
+                    const mobileWrapper = document.getElementById('mobileFieldWrapper');
+                    if (mobileWrapper) {
+                        mobileWrapper.style.display = mobileShow ? 'block' : 'none';
+                        const mobileInput = mobileWrapper.querySelector('input');
+                        if (mobileInput) mobileInput.required = mobileShow && fields.mobile.required;
+                    }
+
+                    const services = settings.contactFormConfig.services || [];
+                    const activeServices = services.filter(s => s.show !== false);
+                    if (activeServices.length > 0 && serviceSelect) {
+                        serviceSelect.innerHTML = activeServices.map(s => 
+                            `<option value="${s.name}">${s.name}</option>`
+                        ).join('');
+                    }
+                }
+
+                // Hydrate map section from settings
+                if (settings.contact) {
+                    const c = settings.contact;
+                    const mapSection = document.querySelector('.map-section');
+                    if (mapSection) {
+                        mapSection.style.display = c.showMap === false ? 'none' : '';
+                    }
+                    const addressEl = document.querySelector('.maps-address');
+                    if (addressEl) addressEl.textContent = c.address || '';
+                    const linkEl = document.querySelector('.maps-link');
+                    if (linkEl) linkEl.href = c.mapLink || '#';
+                    const iframeEl = document.querySelector('.maps-iframe');
+                    if (iframeEl) {
+                        const q = c.coords || c.address || '';
+                        const z = c.zoom || 14;
+                        iframeEl.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(q) + '&t=&z=' + z + '&ie=UTF8&iwloc=&output=embed';
+                    }
+                }
+            } catch (_) {
+                // Fallback to static HTML if offline
+            }
+
+            // Monitor service selection for custom specification requirements
+            if (serviceSelect && customServiceField && customServiceInput) {
+                const checkCustomVisibility = () => {
+                    const isCustom = serviceSelect.value.toLowerCase().includes('custom') || serviceSelect.value.toLowerCase().includes('other');
+                    customServiceField.style.display = isCustom ? 'block' : 'none';
+                    customServiceInput.required = isCustom;
+                };
+
+                serviceSelect.addEventListener('change', checkCustomVisibility);
+                checkCustomVisibility(); // Initial check
+            }
+
+            if (form && submitBtn && formStatus) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    formStatus.style.display = 'none';
+                    formStatus.className = '';
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = 'Sending message...';
+
+                    const serviceVal = serviceSelect ? serviceSelect.value : 'General';
+                    let finalService = serviceVal;
+                    let customRequirement = '';
+                    
+                    if ((serviceVal.toLowerCase().includes('custom') || serviceVal.toLowerCase().includes('other')) && customServiceInput) {
+                        customRequirement = customServiceInput.value.trim();
+                    }
+
+                    const mobileInputVal = form.querySelector('[name="mobile"]').value.trim();
+                    let fullMobile = '';
+                    if (mobileInputVal) {
+                        const codeSelect = document.getElementById('countryCodeSelect');
+                        const countryCodeVal = codeSelect ? codeSelect.value : '+91';
+                        fullMobile = `${countryCodeVal} ${mobileInputVal}`;
+                    }
+
+                    const formData = {
+                        name: form.querySelector('[name="name"]').value,
+                        email: form.querySelector('[name="email"]').value,
+                        mobile: fullMobile,
+                        service: finalService,
+                        message: form.querySelector('[name="message"]').value,
+                        custom_requirement: customRequirement || null
+                    };
+
+                    try {
+                        const response = await fetch('/api/contact', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            formStatus.innerText = 'Thank you! Your message has been sent successfully. We will get back to you shortly.';
+                            formStatus.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                            formStatus.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                            formStatus.style.color = '#10b981';
+                            formStatus.style.display = 'block';
+                            form.reset();
+                            if (customServiceField) customServiceField.style.display = 'none';
+                        } else {
+                            throw new Error(result.error || 'Failed to submit form.');
+                        }
+                    } catch (error) {
+                        formStatus.innerText = 'Oops! ' + error.message;
+                        formStatus.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                        formStatus.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                        formStatus.style.color = '#ef4444';
+                        formStatus.style.display = 'block';
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = 'Send Message';
+                    }
+                });
+            }
+        });
+    </script>
+
+
+
+</body>
+
+</html>

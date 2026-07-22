@@ -67,14 +67,14 @@
 
             <nav class="nav-menu">
                 <a class="nav-link active" href="#home">Home</a>
-                <a class="nav-link" href="about.html">About Us</a>
-                <a class="nav-link" href="services.html">Services</a>
-                <a class="nav-link" href="portfolio.html">Portfolio</a>
-                <a class="nav-link" href="contact.html">Contact</a>
+                <a class="nav-link" href="/about">About Us</a>
+                <a class="nav-link" href="/services">Services</a>
+                <a class="nav-link" href="/portfolio">Portfolio</a>
+                <a class="nav-link" href="/contact">Contact</a>
             </nav>
 
             <div class="nav-actions">
-                <a class="btn btn-primary" href="contact.html" style="padding: 0.6rem 1.5rem;">Let's Connect</a>
+                <a class="btn btn-primary" href="/contact" style="padding: 0.6rem 1.5rem;">Let's Connect</a>
             </div>
 
             <!-- Mobile Menu Toggle Button -->
@@ -110,12 +110,12 @@
         </div>
         <ul class="mobile-nav-links">
             <li><a class="mobile-nav-link active" href="#home">Home</a></li>
-            <li><a class="mobile-nav-link" href="about.html">About Us</a></li>
-            <li><a class="mobile-nav-link" href="services.html">Services</a></li>
-            <li><a class="mobile-nav-link" href="portfolio.html">Portfolio</a></li>
-            <li><a class="mobile-nav-link" href="contact.html">Contact</a></li>
+            <li><a class="mobile-nav-link" href="/about">About Us</a></li>
+            <li><a class="mobile-nav-link" href="/services">Services</a></li>
+            <li><a class="mobile-nav-link" href="/portfolio">Portfolio</a></li>
+            <li><a class="mobile-nav-link" href="/contact">Contact</a></li>
         </ul>
-        <a class="btn btn-primary" href="contact.html" style="width: 100%; text-align: center; margin-top: auto;">Get
+        <a class="btn btn-primary" href="/contact" style="width: 100%; text-align: center; margin-top: auto;">Get
             Started</a>
     </div>
 
@@ -135,7 +135,7 @@
                         high-end enterprise solutions that redefine the standard of excellence.
                     </p>
                     <div class="hero-actions">
-                        <a class="btn btn-primary" href="contact.html">Get Started</a>
+                        <a class="btn btn-primary" href="/contact">Get Started</a>
                         <a class="scroll-down" href="#services">
                             <span class="scroll-down-circle">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -241,8 +241,8 @@
                     </div>
 
                     <div class="process-actions">
-                        <a class="btn btn-white" href="contact.html">Get Started</a>
-                        <a class="btn btn-outline-white" href="services.html">Read More</a>
+                        <a class="btn btn-white" href="/contact">Get Started</a>
+                        <a class="btn btn-outline-white" href="/services">Read More</a>
                     </div>
                 </div>
             </div>
@@ -268,7 +268,7 @@
                         Our multidisciplined team brings together decades of collective experience in high-performance
                         web development and strategic marketing.
                     </p>
-                    <a class="btn btn-primary" href="about.html">Read More</a>
+                    <a class="btn btn-primary" href="/about">Read More</a>
                 </div>
 
                 <div class="agency-media">
@@ -464,7 +464,7 @@
                         <p class="body-md">A curated selection of high-impact digital products delivered for industry
                             leaders.</p>
                     </div>
-                    <a class="btn btn-outline-white" href="portfolio.html">View All Work</a>
+                    <a class="btn btn-outline-white" href="/portfolio">View All Work</a>
                 </div>
 
                 <div class="grid-12">
@@ -485,7 +485,7 @@
                 <h2 class="display-lg">Ready to Scale?</h2>
                 <p class="body-lg">Join hundreds of successful businesses that have transformed their digital presence
                     with AS Creates.</p>
-                <a class="btn btn-white" href="contact.html">Start Your Project Today</a>
+                <a class="btn btn-white" href="/contact">Start Your Project Today</a>
             </div>
         </section>
 
@@ -518,10 +518,10 @@
                 <div class="footer-links-col">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#home">Start</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="/#home">Start</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/portfolio">Portfolio</a></li>
                     </ul>
                 </div>
 
@@ -532,7 +532,7 @@
                         <li><a href="#">Billing and Payment</a></li>
                         <li><a href="#">Privacy Policy</a></li>
                         <li><a href="#">Terms of Service</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="/contact">Contact</a></li>
                     </ul>
                 </div>
 
@@ -763,7 +763,7 @@
                     featured.forEach(proj => {
                         const card = document.createElement('a');
                         // Make entire card clickable and link to portfolio detail page
-                        card.href = `portfolio.html?id=${proj.id}`;
+                        card.href = `/portfolio?id=${proj.id}`;
                         card.className = 'portfolio-card';
                         card.style.display = 'block';
                         card.style.textDecoration = 'none';

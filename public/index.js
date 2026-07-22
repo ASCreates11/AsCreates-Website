@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateActiveLink = () => {
         const path = window.location.pathname;
-        const isHomepage = path === '/' || path.endsWith('index.html') || (!path.endsWith('.html') && !path.includes('about'));
+        const isHomepage = path === '/' || path === '/index' || path.endsWith('index.html');
         if (!isHomepage) return;
 
         let currentSectionId = 'home';
@@ -628,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <h3 class="headline-sm">${item.title}</h3>
                     <p class="body-md">${item.description}</p>
-                    <a class="service-link" href="services.html">Read More</a>
+                    <a class="service-link" href="/services">Read More</a>
                 `;
                 grid.appendChild(card);
             });
@@ -841,11 +841,11 @@ async function loadGlobalDynamicSettings() {
             const isNotAdmin = !window.location.pathname.startsWith('/admin');
             if (isNotAdmin) {
                 if (g.isDeployed === false && !window.location.pathname.includes('coming-soon')) {
-                    window.location.href = '/coming-soon.html';
+                    window.location.href = '/coming-soon';
                     return;
                 }
                 if (g.maintenance === true && !window.location.pathname.includes('maintenance')) {
-                    window.location.href = '/maintenance.html';
+                    window.location.href = '/maintenance';
                     return;
                 }
             }

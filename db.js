@@ -5,9 +5,11 @@ const fs = require('fs');
 
 let db;
 if (process.env.TURSO_DATABASE_URL) {
-    db = new sqlite3.Database(process.env.TURSO_DATABASE_URL, {
-        authToken: process.env.TURSO_AUTH_TOKEN
-    });
+    let dbUrl = process.env.TURSO_DATABASE_URL;
+    if (process.env.TURSO_AUTH_TOKEN) {
+        dbUrl += (dbUrl.includes('?') ? '&' : '?') + 'authToken=' + process.env.TURSO_AUTH_TOKEN;
+    }
+    db = new sqlite3.Database(dbUrl);
 } else {
     const dbPath = path.join(__dirname, 'database.sqlite');
     db = new sqlite3.Database(dbPath);

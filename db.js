@@ -185,12 +185,6 @@ db.serialize(() => {
             console.log('Default admin created: admin@ascreates.com / password');
         }
     });
-
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(__dirname, 'public', 'uploads');
-    if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-    }
 });
 
 module.exports = db;

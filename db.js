@@ -145,11 +145,11 @@ db.serialize(() => {
     // 4. Testimonials table
     db.run(`CREATE TABLE IF NOT EXISTS testimonials (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        role TEXT,
+        author_name TEXT NOT NULL,
+        author_role TEXT,
         quote TEXT,
         rating INTEGER DEFAULT 5,
-        avatar TEXT,
+        author_image TEXT,
         published INTEGER DEFAULT 1,
         display_order INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -157,6 +157,21 @@ db.serialize(() => {
     db.run(`ALTER TABLE testimonials ADD COLUMN rating INTEGER DEFAULT 5`, (err) => { });
     db.run(`ALTER TABLE testimonials ADD COLUMN published INTEGER DEFAULT 1`, (err) => { });
     db.run(`ALTER TABLE testimonials ADD COLUMN display_order INTEGER DEFAULT 0`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN author_name TEXT`, (err) => {
+        if (!err) {
+            db.run(`UPDATE testimonials SET author_name = name WHERE author_name IS NULL AND name IS NOT NULL`);
+        }
+    });
+    db.run(`ALTER TABLE testimonials ADD COLUMN author_role TEXT`, (err) => {
+        if (!err) {
+            db.run(`UPDATE testimonials SET author_role = role WHERE author_role IS NULL AND role IS NOT NULL`);
+        }
+    });
+    db.run(`ALTER TABLE testimonials ADD COLUMN author_image TEXT`, (err) => {
+        if (!err) {
+            db.run(`UPDATE testimonials SET author_image = avatar WHERE author_image IS NULL AND avatar IS NOT NULL`);
+        }
+    });
 
     // 5. Team table
     db.run(`CREATE TABLE IF NOT EXISTS team (
@@ -164,10 +179,26 @@ db.serialize(() => {
         name TEXT NOT NULL,
         role TEXT,
         bio TEXT,
+        image_url TEXT,
+        pov_pre_heading TEXT,
+        pov_title TEXT,
+        pov_text TEXT,
+        display_order INTEGER DEFAULT 0,
         photo TEXT,
         visible INTEGER DEFAULT 1,
+        is_founder INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+    db.run(`ALTER TABLE team ADD COLUMN image_url TEXT`, (err) => {
+        if (!err) {
+            db.run(`UPDATE team SET image_url = photo WHERE image_url IS NULL AND photo IS NOT NULL`);
+        }
+    });
+    db.run(`ALTER TABLE team ADD COLUMN pov_pre_heading TEXT`, (err) => { });
+    db.run(`ALTER TABLE team ADD COLUMN pov_title TEXT`, (err) => { });
+    db.run(`ALTER TABLE team ADD COLUMN pov_text TEXT`, (err) => { });
+    db.run(`ALTER TABLE team ADD COLUMN display_order INTEGER DEFAULT 0`, (err) => { });
+    db.run(`ALTER TABLE team ADD COLUMN is_founder INTEGER DEFAULT 0`, (err) => { });
 
     // 6. Leads table
     db.run(`CREATE TABLE IF NOT EXISTS leads (

@@ -462,7 +462,7 @@ section {
     padding-top: 180px;
     padding-bottom: var(--spacing-section-gap-desktop);
     overflow: hidden;
-    background-image: url('Images/hero background.jpeg');
+    background-image: url('Images/hero background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2089,7 +2089,7 @@ section {
     padding-top: 180px;
     padding-bottom: var(--spacing-section-gap-desktop);
     overflow: hidden;
-    background-image: url('Images/About background.jpeg');
+    background-image: url('Images/About background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2203,7 +2203,7 @@ section {
     padding-top: 180px;
     padding-bottom: var(--spacing-section-gap-desktop);
     overflow: hidden;
-    background-image: url('Images/Service background.jpeg');
+    background-image: url('Images/Service background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2350,7 +2350,7 @@ section {
     .services-hero {
         padding-top: 140px;
         padding-bottom: 60px;
-        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/Service background mobile.jpeg');
+        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/Service background mobile.webp');
     }
     
     .services-detail-grid {
@@ -2368,7 +2368,7 @@ section {
     padding-top: 180px;
     padding-bottom: var(--spacing-section-gap-desktop);
     overflow: hidden;
-    background-image: url('Images/Contact page.jpeg');
+    background-image: url('Images/Contact page.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2764,7 +2764,7 @@ section {
     .contact-hero {
         padding-top: 140px;
         padding-bottom: 40px;
-        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/Contact page mobile.jpeg');
+        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/Contact page mobile.webp');
     }
     
     .contact-form-card {
@@ -2819,7 +2819,7 @@ section {
     padding-top: 180px;
     padding-bottom: var(--spacing-section-gap-desktop);
     overflow: hidden;
-    background-image: url('Images/Portfolio background.jpeg');
+    background-image: url('Images/Portfolio background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -3695,19 +3695,19 @@ body.has-promo-bar .header {
     }
     
     .hero {
-        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/hero background mobile.jpeg') !important;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/hero background mobile.webp') !important;
         background-position: center center !important;
         background-size: cover !important;
     }
     
     .about-hero {
-        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/about background mobile.jpeg') !important;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/about background mobile.webp') !important;
         background-position: center center !important;
         background-size: cover !important;
     }
     
     .portfolio-hero {
-        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/Portfolio background mobile.jpeg') !important;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('Images/Portfolio background mobile.webp') !important;
         background-position: center center !important;
         background-size: cover !important;
     }

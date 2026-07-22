@@ -56,8 +56,11 @@ app.use((req, res, next) => {
     });
 });
 
-// Serve static files (Frontend & Admin UI)
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files (Frontend & Admin UI) with 1-year caching for performance
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '1y',
+    etag: true
+}));
 
 // Routes
 const { router: authRoutes } = require('./routes/auth');

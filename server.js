@@ -56,10 +56,15 @@ app.use((req, res, next) => {
     });
 });
 
-// Serve static files (Frontend & Admin UI) with 1-year caching for performance
+// Serve static files (Frontend & Admin UI) with 1-year caching for assets, but NO CACHE for HTML
 app.use(express.static(path.join(__dirname, 'public'), {
     maxAge: '1y',
-    etag: true
+    etag: true,
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        }
+    }
 }));
 
 // Routes

@@ -1,17 +1,27 @@
-const sqlite3 = require('@libsql/sqlite3').verbose();
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 
+let sqlite3;
 let db;
+
 if (process.env.TURSO_DATABASE_URL) {
-    db = new sqlite3.Database(process.env.TURSO_DATABASE_URL, {
-        authToken: process.env.TURSO_AUTH_TOKEN
-    });
+    sqlite3 = require('@libsql/sqlite3').verbose();
+    let dbUrl = process.env.TURSO_DATABASE_URL;
+    if (process.env.TURSO_AUTH_TOKEN) {
+        dbUrl += (dbUrl.includes('?') ? '&' : '?') + 'authToken=' + process.env.TURSO_AUTH_TOKEN;
+    }
+    db = new sqlite3.Database(dbUrl);
 } else {
+    sqlite3 = require('sqlite3').verbose();
     const dbPath = path.join(__dirname, 'database.sqlite');
     db = new sqlite3.Database(dbPath);
 }
+
+// Prevent unhandled db error events from crashing the process
+db.on('error', (err) => {
+    console.error('Database connection / query error:', err.message || err);
+});
 
 // Initialize DB schema
 db.serialize(() => {

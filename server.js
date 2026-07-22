@@ -33,14 +33,14 @@ app.use((req, res, next) => {
                 const localSettings = JSON.parse(fs.readFileSync(path.join(__dirname, 'settings.json'), 'utf8'));
                 settings = localSettings.general || {};
             }
-            
+
             const maintenance = settings.maintenance;
             const isDeployed = settings.isDeployed !== false;
-            
+
             const isAdmin = req.path.startsWith('/admin') || req.path.startsWith('/api/admin');
             const isApi = req.path.startsWith('/api');
             const isStatic = req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg|mp4|webm|webp|ico)$/i) || req.path.startsWith('/Video/') || req.path.startsWith('/uploads/');
-            
+
             if (!isAdmin && !isApi && !isStatic && req.method === 'GET') {
                 if (!isDeployed) {
                     return res.sendFile(path.join(__dirname, 'public', 'coming-soon.html'));
@@ -66,6 +66,11 @@ const apiRoutes = require('./routes/api');
 
 app.use('/api/admin', authRoutes);
 app.use('/api', apiRoutes);
+
+// Favicon route
+app.get(['/favicon.ico', '/favicon.png'], (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'favicon.png'));
+});
 
 // Admin Dashboard Route
 app.get('/admin', (req, res) => {

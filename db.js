@@ -5,11 +5,9 @@ const fs = require('fs');
 
 let db;
 if (process.env.TURSO_DATABASE_URL) {
-    let dbUrl = process.env.TURSO_DATABASE_URL;
-    if (process.env.TURSO_AUTH_TOKEN) {
-        dbUrl += (dbUrl.includes('?') ? '&' : '?') + 'authToken=' + process.env.TURSO_AUTH_TOKEN;
-    }
-    db = new sqlite3.Database(dbUrl);
+    db = new sqlite3.Database(process.env.TURSO_DATABASE_URL, {
+        authToken: process.env.TURSO_AUTH_TOKEN
+    });
 } else {
     const dbPath = path.join(__dirname, 'database.sqlite');
     db = new sqlite3.Database(dbPath);
@@ -82,9 +80,9 @@ db.serialize(() => {
         display_order INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
-    db.run(`ALTER TABLE testimonials ADD COLUMN rating INTEGER DEFAULT 5`, (err) => {});
-    db.run(`ALTER TABLE testimonials ADD COLUMN published INTEGER DEFAULT 1`, (err) => {});
-    db.run(`ALTER TABLE testimonials ADD COLUMN display_order INTEGER DEFAULT 0`, (err) => {});
+    db.run(`ALTER TABLE testimonials ADD COLUMN rating INTEGER DEFAULT 5`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN published INTEGER DEFAULT 1`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN display_order INTEGER DEFAULT 0`, (err) => { });
 
     // 5. Team table
     db.run(`CREATE TABLE IF NOT EXISTS team (
@@ -185,6 +183,12 @@ db.serialize(() => {
             console.log('Default admin created: admin@ascreates.com / password');
         }
     });
+
+    // Create uploads directory if it doesn't exist
+    const uploadsDir = path.join(__dirname, 'public', 'uploads');
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
 });
 
 module.exports = db;

@@ -3424,10 +3424,10 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
         sessionStorage.removeItem('admin_session_active');
         sessionStorage.removeItem('adminActiveTab');
         await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
-        window.location.replace('login.html');
+        window.location.replace('/admin/login');
     } catch (err) {
         sessionStorage.removeItem('admin_session_active');
-        window.location.href = 'login.html';
+        window.location.href = '/admin/login';
     }
 });
 
@@ -3666,14 +3666,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Enforce tab session logic
         if (sessionStorage.getItem('admin_session_active') !== 'true') {
             await fetch('/api/admin/logout', { method: 'POST' });
-            window.location.replace('login.html');
+            window.location.replace('/admin/login');
             return;
         }
 
         const res  = await fetch('/api/admin/check-auth', { credentials: 'same-origin' });
         const data = await res.json();
         if (!data.authenticated) {
-            window.location.replace('login.html');
+            window.location.replace('/admin/login');
             return;
         }
         // Set user info
@@ -3699,7 +3699,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             inactivityTimer = setTimeout(async () => {
                 sessionStorage.removeItem('admin_session_active');
                 await fetch('/api/admin/logout', { method: 'POST' });
-                window.location.replace('login.html?timeout=1');
+                window.location.replace('/admin/login?timeout=1');
             }, 15 * 60 * 1000);
         };
         ['mousemove', 'keydown', 'scroll', 'click'].forEach(evt => 

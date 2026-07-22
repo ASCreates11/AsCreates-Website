@@ -226,7 +226,7 @@
                 const checkRes = await fetch('/api/admin/check-auth', { credentials: 'same-origin' });
                 const checkResult = await checkRes.json();
                 if (checkResult.authenticated) {
-                    window.location.href = 'dashboard.html';
+                    window.location.href = '/admin/dashboard';
                     return;
                 }
             } catch (err) {
@@ -296,7 +296,7 @@
                             sessionStorage.setItem('admin_session_active', 'true');
                             
                             setTimeout(() => {
-                                window.location.href = 'dashboard.html';
+                                window.location.href = '/admin/dashboard';
                             }, 800);
                         } else {
                             throw new Error(result.error || 'Authentication failed. Please verify credentials.');

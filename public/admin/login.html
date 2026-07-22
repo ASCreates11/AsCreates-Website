@@ -123,7 +123,7 @@
             const res = await fetch('/api/admin/check-auth', { credentials: 'same-origin' });
             const data = await res.json();
             if (data.authenticated) {
-                window.location.replace('dashboard.html');
+                window.location.replace('/admin/dashboard');
                 return;
             }
         } catch (_) {
@@ -212,7 +212,7 @@
                 if (res.ok && data.success) {
                     showAlert('Login successful! Redirecting…', 'success');
                     sessionStorage.setItem('admin_session_active', 'true');
-                    setTimeout(() => window.location.href = 'dashboard.html', 900);
+                    setTimeout(() => window.location.href = '/admin/dashboard', 900);
                 } else {
                     throw new Error(data.error || 'Invalid credentials. Please try again.');
                 }

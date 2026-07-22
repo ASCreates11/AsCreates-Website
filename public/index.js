@@ -819,15 +819,6 @@ async function loadGlobalDynamicSettings() {
             
             const iframeEls = document.querySelectorAll('.maps-iframe');
             iframeEls.forEach(el => {
-        if (data.contact) {
-            const addressEls = document.querySelectorAll('.maps-address');
-            addressEls.forEach(el => el.textContent = data.contact.address || '');
-            
-            const linkEls = document.querySelectorAll('.maps-link');
-            linkEls.forEach(el => el.href = data.contact.mapLink || '#');
-            
-            const iframeEls = document.querySelectorAll('.maps-iframe');
-            iframeEls.forEach(el => {
                 const q = data.contact.coords || data.contact.address || '';
                 const z = data.contact.zoom || 14;
                 el.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(q) + '&t=&z=' + z + '&ie=UTF8&iwloc=&output=embed';
@@ -865,6 +856,7 @@ async function loadGlobalDynamicSettings() {
         }
         
         if (data.media) {
+            const getYoutubeId = (url) => {
                 if (!url) return '';
                 if (url.includes('youtube.com/watch?v=')) return url.split('v=')[1].split('&')[0];
                 if (url.includes('youtu.be/')) return url.split('youtu.be/')[1].split('?')[0];

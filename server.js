@@ -86,16 +86,18 @@ app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'public', 'c
 app.get('/portfolio', (req, res) => res.sendFile(path.join(__dirname, 'public', 'portfolio.html')));
 app.get('/coming-soon', (req, res) => res.sendFile(path.join(__dirname, 'public', 'coming-soon.html')));
 app.get('/maintenance', (req, res) => res.sendFile(path.join(__dirname, 'public', 'maintenance.html')));
+app.get('/admin/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'login.html')));
+app.get('/admin/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html')));
 
 // 301 Redirect legacy .html extension to clean URLs
-app.get(['/about.html', '/services.html', '/contact.html', '/portfolio.html', '/coming-soon.html', '/maintenance.html'], (req, res) => {
+app.get(['/about.html', '/services.html', '/contact.html', '/portfolio.html', '/coming-soon.html', '/maintenance.html', '/admin/login.html', '/admin/dashboard.html'], (req, res) => {
     const cleanPath = req.path.replace(/\.html$/, '');
     res.redirect(301, cleanPath);
 });
 
 // Admin Dashboard Route
 app.get('/admin', (req, res) => {
-    res.redirect('/admin/login.html');
+    res.redirect('/admin/login');
 });
 
 // Fallback for frontend SPA routing if needed

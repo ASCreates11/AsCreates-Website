@@ -11,15 +11,15 @@ const router = express.Router();
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'as_creates',
-  },
+    cloudinary: cloudinary,
+    params: {
+        folder: 'as_creates',
+    },
 });
 const upload = multer({ storage });
 
@@ -40,7 +40,7 @@ const getSettings = () => {
 const saveSettings = async (newSettings) => {
     const current = await getSettings();
     const updated = deepMerge(current, newSettings);
-    
+
     for (const key of Object.keys(updated)) {
         const value = JSON.stringify(updated[key]);
         db.get('SELECT id FROM settings WHERE key = ?', [key], (err, row) => {
@@ -75,12 +75,12 @@ router.get('/settings', async (req, res) => {
 router.get('/site-images', async (req, res) => {
     const settings = await getSettings();
     const media = settings.media || {};
-    
+
     // Support the old hydration format index.html expects:
     // { agency_image: {url}, how_we_work_image: {url}, ... }
     const response = {
         agency_image: { url: (media.our_agency || {}).image },
-        how_we_work_image: { 
+        how_we_work_image: {
             url: (media.how_we_work || {}).image,
             images: (media.how_we_work || {}).images || [] // Support new carousel array
         },
@@ -174,7 +174,7 @@ router.post('/admin/portfolio', requireAuth, (req, res) => {
     db.run(`INSERT INTO portfolio (title, category, description, full_description, project_link, image_url, is_featured, published, gallery_type, gallery_urls, video_url, year, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
         [title, category, description, full_description || '', project_link || '', image_url || '', is_featured ? 1 : 0, published ? 1 : 0, gallery_type || '16:9', gallery_urls || '', video_url || '', year || null],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true, id: this.lastID });
         });
@@ -184,14 +184,14 @@ router.put('/admin/portfolio/:id', requireAuth, (req, res) => {
     const { title, category, description, full_description, project_link, image_url, is_featured, published, gallery_type, gallery_urls, video_url, year } = req.body;
     db.run(`UPDATE portfolio SET title=?, category=?, description=?, full_description=?, project_link=?, image_url=?, is_featured=?, published=?, gallery_type=?, gallery_urls=?, video_url=?, year=?, updated_at=CURRENT_TIMESTAMP WHERE id=?`,
         [title, category, description, full_description || '', project_link || '', image_url || '', is_featured ? 1 : 0, published ? 1 : 0, gallery_type || '16:9', gallery_urls || '', video_url || '', year || null, req.params.id],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true });
         });
 });
 // DELETE /api/admin/portfolio/:id
 router.delete('/admin/portfolio/:id', requireAuth, (req, res) => {
-    db.run('DELETE FROM portfolio WHERE id=?', [req.params.id], function(err) {
+    db.run('DELETE FROM portfolio WHERE id=?', [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: 'DB Error' });
         res.json({ success: true });
     });
@@ -218,7 +218,7 @@ router.post('/admin/services', requireAuth, (req, res) => {
     db.run(`INSERT INTO services (title, description, icon_svg, features, is_active, display_order)
             VALUES (?, ?, ?, ?, ?, ?)`,
         [title, description, icon_svg, features || '[]', is_active ? 1 : 0, display_order || 0],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true, id: this.lastID });
         });
@@ -228,14 +228,14 @@ router.put('/admin/services/:id', requireAuth, (req, res) => {
     const { title, description, icon_svg, features, is_active, display_order } = req.body;
     db.run(`UPDATE services SET title=?, description=?, icon_svg=?, features=?, is_active=?, display_order=? WHERE id=?`,
         [title, description, icon_svg, features || '[]', is_active ? 1 : 0, display_order || 0, req.params.id],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true });
         });
 });
 // DELETE /api/admin/services/:id
 router.delete('/admin/services/:id', requireAuth, (req, res) => {
-    db.run('DELETE FROM services WHERE id=?', [req.params.id], function(err) {
+    db.run('DELETE FROM services WHERE id=?', [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: 'DB Error' });
         res.json({ success: true });
     });
@@ -262,7 +262,7 @@ router.post('/admin/testimonials', requireAuth, (req, res) => {
     db.run(`INSERT INTO testimonials (author_name, author_role, quote, rating, author_image, published, display_order)
             VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [name, role, quote, rating || 5, avatar, published ? 1 : 0, display_order || 0],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true, id: this.lastID });
         });
@@ -272,14 +272,14 @@ router.put('/admin/testimonials/:id', requireAuth, (req, res) => {
     const { name, role, quote, rating, avatar, published, display_order } = req.body;
     db.run(`UPDATE testimonials SET author_name=?, author_role=?, quote=?, rating=?, author_image=?, published=?, display_order=? WHERE id=?`,
         [name, role, quote, rating || 5, avatar, published ? 1 : 0, display_order || 0, req.params.id],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true });
         });
 });
 // DELETE /api/admin/testimonials/:id
 router.delete('/admin/testimonials/:id', requireAuth, (req, res) => {
-    db.run('DELETE FROM testimonials WHERE id=?', [req.params.id], function(err) {
+    db.run('DELETE FROM testimonials WHERE id=?', [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: 'DB Error' });
         res.json({ success: true });
     });
@@ -309,7 +309,7 @@ router.post('/admin/team', requireAuth, (req, res) => {
     db.run(`INSERT INTO team (name, role, bio, image_url, photo, visible, is_founder, pov_pre_heading, pov_title, pov_text)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [name, role, bio, imageUrl, photo, visible ? 1 : 0, is_founder ? 1 : 0, pov_pre_heading || '', pov_title || '', pov_text || ''],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true, id: this.lastID });
         });
@@ -320,14 +320,14 @@ router.put('/admin/team/:id', requireAuth, (req, res) => {
     const imageUrl = (photo || '').trim() || 'https://via.placeholder.com/400x400?text=Team+Member';
     db.run(`UPDATE team SET name=?, role=?, bio=?, image_url=?, photo=?, visible=?, is_founder=?, pov_pre_heading=?, pov_title=?, pov_text=? WHERE id=?`,
         [name, role, bio, imageUrl, photo, visible ? 1 : 0, is_founder ? 1 : 0, pov_pre_heading || '', pov_title || '', pov_text || '', req.params.id],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true });
         });
 });
 // DELETE /api/admin/team/:id
 router.delete('/admin/team/:id', requireAuth, (req, res) => {
-    db.run('DELETE FROM team WHERE id=?', [req.params.id], function(err) {
+    db.run('DELETE FROM team WHERE id=?', [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: 'DB Error' });
         res.json({ success: true });
     });
@@ -357,7 +357,7 @@ router.post('/contact', async (req, res) => {
     db.run(
         `INSERT INTO leads (name, email, mobile, service, message, custom_requirement) VALUES (?, ?, ?, ?, ?, ?)`,
         [name, email, mobile, service, message, custom_requirement || null],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true, id: this.lastID });
         }
@@ -374,7 +374,7 @@ router.get('/admin/leads', requireAuth, (req, res) => {
 
 // Admin DELETE route
 router.delete('/admin/leads/:id', requireAuth, (req, res) => {
-    db.run('DELETE FROM leads WHERE id = ?', [req.params.id], function(err) {
+    db.run('DELETE FROM leads WHERE id = ?', [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: 'DB Error' });
         res.json({ success: true });
     });
@@ -383,7 +383,7 @@ router.delete('/admin/leads/:id', requireAuth, (req, res) => {
 // Admin PUT mark-as-read route
 router.put('/admin/leads/:id/read', requireAuth, (req, res) => {
     const isRead = req.body.is_read ? 1 : 0;
-    db.run('UPDATE leads SET is_read = ? WHERE id = ?', [isRead, req.params.id], function(err) {
+    db.run('UPDATE leads SET is_read = ? WHERE id = ?', [isRead, req.params.id], function (err) {
         if (err) return res.status(500).json({ error: 'DB Error' });
         res.json({ success: true });
     });
@@ -411,7 +411,7 @@ router.post('/admin/home-services', requireAuth, (req, res) => {
     db.run(
         `INSERT INTO home_services (title, description, icon_svg, is_featured, is_active, display_order) VALUES (?, ?, ?, ?, ?, ?)`,
         [title, description, icon_svg, is_featured ? 1 : 0, is_active ? 1 : 0, display_order || 0],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true, id: this.lastID });
         }
@@ -424,7 +424,7 @@ router.put('/admin/home-services/:id', requireAuth, (req, res) => {
     db.run(
         `UPDATE home_services SET title=?, description=?, icon_svg=?, is_featured=?, is_active=?, display_order=? WHERE id=?`,
         [title, description, icon_svg, is_featured ? 1 : 0, is_active ? 1 : 0, display_order || 0, req.params.id],
-        function(err) {
+        function (err) {
             if (err) return res.status(500).json({ error: 'DB Error' });
             res.json({ success: true });
         }
@@ -433,7 +433,7 @@ router.put('/admin/home-services/:id', requireAuth, (req, res) => {
 
 // DELETE /admin/home-services/:id
 router.delete('/admin/home-services/:id', requireAuth, (req, res) => {
-    db.run('DELETE FROM home_services WHERE id = ?', [req.params.id], function(err) {
+    db.run('DELETE FROM home_services WHERE id = ?', [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: 'DB Error' });
         res.json({ success: true });
     });
@@ -451,27 +451,27 @@ router.get('/admin/media', requireAuth, async (req, res) => {
             created_at: file.created_at
         }));
         res.json(mediaFiles);
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ error: 'Failed to read media directory' });
     }
 });
-        
-        // Filter out hidden files or non-images if desired, but let's return all files with stats
-        const mediaFiles = files
-            .filter(file => !file.startsWith('.'))
-            .map(file => {
-                const filePath = path.join(uploadsDir, file);
-                const stats = fs.statSync(filePath);
-                return {
-                    name: file,
-                    url: `/uploads/${file}`,
-                    size: stats.size,
-                    created_at: stats.birthtime
-                };
-            })
-            .sort((a, b) => b.created_at - a.created_at); // Newest first
 
-        res.json(mediaFiles);
+// Filter out hidden files or non-images if desired, but let's return all files with stats
+const mediaFiles = files
+    .filter(file => !file.startsWith('.'))
+    .map(file => {
+        const filePath = path.join(uploadsDir, file);
+        const stats = fs.statSync(filePath);
+        return {
+            name: file,
+            url: `/uploads/${file}`,
+            size: stats.size,
+            created_at: stats.birthtime
+        };
+    })
+    .sort((a, b) => b.created_at - a.created_at); // Newest first
+
+res.json(mediaFiles);
     });
 });
 
@@ -480,20 +480,20 @@ router.delete('/admin/media/:filename', requireAuth, async (req, res) => {
     try {
         await cloudinary.uploader.destroy(req.params.filename);
         res.json({ success: true });
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ error: 'Failed to delete file' });
     }
 });
     }
-    
-    const filePath = path.join(__dirname, '../public/uploads', filename);
-    fs.unlink(filePath, (err) => {
-        if (err) {
-            console.error('Delete error:', err);
-            return res.status(500).json({ error: 'Failed to delete file' });
-        }
-        res.json({ success: true });
-    });
+
+const filePath = path.join(__dirname, '../public/uploads', filename);
+fs.unlink(filePath, (err) => {
+    if (err) {
+        console.error('Delete error:', err);
+        return res.status(500).json({ error: 'Failed to delete file' });
+    }
+    res.json({ success: true });
+});
 });
 
 // GET /api/admin/settings/media

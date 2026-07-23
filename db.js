@@ -247,6 +247,48 @@ db.serialize(() => {
         }
     });
 
+    // Seed default testimonials if empty
+    db.get('SELECT COUNT(*) as count FROM testimonials', (err, row) => {
+        if (!err && row && row.count === 0) {
+            const defaults = [
+                {
+                    author_name: 'Marcus Vance',
+                    author_role: 'VP of Product, Apex Digital',
+                    quote: 'AS Creates transformed our digital footprint. Their technical execution and design sensitivity are unmatched in the agency space.',
+                    rating: 5,
+                    author_image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+                    published: 1,
+                    display_order: 1
+                },
+                {
+                    author_name: 'Elena Rostova',
+                    author_role: 'Founder, Lumina Health',
+                    quote: 'The level of strategic insight they brought to our web application architecture saved us months of development cycles. Truly world-class.',
+                    rating: 5,
+                    author_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+                    published: 1,
+                    display_order: 2
+                },
+                {
+                    author_name: 'David Chen',
+                    author_role: 'Managing Director, Horizon Media',
+                    quote: 'Working with their CTO and design team was a seamless experience. They deliver enterprise-grade quality with remarkable agility.',
+                    rating: 5,
+                    author_image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+                    published: 1,
+                    display_order: 3
+                }
+            ];
+
+            const stmt = db.prepare(`INSERT INTO testimonials (author_name, author_role, quote, rating, author_image, published, display_order) VALUES (?, ?, ?, ?, ?, ?, ?)`);
+            defaults.forEach(d => {
+                stmt.run([d.author_name, d.author_role, d.quote, d.rating, d.author_image, d.published, d.display_order]);
+            });
+            stmt.finalize();
+            console.log('Seeded default testimonials in testimonials table');
+        }
+    });
+
     // 5. Team table
     db.run(`CREATE TABLE IF NOT EXISTS team (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

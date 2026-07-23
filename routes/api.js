@@ -262,18 +262,48 @@ router.delete('/admin/services/:id', requireAuth, (req, res) => {
 });
 
 // --- TESTIMONIALS ---
+function seedDefaultTestimonialsIfNeeded(cb) {
+    const defaults = [
+        ['Marcus Vance', 'VP of Product, Apex Digital', 'AS Creates transformed our digital footprint. Their technical execution and design sensitivity are unmatched in the agency space.', 5, 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', 1, 1],
+        ['Elena Rostova', 'Founder, Lumina Health', 'The level of strategic insight they brought to our web application architecture saved us months of development cycles. Truly world-class.', 5, 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', 1, 2],
+        ['David Chen', 'Managing Director, Horizon Media', 'Working with their CTO and design team was a seamless experience. They deliver enterprise-grade quality with remarkable agility.', 5, 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', 1, 3]
+    ];
+    const stmt = db.prepare(`INSERT INTO testimonials (author_name, author_role, quote, rating, author_image, published, display_order) VALUES (?, ?, ?, ?, ?, ?, ?)`);
+    defaults.forEach(d => stmt.run(d));
+    stmt.finalize(() => {
+        if (cb) cb();
+    });
+}
+
 // GET /api/testimonials (Public - only published)
 router.get('/testimonials', (req, res) => {
     db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, display_order FROM testimonials WHERE published = 1 ORDER BY display_order ASC, id DESC', (err, rows) => {
         if (err) return res.status(500).json({ error: 'DB Error' });
-        res.json(rows);
+        if (!rows || rows.length === 0) {
+            seedDefaultTestimonialsIfNeeded(() => {
+                db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, display_order FROM testimonials WHERE published = 1 ORDER BY display_order ASC, id DESC', (err2, rows2) => {
+                    res.json(rows2 || []);
+                });
+            });
+        } else {
+            res.json(rows);
+        }
     });
 });
+
 // GET /api/admin/testimonials (Admin - all)
 router.get('/admin/testimonials', requireAuth, (req, res) => {
     db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, published, display_order FROM testimonials ORDER BY display_order ASC, id DESC', (err, rows) => {
         if (err) return res.status(500).json({ error: 'DB Error' });
-        res.json(rows);
+        if (!rows || rows.length === 0) {
+            seedDefaultTestimonialsIfNeeded(() => {
+                db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, published, display_order FROM testimonials ORDER BY display_order ASC, id DESC', (err2, rows2) => {
+                    res.json(rows2 || []);
+                });
+            });
+        } else {
+            res.json(rows);
+        }
     });
 });
 // POST /api/admin/testimonials

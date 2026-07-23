@@ -1375,8 +1375,9 @@ window.addEventListener("unhandledrejection", function(event) {
                         </select>
                     </div>
                     <div class="field-group">
-                        <label class="field-label" for="tAvatarUrl">Avatar Image URL</label>
-                        <input class="field-input" type="url" id="tAvatarUrl" placeholder="https://…">
+                        <label class="field-label">Avatar Image</label>
+                        <input class="field-input" type="file" id="tAvatarFile" accept="image/*">
+                        <input class="field-input" type="text" id="tAvatarUrl" placeholder="Or paste image URL..." style="margin-top:8px;">
                     </div>
                 </div>
                 <div class="field-group" style="margin-bottom: var(--space-4);">
@@ -2269,12 +2270,28 @@ document.getElementById('saveTestimonialBtn').addEventListener('click', async ()
     const quote = document.getElementById('tQuote').value.trim();
     if (!name || !quote) { Toast.show('Name and quote are required.', 'error'); return; }
 
+    let avatarUrl = document.getElementById('tAvatarUrl').value.trim();
+    const fileInput = document.getElementById('tAvatarFile');
+    const file = fileInput ? fileInput.files[0] : null;
+
+    if (file) {
+        try {
+            const fd = new FormData();
+            fd.append('image', file);
+            const uploadRes = await fetch('/api/admin/upload', { method: 'POST', body: fd, credentials: 'same-origin' });
+            const uploadData = await uploadRes.json();
+            if (uploadData.url) avatarUrl = uploadData.url;
+        } catch (err) {
+            console.warn('Testimonial image upload failed, proceeding with URL:', err);
+        }
+    }
+
     const payload = {
         name,
         role:          document.getElementById('tRole').value.trim(),
         quote,
-        rating:        parseInt(document.getElementById('tRating').value),
-        avatar:        document.getElementById('tAvatarUrl').value.trim(),
+        rating:        parseInt(document.getElementById('tRating').value) || 5,
+        avatar:        avatarUrl,
         published:     document.getElementById('tPublished').checked,
         display_order: parseInt(document.getElementById('tDisplayOrder').value) || 0,
     };
@@ -2283,7 +2300,10 @@ document.getElementById('saveTestimonialBtn').addEventListener('click', async ()
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/testimonials/${id}` : '/api/admin/testimonials';
         const res    = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
-        if (!res.ok) throw new Error('Failed to save testimonial.');
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.error || errData.details || 'Failed to save testimonial.');
+        }
         Modal.close('testimonialModal');
         Toast.show(id ? 'Testimonial updated!' : 'Testimonial added!', 'success');
         loadTestimonials();

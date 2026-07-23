@@ -308,22 +308,51 @@ router.get('/admin/testimonials', requireAuth, (req, res) => {
 });
 // POST /api/admin/testimonials
 router.post('/admin/testimonials', requireAuth, (req, res) => {
-    const { name, role, quote, rating, avatar, published, display_order } = req.body;
+    const name = (req.body.name || req.body.author_name || '').trim();
+    const role = (req.body.role || req.body.author_role || '').trim();
+    const quote = (req.body.quote || '').trim();
+    const rating = parseInt(req.body.rating) || 5;
+    const avatar = (req.body.avatar || req.body.author_image || '').trim();
+    const published = req.body.published !== false && req.body.published !== 0 ? 1 : 0;
+    const display_order = parseInt(req.body.display_order) || 0;
+
+    if (!name || !quote) {
+        return res.status(400).json({ error: 'Name and quote are required' });
+    }
+
     db.run(`INSERT INTO testimonials (author_name, author_role, quote, rating, author_image, published, display_order)
             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [name, role, quote, rating || 5, avatar, published ? 1 : 0, display_order || 0],
+        [name, role, quote, rating, avatar, published, display_order],
         function (err) {
-            if (err) return res.status(500).json({ error: 'DB Error' });
+            if (err) {
+                console.error('Error inserting testimonial:', err);
+                return res.status(500).json({ error: 'DB Error', details: err.message });
+            }
             res.json({ success: true, id: this.lastID });
         });
 });
+
 // PUT /api/admin/testimonials/:id
 router.put('/admin/testimonials/:id', requireAuth, (req, res) => {
-    const { name, role, quote, rating, avatar, published, display_order } = req.body;
+    const name = (req.body.name || req.body.author_name || '').trim();
+    const role = (req.body.role || req.body.author_role || '').trim();
+    const quote = (req.body.quote || '').trim();
+    const rating = parseInt(req.body.rating) || 5;
+    const avatar = (req.body.avatar || req.body.author_image || '').trim();
+    const published = req.body.published !== false && req.body.published !== 0 ? 1 : 0;
+    const display_order = parseInt(req.body.display_order) || 0;
+
+    if (!name || !quote) {
+        return res.status(400).json({ error: 'Name and quote are required' });
+    }
+
     db.run(`UPDATE testimonials SET author_name=?, author_role=?, quote=?, rating=?, author_image=?, published=?, display_order=? WHERE id=?`,
-        [name, role, quote, rating || 5, avatar, published ? 1 : 0, display_order || 0, req.params.id],
+        [name, role, quote, rating, avatar, published, display_order, req.params.id],
         function (err) {
-            if (err) return res.status(500).json({ error: 'DB Error' });
+            if (err) {
+                console.error('Error updating testimonial:', err);
+                return res.status(500).json({ error: 'DB Error', details: err.message });
+            }
             res.json({ success: true });
         });
 });

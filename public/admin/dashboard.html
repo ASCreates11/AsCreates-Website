@@ -3580,8 +3580,154 @@ loadOverview = async function() {
 };
 
 
-/* --- LOAD ALL DATA --- */
+/* --- FAST SUMMARY & LOAD ALL DATA --- */
+function populateSettingsFromData(data) {
+    if (!data) return;
+    if (data.promo) {
+        document.getElementById('promoEnabled').checked  = !!data.promo.enabled;
+        document.getElementById('promoText').value       = data.promo.text || '';
+        document.getElementById('promoBtnText').value    = data.promo.btnText || '';
+        document.getElementById('promoBtnUrl').value     = data.promo.btnUrl || '';
+        document.getElementById('promoSpeed').value      = typeof data.promo.speed === 'number' ? data.promo.speed : 15;
+        const popup = (data.promo.popup || {});
+        document.getElementById('popupEnabled').checked  = !!popup.enabled;
+        document.getElementById('popupLinkUrl').value     = popup.link_url || '';
+        
+        const desktopPreview = document.getElementById('popupDesktopPreview');
+        if (popup.desktop_image) {
+            desktopPreview.src = popup.desktop_image;
+            desktopPreview.style.display = 'block';
+        } else {
+            desktopPreview.style.display = 'none';
+        }
+        
+        const mobilePreview = document.getElementById('popupMobilePreview');
+        if (popup.mobile_image) {
+            mobilePreview.src = popup.mobile_image;
+            mobilePreview.style.display = 'block';
+        } else {
+            mobilePreview.style.display = 'none';
+        }
+    }
+    if (data.general) {
+        document.getElementById('siteName').value        = data.general.siteName || 'AS Creates';
+        document.getElementById('siteTagline').value    = data.general.tagline || '';
+        document.getElementById('siteDescription').value= data.general.description || '';
+        document.getElementById('maintenanceMode').checked   = !!data.general.maintenance;
+        document.getElementById('contactFormEnabled').checked = data.general.contactForm !== false;
+        
+        const deployed = data.general.isDeployed !== false; 
+        updateLiveStatusUI(deployed);
+    }
+    if (data.contact) {
+        document.getElementById('mapAddress').value     = data.contact.address || '';
+        document.getElementById('mapCoords').value      = data.contact.coords || '';
+        document.getElementById('mapLink').value        = data.contact.mapLink || '';
+        document.getElementById('mapShow').checked      = data.contact.showMap !== false;
+        document.getElementById('mapZoom').value        = data.contact.zoom || 14;
+        document.getElementById('mapMarkerLabel').value = data.contact.markerLabel || '';
+        document.getElementById('contactEmail').value   = data.contact.email || '';
+        document.getElementById('contactPhone').value   = data.contact.phone || '';
+    }
+    if (data.socials) {
+        socialsData = data.socials;
+        renderSocials(socialsData);
+    }
+    if (data.contactFormConfig) {
+        const fields = data.contactFormConfig.fields || {};
+        document.getElementById('formMobileShow').checked = fields.mobile ? !!fields.mobile.show : true;
+        
+        formServicesConfig = data.contactFormConfig.services || [];
+        renderFormServicesConfig(formServicesConfig);
+        populateLeadsFilterDropdowns(formServicesConfig);
+    }
+}
+
 async function loadAll() {
+    try {
+        const summaryRes = await fetch('/api/admin/summary', { credentials: 'same-origin' });
+        if (summaryRes.ok) {
+            const summary = await summaryRes.json();
+            
+            // Instantly populate Leads inbox
+            if (summary.leads) {
+                leadsData = summary.leads;
+                renderLeads(leadsData);
+            }
+            
+            // Instantly populate Overview stats counters
+            if (summary.stats) {
+                const totalLeads = summary.stats.totalLeads || 0;
+                const unreadLeads = summary.stats.unreadLeads || 0;
+                document.getElementById('stat-leads-received').textContent = totalLeads;
+                document.getElementById('stat-leads-unread').textContent = unreadLeads;
+                
+                const statPort = document.getElementById('stat-portfolio');
+                if (statPort) statPort.textContent = summary.stats.portfolioCount || 0;
+                
+                const statServ = document.getElementById('stat-services');
+                if (statServ) statServ.textContent = summary.stats.servicesCount || 0;
+                
+                const statTeam = document.getElementById('stat-team');
+                if (statTeam) statTeam.textContent = summary.stats.teamCount || 0;
+            }
+            
+            // Instantly populate Settings UI
+            if (summary.settings) {
+                populateSettingsFromData(summary.settings);
+            }
+            
+            // Render top 3 recent leads on overview page
+            const leadsContainer = document.getElementById('overviewLeadsContainer');
+            if (leadsContainer && summary.leads) {
+                const recentLeads = summary.leads.slice(0, 3);
+                if (recentLeads.length === 0) {
+                    leadsContainer.innerHTML = `
+                        <div class="empty-state" style="padding: 20px 0;">
+                            <div class="empty-state-icon"><span class="material-symbols-outlined">inbox</span></div>
+                            <div class="empty-state-title">No messages yet</div>
+                        </div>`;
+                } else {
+                    leadsContainer.innerHTML = recentLeads.map(lead => {
+                        const dateStr = new Date(lead.created_at).toLocaleDateString();
+                        const truncatedMsg = lead.message && lead.message.length > 80 ? lead.message.slice(0, 80).trim() + '…' : (lead.message || '—');
+                        return `
+                        <div style="padding: 14px; border: 1px solid var(--color-border-light); border-radius: var(--radius-md); background: #fff; position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; flex-wrap: wrap; gap: 4px;">
+                                <div>
+                                    <span style="font-weight: 700; font-size: 13px; color: var(--color-text-primary);">${lead.name}</span>
+                                    <span style="font-size: 11px; color: var(--color-text-tertiary); margin-left: 8px;">${dateStr}</span>
+                                </div>
+                                <div style="display: flex; gap: 6px; align-items: center;">
+                                    <span class="tag" style="font-size: 10px; padding: 1px 6px; margin:0;">${lead.service || 'General'}</span>
+                                    ${!lead.is_read ? `<span class="badge" style="font-size: 9px; padding: 2px 6px; background-color: var(--color-error); color: #fff; border-radius: 4px; font-weight:700;">New</span>` : ''}
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 8px;">${truncatedMsg}</p>
+                            <div style="display: flex; gap: 6px;">
+                                <button class="btn btn-secondary btn-sm overview-view-btn" data-id="${lead.id}" style="font-size: 10px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 4px; border-radius: var(--radius-sm);">
+                                    <span class="material-symbols-outlined" style="font-size: 12px;">visibility</span> View
+                                </button>
+                                ${!lead.is_read ? `
+                                    <button class="btn btn-secondary btn-sm" onclick="markLeadRead(${lead.id})" style="font-size: 10px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 4px; border-radius: var(--radius-sm);">
+                                        <span class="material-symbols-outlined" style="font-size: 12px;">done_all</span> Mark Read
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>`;
+                    }).join('');
+                    leadsContainer.querySelectorAll('.overview-view-btn').forEach(btn => {
+                        btn.addEventListener('click', () => openLeadView(btn.dataset.id));
+                    });
+                }
+            }
+            return;
+        }
+    } catch(e) {
+        console.warn('Fast summary load fallback triggered:', e);
+    }
+
+    // Fallback parallel load if summary fails
     await Promise.allSettled([
         loadOverview(),
         loadPortfolio(),
@@ -3596,66 +3742,7 @@ async function loadSettings() {
     try {
         const res  = await fetch('/api/settings', { credentials: 'same-origin' });
         const data = await res.json();
-
-        if (data.promo) {
-            document.getElementById('promoEnabled').checked  = !!data.promo.enabled;
-            document.getElementById('promoText').value       = data.promo.text || '';
-            document.getElementById('promoBtnText').value    = data.promo.btnText || '';
-            document.getElementById('promoBtnUrl').value     = data.promo.btnUrl || '';
-            document.getElementById('promoSpeed').value      = typeof data.promo.speed === 'number' ? data.promo.speed : 15;
-            const popup = (data.promo.popup || {});
-            document.getElementById('popupEnabled').checked  = !!popup.enabled;
-            document.getElementById('popupLinkUrl').value     = popup.link_url || '';
-            
-            const desktopPreview = document.getElementById('popupDesktopPreview');
-            if (popup.desktop_image) {
-                desktopPreview.src = popup.desktop_image;
-                desktopPreview.style.display = 'block';
-            } else {
-                desktopPreview.style.display = 'none';
-            }
-            
-            const mobilePreview = document.getElementById('popupMobilePreview');
-            if (popup.mobile_image) {
-                mobilePreview.src = popup.mobile_image;
-                mobilePreview.style.display = 'block';
-            } else {
-                mobilePreview.style.display = 'none';
-            }
-        }
-        if (data.general) {
-            document.getElementById('siteName').value        = data.general.siteName || 'AS Creates';
-            document.getElementById('siteTagline').value    = data.general.tagline || '';
-            document.getElementById('siteDescription').value= data.general.description || '';
-            document.getElementById('maintenanceMode').checked   = !!data.general.maintenance;
-            document.getElementById('contactFormEnabled').checked = data.general.contactForm !== false;
-            
-            // isDeployed defaults to true if not explicitly false
-            const deployed = data.general.isDeployed !== false; 
-            updateLiveStatusUI(deployed);
-        }
-        if (data.contact) {
-            document.getElementById('mapAddress').value     = data.contact.address || '';
-            document.getElementById('mapCoords').value      = data.contact.coords || '';
-            document.getElementById('mapLink').value        = data.contact.mapLink || '';
-            document.getElementById('mapShow').checked      = data.contact.showMap !== false;
-            document.getElementById('mapZoom').value        = data.contact.zoom || 14;
-            document.getElementById('mapMarkerLabel').value = data.contact.markerLabel || '';
-            document.getElementById('contactEmail').value   = data.contact.email || '';
-            document.getElementById('contactPhone').value   = data.contact.phone || '';
-        }
-        if (data.socials) {
-            socialsData = data.socials;
-            renderSocials(socialsData);
-        }
-        if (data.contactFormConfig) {
-            const fields = data.contactFormConfig.fields || {};
-            document.getElementById('formMobileShow').checked = fields.mobile ? !!fields.mobile.show : true;
-            
-            formServicesConfig = data.contactFormConfig.services || [];
-            renderFormServicesConfig(formServicesConfig);
-            populateLeadsFilterDropdowns(formServicesConfig);
-        }
+        populateSettingsFromData(data);
     } catch (_) {
         renderSocials([]);
     }

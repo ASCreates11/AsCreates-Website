@@ -407,6 +407,32 @@ router.get('/admin/leads', requireAuth, (req, res) => {
     });
 });
 
+// GET /api/admin/summary (Fast Consolidated Dashboard Payload)
+router.get('/admin/summary', requireAuth, async (req, res) => {
+    db.all('SELECT * FROM leads ORDER BY id DESC', async (err, leads) => {
+        const leadsList = Array.isArray(leads) ? leads : [];
+        const settings = await getSettings();
+        
+        db.get('SELECT COUNT(*) as count FROM portfolio', (err2, portRow) => {
+            db.get('SELECT COUNT(*) as count FROM services', (err3, servRow) => {
+                db.get('SELECT COUNT(*) as count FROM team', (err4, teamRow) => {
+                    res.json({
+                        leads: leadsList,
+                        stats: {
+                            totalLeads: leadsList.length,
+                            unreadLeads: leadsList.filter(l => !l.is_read).length,
+                            portfolioCount: (portRow && portRow.count) || 0,
+                            servicesCount: (servRow && servRow.count) || 0,
+                            teamCount: (teamRow && teamRow.count) || 0
+                        },
+                        settings: settings
+                    });
+                });
+            });
+        });
+    });
+});
+
 // Admin DELETE route
 router.delete('/admin/leads/:id', requireAuth, (req, res) => {
     db.run('DELETE FROM leads WHERE id = ?', [req.params.id], function (err) {

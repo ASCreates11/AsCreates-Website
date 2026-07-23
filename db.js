@@ -340,6 +340,13 @@ db.serialize(() => {
         // ignore error if column already exists
     });
 
+    // Performance Indexes for instant leads & admin queries
+    db.run(`CREATE INDEX IF NOT EXISTS idx_leads_is_read ON leads(is_read)`);
+    db.run(`CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(id DESC)`);
+    db.run(`CREATE INDEX IF NOT EXISTS idx_team_founder ON team(is_founder)`);
+    db.run(`CREATE INDEX IF NOT EXISTS idx_portfolio_published ON portfolio(published)`);
+    db.run(`CREATE INDEX IF NOT EXISTS idx_services_active ON services(is_active)`);
+
     // 7. Home Services table
     db.run(`CREATE TABLE IF NOT EXISTS home_services (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

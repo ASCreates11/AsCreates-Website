@@ -201,14 +201,20 @@ router.delete('/admin/portfolio/:id', requireAuth, (req, res) => {
 // GET /api/services (Public)
 router.get('/services', (req, res) => {
     db.all('SELECT id, title, description, icon_svg, features, is_active, display_order FROM services WHERE is_active = 1 ORDER BY display_order ASC, id ASC', (err, rows) => {
-        if (err) return res.status(500).json({ error: 'DB Error' });
+        if (err) {
+            console.error('DB Error GET /api/services:', err);
+            return res.status(500).json({ error: 'DB Error', details: err.message });
+        }
         res.json(rows);
     });
 });
 // GET /api/admin/services (Admin)
 router.get('/admin/services', requireAuth, (req, res) => {
     db.all('SELECT id, title, description, icon_svg, features, is_active, display_order, created_at FROM services ORDER BY display_order ASC, id ASC', (err, rows) => {
-        if (err) return res.status(500).json({ error: 'DB Error' });
+        if (err) {
+            console.error('DB Error GET /api/admin/services:', err);
+            return res.status(500).json({ error: 'DB Error', details: err.message });
+        }
         res.json(rows);
     });
 });

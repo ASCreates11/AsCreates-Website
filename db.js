@@ -133,14 +133,88 @@ db.serialize(() => {
     // 3. Services table
     db.run(`CREATE TABLE IF NOT EXISTS services (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        category TEXT,
+        title TEXT,
         description TEXT,
+        icon_svg TEXT,
+        features TEXT DEFAULT '[]',
+        is_active INTEGER DEFAULT 1,
+        display_order INTEGER DEFAULT 0,
+        name TEXT,
+        category TEXT,
         icon TEXT,
         sort_order INTEGER DEFAULT 0,
         published INTEGER DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+    db.run(`ALTER TABLE services ADD COLUMN title TEXT`, (err) => {
+        if (!err) {
+            db.run(`UPDATE services SET title = name WHERE title IS NULL AND name IS NOT NULL`);
+        }
+    });
+    db.run(`ALTER TABLE services ADD COLUMN icon_svg TEXT`, (err) => {
+        if (!err) {
+            db.run(`UPDATE services SET icon_svg = icon WHERE icon_svg IS NULL AND icon IS NOT NULL`);
+        }
+    });
+    db.run(`ALTER TABLE services ADD COLUMN features TEXT DEFAULT '[]'`, (err) => { });
+    db.run(`ALTER TABLE services ADD COLUMN is_active INTEGER DEFAULT 1`, (err) => {
+        if (!err) {
+            db.run(`UPDATE services SET is_active = published WHERE is_active IS NULL AND published IS NOT NULL`);
+        }
+    });
+    db.run(`ALTER TABLE services ADD COLUMN display_order INTEGER DEFAULT 0`, (err) => {
+        if (!err) {
+            db.run(`UPDATE services SET display_order = sort_order WHERE display_order IS NULL AND sort_order IS NOT NULL`);
+        }
+    });
+
+    // Seed default services if empty
+    db.get('SELECT COUNT(*) as count FROM services', (err, row) => {
+        if (!err && row && row.count === 0) {
+            const defaults = [
+                {
+                    title: 'UI/UX Design',
+                    description: 'We craft immersive digital experiences that prioritize user behavior and aesthetic excellence. From wireframing to high-fidelity prototyping, our design process is rooted in empathy and data-driven insights.',
+                    icon_svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 44px; height: 44px;"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" /><path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" /></svg>`,
+                    features: JSON.stringify(["User Research & Personas", "Interaction Design", "Design Systems Scaling"]),
+                    is_active: 1,
+                    display_order: 1
+                },
+                {
+                    title: 'Web Development',
+                    description: 'Engineering robust, scalable, and high-performance web applications. Our technical stack is curated for enterprise demands, ensuring security, speed, and seamless integration with your existing infrastructure.',
+                    icon_svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 44px; height: 44px;"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>`,
+                    features: JSON.stringify(["Full-stack Applications", "E-commerce Solutions", "API & Microservices"]),
+                    is_active: 1,
+                    display_order: 2
+                },
+                {
+                    title: 'SEO/SEM',
+                    description: 'Performance marketing that delivers measurable ROI. We optimize your digital presence to dominate search engine results through technical SEO, content strategy, and aggressive PPC campaigns.',
+                    icon_svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 44px; height: 44px;"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>`,
+                    features: JSON.stringify(["Technical SEO Audits", "Keyword Research & Mapping", "Paid Search Management"]),
+                    is_active: 1,
+                    display_order: 3
+                },
+                {
+                    title: 'Digital Marketing',
+                    description: 'Building cohesive brand narratives across the digital ecosystem. Our holistic marketing strategies focus on lead generation, customer retention, and multi-channel brand authority.',
+                    icon_svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 44px; height: 44px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>`,
+                    features: JSON.stringify(["Social Media Strategy", "Content Lifecycle Management", "Email Automation"]),
+                    is_active: 1,
+                    display_order: 4
+                }
+            ];
+
+            const stmt = db.prepare(`INSERT INTO services (title, description, icon_svg, features, is_active, display_order) VALUES (?, ?, ?, ?, ?, ?)`);
+            defaults.forEach(d => {
+                stmt.run([d.title, d.description, d.icon_svg, d.features, d.is_active, d.display_order]);
+            });
+            stmt.finalize();
+            console.log('Seeded default services');
+        }
+    });
+
 
     // 4. Testimonials table
     db.run(`CREATE TABLE IF NOT EXISTS testimonials (

@@ -320,15 +320,24 @@ router.post('/admin/testimonials', requireAuth, (req, res) => {
         return res.status(400).json({ error: 'Name and quote are required' });
     }
 
-    db.run(`INSERT INTO testimonials (author_name, author_role, quote, rating, author_image, published, display_order)
-            VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [name, role, quote, rating, avatar, published, display_order],
+    db.run(`INSERT INTO testimonials (author_name, name, author_role, role, quote, rating, author_image, avatar, published, display_order)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [name, name, role, role, quote, rating, avatar, avatar, published, display_order],
         function (err) {
             if (err) {
-                console.error('Error inserting testimonial:', err);
-                return res.status(500).json({ error: 'DB Error', details: err.message });
+                db.run(`INSERT INTO testimonials (author_name, author_role, quote, rating, author_image, published, display_order)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                    [name, role, quote, rating, avatar, published, display_order],
+                    function (err2) {
+                        if (err2) {
+                            console.error('Error inserting testimonial:', err2);
+                            return res.status(500).json({ error: 'DB Error', details: err2.message });
+                        }
+                        res.json({ success: true, id: this.lastID });
+                    });
+            } else {
+                res.json({ success: true, id: this.lastID });
             }
-            res.json({ success: true, id: this.lastID });
         });
 });
 
@@ -346,14 +355,22 @@ router.put('/admin/testimonials/:id', requireAuth, (req, res) => {
         return res.status(400).json({ error: 'Name and quote are required' });
     }
 
-    db.run(`UPDATE testimonials SET author_name=?, author_role=?, quote=?, rating=?, author_image=?, published=?, display_order=? WHERE id=?`,
-        [name, role, quote, rating, avatar, published, display_order, req.params.id],
+    db.run(`UPDATE testimonials SET author_name=?, name=?, author_role=?, role=?, quote=?, rating=?, author_image=?, avatar=?, published=?, display_order=? WHERE id=?`,
+        [name, name, role, role, quote, rating, avatar, avatar, published, display_order, req.params.id],
         function (err) {
             if (err) {
-                console.error('Error updating testimonial:', err);
-                return res.status(500).json({ error: 'DB Error', details: err.message });
+                db.run(`UPDATE testimonials SET author_name=?, author_role=?, quote=?, rating=?, author_image=?, published=?, display_order=? WHERE id=?`,
+                    [name, role, quote, rating, avatar, published, display_order, req.params.id],
+                    function (err2) {
+                        if (err2) {
+                            console.error('Error updating testimonial:', err2);
+                            return res.status(500).json({ error: 'DB Error', details: err2.message });
+                        }
+                        res.json({ success: true });
+                    });
+            } else {
+                res.json({ success: true });
             }
-            res.json({ success: true });
         });
 });
 // DELETE /api/admin/testimonials/:id

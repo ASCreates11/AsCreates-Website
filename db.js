@@ -231,21 +231,18 @@ db.serialize(() => {
     db.run(`ALTER TABLE testimonials ADD COLUMN rating INTEGER DEFAULT 5`, (err) => { });
     db.run(`ALTER TABLE testimonials ADD COLUMN published INTEGER DEFAULT 1`, (err) => { });
     db.run(`ALTER TABLE testimonials ADD COLUMN display_order INTEGER DEFAULT 0`, (err) => { });
-    db.run(`ALTER TABLE testimonials ADD COLUMN author_name TEXT`, (err) => {
-        if (!err) {
-            db.run(`UPDATE testimonials SET author_name = name WHERE author_name IS NULL AND name IS NOT NULL`);
-        }
-    });
-    db.run(`ALTER TABLE testimonials ADD COLUMN author_role TEXT`, (err) => {
-        if (!err) {
-            db.run(`UPDATE testimonials SET author_role = role WHERE author_role IS NULL AND role IS NOT NULL`);
-        }
-    });
-    db.run(`ALTER TABLE testimonials ADD COLUMN author_image TEXT`, (err) => {
-        if (!err) {
-            db.run(`UPDATE testimonials SET author_image = avatar WHERE author_image IS NULL AND avatar IS NOT NULL`);
-        }
-    });
+    db.run(`ALTER TABLE testimonials ADD COLUMN name TEXT`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN role TEXT`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN avatar TEXT`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN author_name TEXT`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN author_role TEXT`, (err) => { });
+    db.run(`ALTER TABLE testimonials ADD COLUMN author_image TEXT`, (err) => { });
+    db.run(`UPDATE testimonials SET author_name = name WHERE (author_name IS NULL OR author_name = '') AND name IS NOT NULL`, (err) => { });
+    db.run(`UPDATE testimonials SET name = author_name WHERE (name IS NULL OR name = '') AND author_name IS NOT NULL`, (err) => { });
+    db.run(`UPDATE testimonials SET author_role = role WHERE (author_role IS NULL OR author_role = '') AND role IS NOT NULL`, (err) => { });
+    db.run(`UPDATE testimonials SET role = author_role WHERE (role IS NULL OR role = '') AND author_role IS NOT NULL`, (err) => { });
+    db.run(`UPDATE testimonials SET author_image = avatar WHERE (author_image IS NULL OR author_image = '') AND avatar IS NOT NULL`, (err) => { });
+    db.run(`UPDATE testimonials SET avatar = author_image WHERE (avatar IS NULL OR avatar = '') AND author_image IS NOT NULL`, (err) => { });
 
     // Seed default testimonials if empty
     db.get('SELECT COUNT(*) as count FROM testimonials', (err, row) => {

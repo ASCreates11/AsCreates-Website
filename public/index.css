@@ -1296,7 +1296,7 @@ section {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 24px 16px;
+    padding: 32px 24px;
     border-radius: var(--rounded-xl);
     background: var(--color-surface-container-lowest);
     border: 1px solid var(--color-outline-variant);
@@ -1308,32 +1308,48 @@ section {
     box-shadow: var(--shadow-level-3);
 }
 
+.team-member-card .member-img-container {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 2px solid var(--color-outline-variant);
+    padding: 4px;
+    background-color: var(--color-surface-container-lowest);
+    transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
 .team-member-card .member-img {
-    width: 120px;
-    height: 120px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 16px;
     filter: grayscale(100%);
     transition: filter 0.3s ease;
 }
 
+.team-member-card:hover .member-img-container,
 .team-member-card:hover .member-img {
     filter: grayscale(0%);
+    transform: scale(1.04);
+    box-shadow: var(--shadow-level-3);
 }
 
-.team-member-card h4 {
+.team-member-card h4,
+.team-member-card h3 {
     margin: 0 0 4px;
-    font-size: 16px;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--color-on-background);
 }
 
-.team-member-card .member-role {
-    font-size: 12px;
+.team-member-card .member-role,
+.team-member-card .founder-role {
+    font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--color-primary);
     background: rgba(62, 85, 177, 0.08);
     padding: 3px 10px;
@@ -1342,10 +1358,12 @@ section {
     margin: 4px 0 8px;
 }
 
-.team-member-card .member-bio {
-    font-size: 13px;
+.team-member-card .member-bio,
+.team-member-card .founder-bio {
+    font-size: 14px;
     color: var(--color-on-surface-variant);
     line-height: 1.5;
+    max-width: 280px;
     margin: 0;
 }
 

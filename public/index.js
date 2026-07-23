@@ -511,14 +511,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const teamGrid = document.getElementById('teamMembersGridHome');
             const otherMembers = team.filter(m => !isFounder(m));
             if (teamGrid) {
-                teamGrid.innerHTML = otherMembers.map(m => `
-                    <div class="team-member-card">
-                        <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}">
-                        <h4>${m.name}</h4>
-                        <div class="member-role">${m.role || ''}</div>
-                        <p class="member-bio">${m.bio || ''}</p>
-                    </div>
-                `).join('');
+                if (otherMembers.length === 0) {
+                    teamGrid.style.display = 'none';
+                } else {
+                    teamGrid.style.display = 'grid';
+                    teamGrid.innerHTML = otherMembers.map(m => `
+                        <div class="team-member-card">
+                            <div class="member-img-container">
+                                <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}">
+                            </div>
+                            <h4>${m.name}</h4>
+                            <div class="member-role">${m.role || ''}</div>
+                            <p class="member-bio">${m.bio || ''}</p>
+                        </div>
+                    `).join('');
+                }
             }
         } catch(e) { console.warn('Dynamic team hydration failed:', e); }
     };

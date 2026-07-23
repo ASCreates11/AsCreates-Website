@@ -420,7 +420,7 @@
                     members.forEach(t => {
                         const card = document.createElement('div');
                         card.className = 'team-member-card';
-                        card.innerHTML = '<img class="member-img" alt="' + t.name + ', ' + t.role + ' at AS Creates" src="' + (t.image_url || t.photo || '') + '" onerror="this.style.display=\'none\'" /><h4>' + t.name + '</h4><p class="member-role">' + t.role + '</p><p class="member-bio">' + (t.bio || '') + '</p>';
+                        card.innerHTML = '<div class="member-img-container"><img class="member-img" alt="' + t.name + ', ' + t.role + ' at AS Creates" src="' + (t.image_url || t.photo || '') + '" onerror="this.src=\'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80\'" /></div><h4>' + t.name + '</h4><div class="member-role">' + t.role + '</div><p class="member-bio">' + (t.bio || '') + '</p>';
                         membersGrid.appendChild(card);
                     });
                 }

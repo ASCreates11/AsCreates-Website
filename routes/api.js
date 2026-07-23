@@ -316,9 +316,24 @@ router.get('/team', (req, res) => {
 
 // GET /api/admin/team (Admin)
 router.get('/admin/team', requireAuth, (req, res) => {
-    db.all('SELECT * FROM team ORDER BY id ASC', (err, rows) => {
+    db.all('SELECT * FROM team ORDER BY is_founder DESC, display_order ASC, id ASC', (err, rows) => {
         if (err) return res.status(500).json({ error: 'DB Error' });
-        res.json(rows);
+        const hasFounders = rows && rows.some(r => r.is_founder === 1 || r.is_founder === true || String(r.is_founder) === '1');
+        if (!hasFounders) {
+            const defaults = [
+                ['Js Sriyanka Sargam Rout', 'Founder & CEO', 'Passionate about turning ideas into impactful creations.', 'Images/riya.jpeg', 'Images/riya.jpeg', 'Shaping the Future', 'Purpose-Driven Vision', "Hi, I'm JS Sriyanka Sargam Rout, the CEO & Founder of AS Creates. I started AS Creates with a vision to bring creativity, innovation, and meaningful solutions together.", 1, 1, 1],
+                ['Asish Nayak', 'CTO', 'Passionate about leveraging technology to build innovative and impactful solutions.', 'Images/Asish.jpeg', 'Images/Asish.jpeg', 'Architecting Scale', 'Transforming Ideas into Reality', "Hi, I'm Asish Nayak, the CTO of AS Creates. I lead the technological vision of the company, focusing on innovation, efficiency, and scalable solutions.", 2, 1, 1]
+            ];
+            const stmt = db.prepare(`INSERT INTO team (name, role, bio, image_url, photo, pov_pre_heading, pov_title, pov_text, display_order, visible, is_founder) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+            defaults.forEach(d => stmt.run(d));
+            stmt.finalize(() => {
+                db.all('SELECT * FROM team ORDER BY is_founder DESC, display_order ASC, id ASC', (err2, rows2) => {
+                    res.json(rows2 || rows);
+                });
+            });
+        } else {
+            res.json(rows);
+        }
     });
 });
 

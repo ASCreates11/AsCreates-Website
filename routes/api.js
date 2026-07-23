@@ -153,6 +153,20 @@ router.get('/portfolio', (req, res) => {
         res.json(rows);
     });
 });
+// GET /api/portfolio/categories (Public)
+router.get('/portfolio/categories', (req, res) => {
+    db.all('SELECT DISTINCT category FROM portfolio WHERE published=1', (err, rows) => {
+        if (err) return res.status(500).json({ error: 'DB Error' });
+        res.json(rows ? rows.map(r => r.category).filter(Boolean) : []);
+    });
+});
+// GET /api/admin/portfolio/categories (Admin)
+router.get('/admin/portfolio/categories', requireAuth, (req, res) => {
+    db.all('SELECT DISTINCT category FROM portfolio', (err, rows) => {
+        if (err) return res.status(500).json({ error: 'DB Error' });
+        res.json(rows ? rows.map(r => r.category).filter(Boolean) : []);
+    });
+});
 // GET /api/portfolio/:id (Public - single project)
 router.get('/portfolio/:id', (req, res) => {
     db.get('SELECT * FROM portfolio WHERE id=? AND published=1', [req.params.id], (err, row) => {

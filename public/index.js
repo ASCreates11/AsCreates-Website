@@ -638,7 +638,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- Load Testimonials Section ---
+    const loadTestimonials = async () => {
+        const grid = document.getElementById('testimonialsGrid');
+        if (!grid) return;
+
+        try {
+            const res = await fetch('/api/testimonials');
+            if (!res.ok) return;
+            const items = await res.json();
+            if (!Array.isArray(items) || items.length === 0) return;
+
+            grid.innerHTML = items.map(item => `
+                <div class="testimonial-card">
+                    <div class="quote-icon">
+                        <svg viewBox="0 0 32 32">
+                            <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z" fill="currentColor" />
+                        </svg>
+                    </div>
+                    <p class="body-md testimonial-text">"${item.quote}"</p>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img alt="${item.name || 'Client'} portrait" src="${item.avatar || 'https://via.placeholder.com/100'}" />
+                        </div>
+                        <div class="author-details">
+                            <h4>${item.name || 'Client'}</h4>
+                            <p>${item.role || ''}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (err) {
+            console.warn('Dynamic testimonials failed, using fallback static HTML:', err);
+        }
+    };
+
     loadHomeServices();
+    loadTestimonials();
     initWhatsAppWidget();
 
     // Fetch Promotion Settings

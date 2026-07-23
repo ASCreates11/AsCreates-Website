@@ -26,13 +26,28 @@ const upload = multer({ storage });
 // --- SETTINGS.JSON MANAGER ---
 const getSettings = () => {
     return new Promise((resolve) => {
+        let fileSettings = {};
+        const settingsPath = path.join(__dirname, '../settings.json');
+        if (fs.existsSync(settingsPath)) {
+            try {
+                fileSettings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+            } catch (e) {
+                console.error('Error reading settings.json:', e);
+            }
+        }
+
         db.all('SELECT key, value FROM settings', (err, rows) => {
-            if (err || !rows) return resolve({});
-            const settings = {};
+            if (err || !rows) return resolve(fileSettings);
+            const dbSettings = {};
             rows.forEach(row => {
-                settings[row.key] = JSON.parse(row.value);
+                try {
+                    dbSettings[row.key] = JSON.parse(row.value);
+                } catch (e) {
+                    dbSettings[row.key] = row.value;
+                }
             });
-            resolve(settings);
+            const merged = deepMerge(fileSettings, dbSettings);
+            resolve(merged);
         });
     });
 };
@@ -41,16 +56,33 @@ const saveSettings = async (newSettings) => {
     const current = await getSettings();
     const updated = deepMerge(current, newSettings);
 
-    for (const key of Object.keys(updated)) {
-        const value = JSON.stringify(updated[key]);
-        db.get('SELECT id FROM settings WHERE key = ?', [key], (err, row) => {
-            if (row) {
-                db.run('UPDATE settings SET value = ? WHERE key = ?', [value, key]);
-            } else {
-                db.run('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value]);
-            }
+    const promises = Object.keys(newSettings).map(key => {
+        return new Promise((resolve, reject) => {
+            const value = JSON.stringify(updated[key]);
+            db.get('SELECT id FROM settings WHERE key = ?', [key], (err, row) => {
+                if (err) return reject(err);
+                if (row) {
+                    db.run('UPDATE settings SET value = ? WHERE key = ?', [value, key], (err2) => {
+                        if (err2) reject(err2); else resolve();
+                    });
+                } else {
+                    db.run('INSERT INTO settings (key, value) VALUES (?, ?)', [key, value], (err2) => {
+                        if (err2) reject(err2); else resolve();
+                    });
+                }
+            });
         });
+    });
+
+    await Promise.all(promises);
+
+    try {
+        const settingsPath = path.join(__dirname, '../settings.json');
+        fs.writeFileSync(settingsPath, JSON.stringify(updated, null, 2), 'utf8');
+    } catch (e) {
+        console.error('Failed to write settings.json:', e);
     }
+
     return updated;
 };
 
@@ -214,7 +246,7 @@ router.delete('/admin/portfolio/:id', requireAuth, (req, res) => {
 // --- SERVICES ---
 // GET /api/services (Public)
 router.get('/services', (req, res) => {
-    db.all('SELECT id, title, description, icon_svg, features, is_active, display_order FROM services WHERE is_active = 1 ORDER BY display_order ASC, id ASC', (err, rows) => {
+    db.all('SELECT id, COALESCE(title, name) as title, description, COALESCE(icon_svg, icon) as icon_svg, features, COALESCE(is_active, published, 1) as is_active, COALESCE(display_order, sort_order, 0) as display_order FROM services WHERE is_active = 1 OR published = 1 ORDER BY display_order ASC, id ASC', (err, rows) => {
         if (err) {
             console.error('DB Error GET /api/services:', err);
             return res.status(500).json({ error: 'DB Error', details: err.message });
@@ -224,7 +256,7 @@ router.get('/services', (req, res) => {
 });
 // GET /api/admin/services (Admin)
 router.get('/admin/services', requireAuth, (req, res) => {
-    db.all('SELECT id, title, description, icon_svg, features, is_active, display_order, created_at FROM services ORDER BY display_order ASC, id ASC', (err, rows) => {
+    db.all('SELECT id, COALESCE(title, name) as title, description, COALESCE(icon_svg, icon) as icon_svg, features, COALESCE(is_active, published, 1) as is_active, COALESCE(display_order, sort_order, 0) as display_order, created_at FROM services ORDER BY display_order ASC, id ASC', (err, rows) => {
         if (err) {
             console.error('DB Error GET /api/admin/services:', err);
             return res.status(500).json({ error: 'DB Error', details: err.message });
@@ -234,22 +266,58 @@ router.get('/admin/services', requireAuth, (req, res) => {
 });
 // POST /api/admin/services
 router.post('/admin/services', requireAuth, (req, res) => {
-    const { title, description, icon_svg, features, is_active, display_order } = req.body;
-    db.run(`INSERT INTO services (title, description, icon_svg, features, is_active, display_order)
-            VALUES (?, ?, ?, ?, ?, ?)`,
-        [title, description, icon_svg, features || '[]', is_active ? 1 : 0, display_order || 0],
+    let { title, description, icon_svg, features, is_active, display_order } = req.body;
+    let formattedFeatures = '[]';
+    if (typeof features === 'string') {
+        try {
+            const parsed = JSON.parse(features);
+            formattedFeatures = JSON.stringify(Array.isArray(parsed) ? parsed : [String(parsed)]);
+        } catch (e) {
+            formattedFeatures = JSON.stringify(features.split(/[\n,]+/).map(s => s.trim()).filter(Boolean));
+        }
+    } else if (Array.isArray(features)) {
+        formattedFeatures = JSON.stringify(features);
+    }
+
+    const activeVal = is_active !== false && is_active !== 0 ? 1 : 0;
+    const orderVal = parseInt(display_order) || 0;
+
+    db.run(`INSERT INTO services (title, name, description, icon_svg, icon, features, is_active, published, display_order, sort_order)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [title, title, description, icon_svg, icon_svg, formattedFeatures, activeVal, activeVal, orderVal, orderVal],
         function (err) {
-            if (err) return res.status(500).json({ error: 'DB Error' });
+            if (err) {
+                console.error('Error inserting service:', err);
+                return res.status(500).json({ error: 'DB Error', details: err.message });
+            }
             res.json({ success: true, id: this.lastID });
         });
 });
 // PUT /api/admin/services/:id
 router.put('/admin/services/:id', requireAuth, (req, res) => {
-    const { title, description, icon_svg, features, is_active, display_order } = req.body;
-    db.run(`UPDATE services SET title=?, description=?, icon_svg=?, features=?, is_active=?, display_order=? WHERE id=?`,
-        [title, description, icon_svg, features || '[]', is_active ? 1 : 0, display_order || 0, req.params.id],
+    let { title, description, icon_svg, features, is_active, display_order } = req.body;
+    let formattedFeatures = '[]';
+    if (typeof features === 'string') {
+        try {
+            const parsed = JSON.parse(features);
+            formattedFeatures = JSON.stringify(Array.isArray(parsed) ? parsed : [String(parsed)]);
+        } catch (e) {
+            formattedFeatures = JSON.stringify(features.split(/[\n,]+/).map(s => s.trim()).filter(Boolean));
+        }
+    } else if (Array.isArray(features)) {
+        formattedFeatures = JSON.stringify(features);
+    }
+
+    const activeVal = is_active !== false && is_active !== 0 ? 1 : 0;
+    const orderVal = parseInt(display_order) || 0;
+
+    db.run(`UPDATE services SET title=?, name=?, description=?, icon_svg=?, icon=?, features=?, is_active=?, published=?, display_order=?, sort_order=? WHERE id=?`,
+        [title, title, description, icon_svg, icon_svg, formattedFeatures, activeVal, activeVal, orderVal, orderVal, req.params.id],
         function (err) {
-            if (err) return res.status(500).json({ error: 'DB Error' });
+            if (err) {
+                console.error('Error updating service:', err);
+                return res.status(500).json({ error: 'DB Error', details: err.message });
+            }
             res.json({ success: true });
         });
 });
@@ -573,7 +641,7 @@ router.get('/admin/summary', requireAuth, async (req, res) => {
     try {
         db.all('SELECT * FROM leads ORDER BY id DESC', (err, leads) => {
             db.all('SELECT * FROM portfolio ORDER BY display_order ASC, id DESC', (err2, portfolio) => {
-                db.all('SELECT * FROM services ORDER BY display_order ASC, id DESC', (err3, services) => {
+                db.all('SELECT id, COALESCE(title, name) as title, description, COALESCE(icon_svg, icon) as icon_svg, features, COALESCE(is_active, published, 1) as is_active, COALESCE(display_order, sort_order, 0) as display_order, created_at FROM services ORDER BY display_order ASC, id ASC', (err3, services) => {
                     db.all('SELECT * FROM home_services ORDER BY display_order ASC, id DESC', (err4, homeServices) => {
                         db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, published, display_order FROM testimonials ORDER BY display_order ASC, id DESC', (err5, testimonials) => {
                             db.all('SELECT * FROM team ORDER BY is_founder DESC, display_order ASC, id DESC', async (err6, team) => {

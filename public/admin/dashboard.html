@@ -2151,12 +2151,15 @@ document.getElementById('saveServiceBtn').addEventListener('click', async () => 
     if (!title || !desc || !icon) { Toast.show('Title, Description and Icon SVG are required.', 'error'); return; }
 
     let features = '[]';
-    try {
-        const raw = document.getElementById('svcFeatures').value.trim();
-        features = raw ? JSON.stringify(JSON.parse(raw)) : '[]';
-    } catch (e) {
-        Toast.show('Features must be a valid JSON array.', 'error');
-        return;
+    const raw = document.getElementById('svcFeatures').value.trim();
+    if (raw) {
+        try {
+            const parsed = JSON.parse(raw);
+            features = JSON.stringify(Array.isArray(parsed) ? parsed : [String(parsed)]);
+        } catch (e) {
+            const items = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+            features = JSON.stringify(items);
+        }
     }
 
     const payload = {
@@ -2172,17 +2175,20 @@ document.getElementById('saveServiceBtn').addEventListener('click', async () => 
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/services/${id}` : '/api/admin/services';
         const res    = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
-        if (!res.ok) throw new Error('Failed to save service.');
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.details || errData.error || 'Failed to save service.');
+        }
         Modal.close('serviceModal');
         Toast.show(id ? 'Service updated!' : 'Service added!', 'success');
-        loadServices();
+        await loadServices(true);
     } catch (err) {
         Toast.show(err.message, 'error');
     }
 });
 
-async function loadServices() {
-    if (Array.isArray(servicesData) && servicesData.length > 0) {
+async function loadServices(forceFetch = false) {
+    if (!forceFetch && Array.isArray(servicesData) && servicesData.length > 0) {
         renderServices(servicesData);
     }
     try {
@@ -2799,17 +2805,20 @@ document.getElementById('saveHomeServiceBtn').addEventListener('click', async ()
             body: JSON.stringify(payload),
             credentials: 'same-origin',
         });
-        if (!res.ok) throw new Error('Failed to save homepage service highlight.');
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.details || errData.error || 'Failed to save homepage service highlight.');
+        }
         Modal.close('homeServiceModal');
         Toast.show(id ? 'Highlight updated!' : 'Highlight added!', 'success');
-        loadHomeServices();
+        await loadHomeServices(true);
     } catch (err) {
         Toast.show(err.message, 'error');
     }
 });
 
-async function loadHomeServices() {
-    if (Array.isArray(homeServicesData) && homeServicesData.length > 0) {
+async function loadHomeServices(forceFetch = false) {
+    if (!forceFetch && Array.isArray(homeServicesData) && homeServicesData.length > 0) {
         renderHomeServices(homeServicesData);
     }
     try {

@@ -89,11 +89,13 @@ if (process.env.TURSO_DATABASE_URL) {
 
 // Initialize DB schema & performance pragmas
 db.serialize(() => {
-    // Enable WAL Mode & Fast Pragmas
-    db.run("PRAGMA journal_mode = WAL;");
-    db.run("PRAGMA synchronous = NORMAL;");
-    db.run("PRAGMA temp_store = MEMORY;");
-    db.run("PRAGMA cache_size = -64000;");
+    // Enable WAL Mode & Fast Pragmas for local SQLite
+    if (!process.env.TURSO_DATABASE_URL) {
+        db.run("PRAGMA journal_mode = WAL;");
+        db.run("PRAGMA synchronous = NORMAL;");
+        db.run("PRAGMA temp_store = MEMORY;");
+        db.run("PRAGMA cache_size = -64000;");
+    }
 
     // 0. Settings table
     db.run(`CREATE TABLE IF NOT EXISTS settings (
@@ -212,11 +214,10 @@ db.serialize(() => {
                 }
             ];
 
-            const stmt = db.prepare(`INSERT INTO services (title, description, icon_svg, features, is_active, display_order) VALUES (?, ?, ?, ?, ?, ?)`);
             defaults.forEach(d => {
-                stmt.run([d.title, d.description, d.icon_svg, d.features, d.is_active, d.display_order]);
+                db.run(`INSERT INTO services (title, name, description, icon_svg, icon, features, is_active, published, display_order, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                    [d.title, d.title, d.description, d.icon_svg, d.icon_svg, d.features, d.is_active, d.is_active, d.display_order, d.display_order]);
             });
-            stmt.finalize();
             console.log('Seeded default services');
         }
     });

@@ -689,16 +689,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const res = await fetch('/api/home-services');
-            if (!res.ok) throw new Error('Failed to fetch home services');
+            if (!res.ok) return;
             const services = await res.json();
 
-            grid.innerHTML = '';
-            if (services.length === 0) {
-                grid.innerHTML = `<div style="grid-column: span 12; text-align: center; color: var(--color-outline);">No services currently configured.</div>`;
-                return;
-            }
+            if (!Array.isArray(services) || services.length === 0) return;
 
-            // Apply special layout adjustment based on count
+            grid.innerHTML = '';
             if (services.length <= 2) {
                 grid.classList.add('center-layout');
             } else {
@@ -720,8 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 grid.appendChild(card);
             });
         } catch (err) {
-            console.error('Error loading home services:', err);
-            grid.innerHTML = `<div style="grid-column: span 12; text-align: center; color: var(--color-outline);">Failed to load services.</div>`;
+            console.warn('Dynamic home services load failed, preserving static HTML:', err);
         }
     };
 

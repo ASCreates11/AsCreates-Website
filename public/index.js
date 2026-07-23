@@ -811,7 +811,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => { overlay.style.display = 'none'; }, 300);
                 }
                 try {
-                    sessionStorage.setItem('promoPopupDismissed', 'true');
+                    localStorage.setItem('promoPopupDismissed', 'true');
                 } catch(e) {}
             };
 
@@ -895,17 +895,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 3. Auto-show Promo Popup if enabled & not dismissed in current session
+            // 3. Auto-show Promo Popup if enabled & not dismissed for current image configuration
             if (popupEnabled) {
                 const isMobile = window.matchMedia('(max-width: 768px)').matches;
                 const imageUrl = isMobile
                     ? (popupConfig.mobile_image || popupConfig.desktop_image)
                     : (popupConfig.desktop_image || popupConfig.mobile_image);
 
-                if (imageUrl && !sessionStorage.getItem('promoPopupDismissed')) {
-                    setTimeout(() => {
-                        openPromoPopup();
-                    }, 800);
+                if (imageUrl) {
+                    const currentPopupId = (popupConfig.desktop_image || '') + '||' + (popupConfig.mobile_image || '') + '||' + (popupConfig.link_url || '');
+                    const lastShownPopupId = localStorage.getItem('promoPopupShownId');
+
+                    if (lastShownPopupId !== currentPopupId) {
+                        localStorage.removeItem('promoPopupDismissed');
+                        localStorage.setItem('promoPopupShownId', currentPopupId);
+                    }
+
+                    if (!localStorage.getItem('promoPopupDismissed')) {
+                        setTimeout(() => {
+                            openPromoPopup();
+                        }, 800);
+                    }
                 }
             }
         } catch(err) {

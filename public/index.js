@@ -448,6 +448,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Dynamic Team & Founders Hydration ---
+    const loadDynamicTeam = async () => {
+        try {
+            const res = await fetch('/api/team');
+            if (!res.ok) return;
+            const team = await res.json();
+            if (!Array.isArray(team) || team.length === 0) return;
+
+            const founders = team.filter(m => m.is_founder === 1);
+            if (founders.length >= 1) {
+                const f1 = founders[0]; // Founder 1
+                const f2 = founders[1] || f1; // Founder 2
+
+                const f1Card = document.getElementById('founderCardSriyankaHome');
+                if (f1Card) {
+                    const img = f1Card.querySelector('img');
+                    if (img && (f1.photo || f1.image_url)) img.src = f1.photo || f1.image_url;
+                    const h3 = f1Card.querySelector('h3');
+                    if (h3 && f1.name) h3.textContent = f1.name;
+                    const role = f1Card.querySelector('.founder-role');
+                    if (role && f1.role) role.textContent = f1.role;
+                    const bio = f1Card.querySelector('.founder-bio');
+                    if (bio && f1.bio) bio.textContent = f1.bio;
+                }
+                const pov1 = document.getElementById('povContentSriyankaHome');
+                if (pov1) {
+                    const pre = pov1.querySelector('.pov-pre-heading');
+                    if (pre && f1.pov_pre_heading) pre.textContent = f1.pov_pre_heading;
+                    const title = pov1.querySelector('.pov-title');
+                    if (title && f1.pov_title) title.textContent = f1.pov_title;
+                    const text = pov1.querySelector('.pov-text');
+                    if (text && f1.pov_text) text.textContent = `"${f1.pov_text}"`;
+                }
+
+                if (founders.length >= 2) {
+                    const f2Card = document.getElementById('founderCardAsishHome');
+                    if (f2Card) {
+                        const img = f2Card.querySelector('img');
+                        if (img && (f2.photo || f2.image_url)) img.src = f2.photo || f2.image_url;
+                        const h3 = f2Card.querySelector('h3');
+                        if (h3 && f2.name) h3.textContent = f2.name;
+                        const role = f2Card.querySelector('.founder-role');
+                        if (role && f2.role) role.textContent = f2.role;
+                        const bio = f2Card.querySelector('.founder-bio');
+                        if (bio && f2.bio) bio.textContent = f2.bio;
+                    }
+                    const pov2 = document.getElementById('povContentAsishHome');
+                    if (pov2) {
+                        const pre = pov2.querySelector('.pov-pre-heading');
+                        if (pre && f2.pov_pre_heading) pre.textContent = f2.pov_pre_heading;
+                        const title = pov2.querySelector('.pov-title');
+                        if (title && f2.pov_title) title.textContent = f2.pov_title;
+                        const text = pov2.querySelector('.pov-text');
+                        if (text && f2.pov_text) text.textContent = `"${f2.pov_text}"`;
+                    }
+                }
+            }
+
+            const teamGrid = document.getElementById('teamMembersGridHome');
+            const otherMembers = team.filter(m => m.is_founder !== 1);
+            if (teamGrid && otherMembers.length > 0) {
+                teamGrid.innerHTML = otherMembers.map(m => `
+                    <div class="team-member-card">
+                        <div class="team-member-img">
+                            <img src="${m.photo || m.image_url || 'https://via.placeholder.com/300'}" alt="${m.name}">
+                        </div>
+                        <h3>${m.name}</h3>
+                        <p class="role">${m.role || ''}</p>
+                        <p class="bio">${m.bio || ''}</p>
+                    </div>
+                `).join('');
+            }
+        } catch(e) { console.warn('Dynamic team hydration failed:', e); }
+    };
+
+    loadDynamicTeam();
+
     // --- WhatsApp Integration ---
     const initWhatsAppWidget = () => {
         // Create widget container

@@ -2474,9 +2474,13 @@ async function loadTeam() {
         const data = await res.json();
         teamData = Array.isArray(data) ? data : (data.items || []);
         renderTeam(teamData);
+        const statEl = document.getElementById('stat-team');
+        if (statEl) statEl.textContent = teamData.length;
     } catch (err) {
         console.error('Failed to load team:', err);
         renderTeam([]);
+        const statEl = document.getElementById('stat-team');
+        if (statEl) statEl.textContent = '—';
     }
 }
 

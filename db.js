@@ -274,6 +274,47 @@ db.serialize(() => {
     db.run(`ALTER TABLE team ADD COLUMN display_order INTEGER DEFAULT 0`, (err) => { });
     db.run(`ALTER TABLE team ADD COLUMN is_founder INTEGER DEFAULT 0`, (err) => { });
 
+    // Seed default founders if empty
+    db.get('SELECT COUNT(*) as count FROM team', (err, row) => {
+        if (!err && row && row.count === 0) {
+            const defaults = [
+                {
+                    name: 'Js Sriyanka Sargam Rout',
+                    role: 'Founder & CEO',
+                    bio: 'Passionate about turning ideas into impactful creations.',
+                    image_url: 'Images/riya.jpeg',
+                    photo: 'Images/riya.jpeg',
+                    pov_pre_heading: 'Shaping the Future',
+                    pov_title: 'Purpose-Driven Vision',
+                    pov_text: "Hi, I'm JS Sriyanka Sargam Rout, the CEO & Founder of AS Creates. I started AS Creates with a vision to bring creativity, innovation, and meaningful solutions together. I believe in building ideas that create value, inspire growth, and leave a lasting impact. Through dedication, passion, and a commitment to excellence, I continue to lead AS Creates toward creating work that reflects quality, trust, and purpose.",
+                    display_order: 1,
+                    visible: 1,
+                    is_founder: 1
+                },
+                {
+                    name: 'Asish Nayak',
+                    role: 'CTO',
+                    bio: 'Passionate about leveraging technology to build innovative and impactful solutions.',
+                    image_url: 'Images/Asish.jpeg',
+                    photo: 'Images/Asish.jpeg',
+                    pov_pre_heading: 'Architecting Scale',
+                    pov_title: 'Transforming Ideas into Reality',
+                    pov_text: "Hi, I'm Asish Nayak, the CTO of AS Creates. I lead the technological vision of the company, focusing on innovation, efficiency, and scalable solutions. I believe technology is a powerful tool for transforming ideas into reality and creating meaningful impact. Through strategic thinking, continuous learning, and a commitment to excellence, I work to ensure AS Creates stays at the forefront of innovation and delivers solutions that drive growth and success.",
+                    display_order: 2,
+                    visible: 1,
+                    is_founder: 1
+                }
+            ];
+
+            const stmt = db.prepare(`INSERT INTO team (name, role, bio, image_url, photo, pov_pre_heading, pov_title, pov_text, display_order, visible, is_founder) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+            defaults.forEach(d => {
+                stmt.run([d.name, d.role, d.bio, d.image_url, d.photo, d.pov_pre_heading, d.pov_title, d.pov_text, d.display_order, d.visible, d.is_founder]);
+            });
+            stmt.finalize();
+            console.log('Seeded default founders in team table');
+        }
+    });
+
     // 6. Leads table
     db.run(`CREATE TABLE IF NOT EXISTS leads (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

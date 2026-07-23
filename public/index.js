@@ -456,7 +456,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const team = await res.json();
             if (!Array.isArray(team) || team.length === 0) return;
 
-            const founders = team.filter(m => m.is_founder === 1);
+            const isFounder = m => m.is_founder === 1 || m.is_founder === true || String(m.is_founder) === '1';
+            const founders = team.filter(isFounder);
+
             if (founders.length >= 1) {
                 const f1 = founders[0]; // Founder 1
                 const f2 = founders[1] || f1; // Founder 2
@@ -507,16 +509,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const teamGrid = document.getElementById('teamMembersGridHome');
-            const otherMembers = team.filter(m => m.is_founder !== 1);
-            if (teamGrid && otherMembers.length > 0) {
+            const otherMembers = team.filter(m => !isFounder(m));
+            if (teamGrid) {
                 teamGrid.innerHTML = otherMembers.map(m => `
                     <div class="team-member-card">
-                        <div class="team-member-img">
-                            <img src="${m.photo || m.image_url || 'https://via.placeholder.com/300'}" alt="${m.name}">
-                        </div>
-                        <h3>${m.name}</h3>
-                        <p class="role">${m.role || ''}</p>
-                        <p class="bio">${m.bio || ''}</p>
+                        <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}">
+                        <h4>${m.name}</h4>
+                        <div class="member-role">${m.role || ''}</div>
+                        <p class="member-bio">${m.bio || ''}</p>
                     </div>
                 `).join('');
             }

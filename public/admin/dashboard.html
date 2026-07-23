@@ -1988,9 +1988,14 @@ document.getElementById('addPortfolioBtn').addEventListener('click', () => {
 });
 
 document.getElementById('savePortfolioBtn').addEventListener('click', async () => {
+    const saveBtn = document.getElementById('savePortfolioBtn');
+    const originalHtml = saveBtn.innerHTML;
     const id    = document.getElementById('portfolioId').value;
     const title = document.getElementById('pTitle').value.trim();
     if (!title) { Toast.show('Project title is required.', 'error'); return; }
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
 
     const galleryItems = [];
     document.querySelectorAll('#galleryImagesContainer > div').forEach(div => {
@@ -2030,6 +2035,9 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
         loadPortfolio();
     } catch (err) {
         Toast.show(err.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
     }
 });
 
@@ -2281,17 +2289,26 @@ document.getElementById('addTestimonialBtn').addEventListener('click', () => {
 });
 
 document.getElementById('saveTestimonialBtn').addEventListener('click', async () => {
+    const saveBtn = document.getElementById('saveTestimonialBtn');
+    const originalHtml = saveBtn.innerHTML;
     const id    = document.getElementById('testimonialId').value;
     const name  = document.getElementById('tName').value.trim();
     const quote = document.getElementById('tQuote').value.trim();
     if (!name || !quote) { Toast.show('Name and quote are required.', 'error'); return; }
 
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
+
     let avatarUrl = document.getElementById('tAvatarUrl').value.trim();
     const fileInput = document.getElementById('tAvatarFile');
-    const file = fileInput ? fileInput.files[0] : null;
+    let file = fileInput ? fileInput.files[0] : null;
 
     if (file) {
         try {
+            saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Optimizing Image...';
+            file = await compressImage(file, 400, 400, 0.75);
+
+            saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Uploading Image...';
             const fd = new FormData();
             fd.append('image', file);
             const uploadRes = await fetch('/api/admin/upload', { method: 'POST', body: fd, credentials: 'same-origin' });
@@ -2313,6 +2330,7 @@ document.getElementById('saveTestimonialBtn').addEventListener('click', async ()
     };
 
     try {
+        saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/testimonials/${id}` : '/api/admin/testimonials';
         const res    = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
@@ -2325,6 +2343,9 @@ document.getElementById('saveTestimonialBtn').addEventListener('click', async ()
         loadTestimonials();
     } catch (err) {
         Toast.show(err.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
     }
 });
 
@@ -2457,17 +2478,26 @@ document.getElementById('tmPhotoFile').addEventListener('change', async (e) => {
 });
 
 document.getElementById('saveTeamBtn').addEventListener('click', async () => {
+    const saveBtn = document.getElementById('saveTeamBtn');
+    const originalHtml = saveBtn.innerHTML;
     const id   = document.getElementById('teamId').value;
     const name = document.getElementById('tmName').value.trim();
     const role = document.getElementById('tmRole').value.trim();
     if (!name || !role) { Toast.show('Name and role are required.', 'error'); return; }
 
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
+
     let photoUrl = document.getElementById('tmPhoto').value.trim();
     const fileInput = document.getElementById('tmPhotoFile');
-    const file = fileInput.files[0];
+    let file = fileInput.files[0];
     
     if (file) {
         try {
+            saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Optimizing Photo...';
+            file = await compressImage(file, 600, 600, 0.75);
+
+            saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Uploading Photo...';
             const fd = new FormData();
             fd.append('image', file);
             const uploadRes = await fetch('/api/admin/upload', { method: 'POST', body: fd, credentials: 'same-origin' });
@@ -2475,6 +2505,8 @@ document.getElementById('saveTeamBtn').addEventListener('click', async () => {
             if (uploadData.url) photoUrl = uploadData.url;
         } catch (err) {
             Toast.show('Image upload failed.', 'error');
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = originalHtml;
             return;
         }
     }
@@ -2492,6 +2524,7 @@ document.getElementById('saveTeamBtn').addEventListener('click', async () => {
     };
 
     try {
+        saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/team/${id}` : '/api/admin/team';
         const res    = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
@@ -2501,6 +2534,9 @@ document.getElementById('saveTeamBtn').addEventListener('click', async () => {
         loadTeam();
     } catch (err) {
         Toast.show(err.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
     }
 });
 
@@ -2999,6 +3035,10 @@ if (mediaSectionSelect) {
 
 if (saveMediaBtn) {
     saveMediaBtn.addEventListener('click', async () => {
+        const originalHtml = saveMediaBtn.innerHTML;
+        saveMediaBtn.disabled = true;
+        saveMediaBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
+
         const section = mediaSectionSelect.value;
         const carouselInputs = Array.from(document.querySelectorAll('.carousel-url-input'));
         const imagesList = carouselInputs.map(input => input.value.trim()).filter(v => v);
@@ -3023,6 +3063,9 @@ if (saveMediaBtn) {
             Toast.show('Media settings saved!', 'success');
         } catch (_) {
             Toast.show('Saved! (offline mode)', 'info');
+        } finally {
+            saveMediaBtn.disabled = false;
+            saveMediaBtn.innerHTML = originalHtml;
         }
     });
 }
@@ -3185,6 +3228,11 @@ document.getElementById('addSocialBtn').addEventListener('click', () => {
 });
 
 document.getElementById('saveSocialsBtn').addEventListener('click', async () => {
+    const saveBtn = document.getElementById('saveSocialsBtn');
+    const originalHtml = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
+
     // Collect current values from DOM
     window.syncSocialsData();
 
@@ -3198,6 +3246,9 @@ document.getElementById('saveSocialsBtn').addEventListener('click', async () => 
         Toast.show('Social links saved!', 'success');
     } catch (_) {
         Toast.show('Social links saved! (offline mode)', 'info');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
     }
 });
 
@@ -3266,12 +3317,25 @@ async function saveGeneralSettings() {
 
 document.getElementById('generalSettingsForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const saveBtn = document.getElementById('saveGeneralBtn');
+    const originalHtml = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
+
     await saveGeneralSettings();
     Toast.show('General settings saved!', 'success');
+
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = originalHtml;
 });
 
 document.getElementById('promoBarForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const saveBtn = document.getElementById('savePromoBtn');
+    const originalHtml = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
+
     const payload = {
         enabled:  document.getElementById('promoEnabled').checked,
         text:     document.getElementById('promoText').value.trim(),
@@ -3283,6 +3347,9 @@ document.getElementById('promoBarForm').addEventListener('submit', async (e) => 
         await fetch('/api/admin/settings/promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
         Toast.show('Promotion bar saved!', 'success');
     } catch (_) { Toast.show('Promotion bar saved! (offline mode)', 'info'); }
+
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = originalHtml;
 });
 
 function handleImagePreview(inputId, previewId) {
@@ -3417,6 +3484,11 @@ document.getElementById('promoPopupForm').addEventListener('submit', async (e) =
     }
 });document.getElementById('contactSettingsForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const saveBtn = document.getElementById('saveContactBtn');
+    const originalHtml = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
+
     const payload = {
         address:       document.getElementById('mapAddress').value.trim(),
         coords:        document.getElementById('mapCoords').value.trim(),
@@ -3431,13 +3503,21 @@ document.getElementById('promoPopupForm').addEventListener('submit', async (e) =
         await fetch('/api/admin/settings/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
         Toast.show('Contact info saved!', 'success');
     } catch (_) { Toast.show('Contact info saved! (offline mode)', 'info'); }
+
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = originalHtml;
 });
 
 document.getElementById('accountForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const saveBtn = document.getElementById('saveAccountBtn');
+    const originalHtml = saveBtn.innerHTML;
     const newPass  = document.getElementById('newPassword').value;
     const confPass = document.getElementById('confirmPassword').value;
     if (newPass && newPass !== confPass) { Toast.show('Passwords do not match.', 'error'); return; }
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
 
     const payload = {
         name:     document.getElementById('accountName').value.trim(),
@@ -3450,6 +3530,9 @@ document.getElementById('accountForm').addEventListener('submit', async (e) => {
         document.getElementById('newPassword').value     = '';
         document.getElementById('confirmPassword').value = '';
     } catch (_) { Toast.show('Account updated! (offline mode)', 'info'); }
+
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = originalHtml;
 });
 
 
@@ -3504,9 +3587,17 @@ document.getElementById('addNewFormServiceBtn')?.addEventListener('click', () =>
 
 document.getElementById('contactFormSettingsForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const saveBtn = document.getElementById('saveContactFormSettingsBtn');
+    const originalHtml = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
     
     const container = document.getElementById('formServicesListContainer');
-    if (!container) return;
+    if (!container) {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
+        return;
+    }
     const rows = container.querySelectorAll('[data-idx]');
     const updatedServices = [];
 
@@ -3543,6 +3634,9 @@ document.getElementById('contactFormSettingsForm')?.addEventListener('submit', a
         populateLeadsFilterDropdowns(updatedServices);
     } catch (err) {
         Toast.show(err.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
     }
 });
 

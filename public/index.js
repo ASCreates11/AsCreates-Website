@@ -459,12 +459,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const isFounder = m => m.is_founder === 1 || m.is_founder === true || String(m.is_founder) === '1';
             const founders = team.filter(isFounder);
 
-            if (founders.length >= 1) {
-                const f1 = founders[0]; // Founder 1
-                const f2 = founders[1] || f1; // Founder 2
+            if (founders.length > 0) {
+                // Find Sriyanka & Asish specifically by name or role to avoid order swapping
+                const f1 = founders.find(m => (m.name && m.name.toLowerCase().includes('sriyanka')) || (m.role && m.role.toLowerCase().includes('ceo'))) || founders[0];
+                const f2 = founders.find(m => m !== f1 && ((m.name && m.name.toLowerCase().includes('asish')) || (m.role && m.role.toLowerCase().includes('cto')))) || founders[1] || f1;
 
                 const f1Card = document.getElementById('founderCardSriyankaHome');
-                if (f1Card) {
+                if (f1Card && f1) {
                     const img = f1Card.querySelector('img');
                     if (img && (f1.photo || f1.image_url)) img.src = f1.photo || f1.image_url;
                     const h3 = f1Card.querySelector('h3');
@@ -475,16 +476,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (bio && f1.bio) bio.textContent = f1.bio;
                 }
                 const pov1 = document.getElementById('povContentSriyankaHome');
-                if (pov1) {
+                if (pov1 && f1) {
                     const pre = pov1.querySelector('.pov-pre-heading');
                     if (pre && f1.pov_pre_heading) pre.textContent = f1.pov_pre_heading;
                     const title = pov1.querySelector('.pov-title');
                     if (title && f1.pov_title) title.textContent = f1.pov_title;
                     const text = pov1.querySelector('.pov-text');
-                    if (text && f1.pov_text) text.textContent = `"${f1.pov_text}"`;
+                    if (text && f1.pov_text) text.textContent = `"${f1.pov_text.replace(/^"|"$/g, '')}"`;
                 }
 
-                if (founders.length >= 2) {
+                if (f2 && f2 !== f1) {
                     const f2Card = document.getElementById('founderCardAsishHome');
                     if (f2Card) {
                         const img = f2Card.querySelector('img');
@@ -503,13 +504,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         const title = pov2.querySelector('.pov-title');
                         if (title && f2.pov_title) title.textContent = f2.pov_title;
                         const text = pov2.querySelector('.pov-text');
-                        if (text && f2.pov_text) text.textContent = `"${f2.pov_text}"`;
+                        if (text && f2.pov_text) text.textContent = `"${f2.pov_text.replace(/^"|"$/g, '')}"`;
                     }
                 }
             }
 
             const teamGrid = document.getElementById('teamMembersGridHome');
-            const otherMembers = team.filter(m => !isFounder(m));
+            const mainFounderIds = new Set(team.filter(isFounder).slice(0, 2).map(m => m.id));
+            const otherMembers = team.filter(m => !isFounder(m) && !mainFounderIds.has(m.id));
+            
             if (teamGrid) {
                 if (otherMembers.length === 0) {
                     teamGrid.style.display = 'none';
@@ -518,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     teamGrid.innerHTML = otherMembers.map(m => `
                         <div class="team-member-card">
                             <div class="member-img-container">
-                                <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}">
+                                <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
                             </div>
                             <h4>${m.name}</h4>
                             <div class="member-role">${m.role || ''}</div>

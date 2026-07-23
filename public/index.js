@@ -764,16 +764,104 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTestimonials();
     initWhatsAppWidget();
 
-    // Fetch Promotion Settings
-    (async () => {
+    // Fetch & Initialize Promotion Bar and Promo Popup
+    (async function initPromotionSystem() {
         try {
             const res = await fetch('/api/promotion');
+            if (!res.ok) return;
             const promo = await res.json();
-            if (promo && promo.is_active) {
-                const bar = document.getElementById('promotionBar');
-                const marquee = document.getElementById('promotionMarquee');
-                
-                // Fill marquee with enough copies to prevent blank space
+            if (!promo || !promo.is_active) return;
+
+            // 1. Dynamic DOM Injection: Ensure #promoPopup HTML container exists on every page
+            let overlay = document.getElementById('promoPopup');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'promoPopup';
+                overlay.className = 'promo-popup-overlay';
+                overlay.style.display = 'none';
+                overlay.setAttribute('role', 'dialog');
+                overlay.setAttribute('aria-modal', 'true');
+                overlay.setAttribute('aria-label', 'Special Offer');
+                overlay.innerHTML = `
+                    <div class="promo-popup-card">
+                        <button class="promo-popup-close" id="promoPopupClose" aria-label="Close popup">&times;</button>
+                        <a id="promoPopupLink" href="#" class="promo-popup-image-link">
+                            <picture>
+                                <source media="(max-width: 768px)" id="promoPopupMobileSource" srcset="">
+                                <img id="promoPopupImage" src="" alt="Special Offer" class="promo-popup-image">
+                            </picture>
+                        </a>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            }
+
+            const img = document.getElementById('promoPopupImage');
+            const mobileSource = document.getElementById('promoPopupMobileSource');
+            const link = document.getElementById('promoPopupLink');
+            const closeBtn = document.getElementById('promoPopupClose');
+
+            const popupConfig = promo.popup || {};
+            const popupEnabled = !!popupConfig.enabled;
+
+            // Dismiss handler
+            const dismissPopup = () => {
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    setTimeout(() => { overlay.style.display = 'none'; }, 300);
+                }
+                try {
+                    sessionStorage.setItem('promoPopupDismissed', 'true');
+                } catch(e) {}
+            };
+
+            // Bind dismiss handlers ALWAYS so close button & backdrop never fail
+            if (closeBtn && !closeBtn._hasListener) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dismissPopup();
+                });
+                closeBtn._hasListener = true;
+            }
+
+            if (overlay && !overlay._hasListener) {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        dismissPopup();
+                    }
+                });
+                overlay._hasListener = true;
+            }
+
+            // Function to open promo popup
+            const openPromoPopup = () => {
+                const isMobile = window.matchMedia('(max-width: 768px)').matches;
+                const imageUrl = isMobile
+                    ? (popupConfig.mobile_image || popupConfig.desktop_image)
+                    : (popupConfig.desktop_image || popupConfig.mobile_image);
+
+                if (!imageUrl) return false;
+
+                if (img) img.src = imageUrl;
+                if (mobileSource) {
+                    if (popupConfig.mobile_image && popupConfig.desktop_image) {
+                        mobileSource.srcset = popupConfig.mobile_image;
+                    } else {
+                        mobileSource.removeAttribute('srcset');
+                    }
+                }
+                if (link) link.href = popupConfig.link_url || promo.link_url || '#';
+
+                overlay.style.display = 'flex';
+                requestAnimationFrame(() => overlay.classList.add('active'));
+                return true;
+            };
+
+            // 2. Hydrate Promotion Bar
+            const bar = document.getElementById('promotionBar');
+            const marquee = document.getElementById('promotionMarquee');
+            if (bar && marquee && promo.text) {
                 const innerHtml = `
                     <span class="promo-text-node">${promo.text}</span>
                     <a href="#" class="promo-link-node promotion-bar-btn">${promo.link_text || "Today's Exclusive Pricing"}</a>
@@ -784,38 +872,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 marquee.innerHTML = marqueeHtml;
 
-                const linkNodes = marquee.querySelectorAll('.promo-link-node');
-                
                 const speed = promo.speed || 15;
                 marquee.style.animationDuration = `${speed * 10}s`;
-                
+
                 bar.style.display = 'flex';
                 document.body.classList.add('has-promo-bar');
 
-                const popupConfig = (promo.popup || {});
-                const popupEnabled = !!popupConfig.enabled;
-
-                const openPromoPopup = () => {
-                    const overlay = document.getElementById('promoPopup');
-                    const img = document.getElementById('promoPopupImage');
-                    const mobileSource = document.getElementById('promoPopupMobileSource');
-                    const link = document.getElementById('promoPopupLink');
-                    if (!overlay || !img) return;
-
-                    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-                    const imageUrl = isMobile ? (popupConfig.mobile_image || popupConfig.desktop_image) : (popupConfig.desktop_image || popupConfig.mobile_image);
-                    if (!imageUrl) return;
-
-                    img.src = imageUrl;
-                    if (mobileSource && popupConfig.mobile_image && popupConfig.desktop_image) {
-                        mobileSource.srcset = popupConfig.mobile_image;
-                    }
-                    link.href = popupConfig.link_url || '#';
-
-                    overlay.style.display = 'flex';
-                    requestAnimationFrame(() => overlay.classList.add('active'));
-                };
-
+                const linkNodes = marquee.querySelectorAll('.promo-link-node');
                 if (popupEnabled) {
                     linkNodes.forEach(el => {
                         el.removeAttribute('href');
@@ -830,98 +893,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         el.href = promo.link_url || '#';
                     });
                 }
+            }
 
-                // Handle floating offer image
-                if (promo.floating_image_active === 1 && promo.floating_image_url) {
-                    const modal = document.createElement('div');
-                    modal.className = 'floating-offer-overlay';
-                    modal.innerHTML = `
-                        <div class="floating-offer-modal">
-                            <button class="floating-offer-close">&times;</button>
-                            <a href="${promo.link_url || '#'}">
-                                <picture>
-                                    ${promo.floating_image_url_mobile ? `<source media="(max-width: 768px)" srcset="${promo.floating_image_url_mobile}">` : ''}
-                                    <img src="${promo.floating_image_url}" alt="Special Offer">
-                                </picture>
-                            </a>
-                        </div>
-                    `;
-                    document.body.appendChild(modal);
+            // 3. Auto-show Promo Popup if enabled & not dismissed in current session
+            if (popupEnabled) {
+                const isMobile = window.matchMedia('(max-width: 768px)').matches;
+                const imageUrl = isMobile
+                    ? (popupConfig.mobile_image || popupConfig.desktop_image)
+                    : (popupConfig.desktop_image || popupConfig.mobile_image);
 
-                    const closeModal = (e) => {
-                        if (e) e.preventDefault();
-                        modal.classList.remove('active');
-                    };
-
-                    const openModal = (e) => {
-                        if (e) e.preventDefault();
-                        modal.classList.add('active');
-                    };
-
-                    modal.querySelector('.floating-offer-close').addEventListener('click', closeModal);
-                    modal.addEventListener('click', (e) => {
-                        if (e.target === modal) closeModal();
-                    });
-
-                    // Show on load
-                    setTimeout(openModal, 1000);
-
-                    // Override promotion bar links
-                    linkNodes.forEach(el => {
-                        el.href = '#';
-                        el.addEventListener('click', openModal);
-                    });
-                } else {
-                    linkNodes.forEach(el => {
-                        el.href = promo.link_url || '#';
-                    });
+                if (imageUrl && !sessionStorage.getItem('promoPopupDismissed')) {
+                    setTimeout(() => {
+                        openPromoPopup();
+                    }, 800);
                 }
             }
         } catch(err) {
-            console.warn('Promotion bar failed to load:', err);
-        }
-    })();
-
-    // Show promo popup once per user
-    (async () => {
-        try {
-            const res = await fetch('/api/promotion');
-            const promo = await res.json();
-            const popup = (promo.popup || {});
-            if (!popup.enabled) return;
-
-            const overlay = document.getElementById('promoPopup');
-            const img = document.getElementById('promoPopupImage');
-            const mobileSource = document.getElementById('promoPopupMobileSource');
-            const link = document.getElementById('promoPopupLink');
-            const closeBtn = document.getElementById('promoPopupClose');
-
-            if (!overlay || !img) return;
-
-            const isMobile = window.matchMedia('(max-width: 768px)').matches;
-            const imageUrl = isMobile ? (popup.mobile_image || popup.desktop_image) : (popup.desktop_image || popup.mobile_image);
-            if (!imageUrl) return;
-
-            const dismiss = () => {
-                overlay.classList.remove('active');
-                setTimeout(() => { overlay.style.display = 'none'; }, 300);
-                localStorage.setItem('promoPopupDismissed', 'true');
-            };
-
-            closeBtn.addEventListener('click', (e) => { e.preventDefault(); dismiss(); });
-            overlay.addEventListener('click', (e) => { if (e.target === overlay) dismiss(); });
-
-            if (!localStorage.getItem('promoPopupDismissed')) {
-                img.src = imageUrl;
-                if (mobileSource && popup.mobile_image && popup.desktop_image) {
-                    mobileSource.srcset = popup.mobile_image;
-                }
-                link.href = popup.link_url || '#';
-                overlay.style.display = 'flex';
-                requestAnimationFrame(() => overlay.classList.add('active'));
-            }
-        } catch (err) {
-            console.warn('Promo popup failed to load:', err);
+            console.warn('Promotion system failed to load:', err);
         }
     })();
 });

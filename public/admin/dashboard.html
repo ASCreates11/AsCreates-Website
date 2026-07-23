@@ -3055,6 +3055,9 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async () =
     const { id, type } = pendingDelete;
     if (!id || !type) return;
 
+    // Reset pendingDelete immediately to avoid race conditions with overlapping deletions
+    pendingDelete = { id: null, type: null };
+
     // Optimistically update local data array & render instantly (0ms lag)
     if (type === 'testimonial') { testimonialsData = testimonialsData.filter(x => String(x.id) !== String(id)); renderTestimonials(testimonialsData); }
     else if (type === 'portfolio') { portfolioData = portfolioData.filter(x => String(x.id) !== String(id)); renderPortfolio(portfolioData); }
@@ -3083,7 +3086,6 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async () =
     } catch (err) {
         console.warn('Background delete sync failed:', err);
     }
-    pendingDelete = { id: null, type: null };
 });
 
 

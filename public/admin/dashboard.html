@@ -14,6 +14,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.24.2/jodit.min.js"></script>
     <style>
         /* Modernize Jodit Editor to match AS Creates theme */
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
         .jodit-container:not(.jodit_inline) {
             border: 1px solid var(--color-border-light) !important;
             border-radius: var(--radius-md) !important;
@@ -569,11 +572,10 @@ window.addEventListener("unhandledrejection", function(event) {
                         </thead>
                         <tbody id="leadsTableBody">
                             <tr>
-                                <td colspan="6">
-                                    <div class="empty-state" style="padding: 40px 0;">
-                                        <div class="empty-state-icon"><span class="material-symbols-outlined">inbox</span></div>
-                                        <div class="empty-state-title">No leads yet</div>
-                                        <div class="empty-state-desc">Customer messages will appear here once the contact form is used.</div>
+                                <td colspan="6" style="text-align: center; padding: 45px 0;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--color-text-tertiary);">
+                                        <span class="material-symbols-outlined spin-icon" style="font-size: 28px; animation: spin 1s linear infinite;">sync</span>
+                                        <span style="font-size: 13px; font-weight: 500;">Loading inquiries...</span>
                                     </div>
                                 </td>
                             </tr>
@@ -2584,13 +2586,18 @@ document.getElementById('leadsFilterStatus').addEventListener('change', filterAn
 document.getElementById('leadsFilterService').addEventListener('change', filterAndRenderLeads);
 
 async function loadLeads() {
+    if (Array.isArray(leadsData) && leadsData.length > 0) {
+        renderLeads(leadsData);
+    }
     try {
         const res = await fetch('/api/admin/leads', { credentials: 'same-origin' });
         const data = await res.json();
         leadsData = Array.isArray(data) ? data : [];
         renderLeads(leadsData);
     } catch (_) {
-        renderLeads([]);
+        if (!Array.isArray(leadsData) || leadsData.length === 0) {
+            renderLeads([]);
+        }
     }
 }
 

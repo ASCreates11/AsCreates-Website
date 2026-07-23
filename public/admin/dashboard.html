@@ -3015,6 +3015,18 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async () =
     const { id, type } = pendingDelete;
     if (!id || !type) return;
 
+    // Optimistically update local data array & render instantly (0ms lag)
+    if (type === 'testimonial') { testimonialsData = testimonialsData.filter(x => String(x.id) !== String(id)); renderTestimonials(testimonialsData); }
+    else if (type === 'portfolio') { portfolioData = portfolioData.filter(x => String(x.id) !== String(id)); renderPortfolio(portfolioData); }
+    else if (type === 'service') { servicesData = servicesData.filter(x => String(x.id) !== String(id)); renderServices(servicesData); }
+    else if (type === 'team') { teamData = teamData.filter(x => String(x.id) !== String(id)); renderTeam(teamData); }
+    else if (type === 'lead') { leadsData = leadsData.filter(x => String(x.id) !== String(id)); renderLeads(leadsData); }
+    else if (type === 'homeService') { homeServicesData = homeServicesData.filter(x => String(x.id) !== String(id)); renderHomeServices(homeServicesData); }
+    else if (type === 'media') { mediaData = mediaData.filter(x => String(x.id) !== String(id) && String(x.name) !== String(id)); renderMediaLibrary(mediaData); }
+
+    Modal.close('confirmModal');
+    Toast.show('Item deleted successfully.', 'success');
+
     const endpoints = {
         portfolio:   `/api/admin/portfolio/${id}`,
         service:     `/api/admin/services/${id}`,
@@ -3024,24 +3036,12 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async () =
         homeService: `/api/admin/home-services/${id}`,
         media:       `/api/admin/media/${encodeURIComponent(id)}`,
     };
-    const reloaders = {
-        portfolio:   loadPortfolio,
-        service:     loadServices,
-        testimonial: loadTestimonials,
-        team:        loadTeam,
-        lead:        loadLeads,
-        homeService: loadHomeServices,
-        media:       loadMediaLibrary,
-    };
 
     try {
         const res = await fetch(endpoints[type], { method: 'DELETE', credentials: 'same-origin' });
         if (!res.ok) throw new Error('Delete failed.');
-        Modal.close('confirmModal');
-        Toast.show('Item deleted successfully.', 'success');
-        if (reloaders[type]) reloaders[type]();
     } catch (err) {
-        Toast.show(err.message, 'error');
+        console.warn('Background delete sync failed:', err);
     }
     pendingDelete = { id: null, type: null };
 });

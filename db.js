@@ -87,8 +87,14 @@ if (process.env.TURSO_DATABASE_URL) {
     });
 }
 
-// Initialize DB schema
+// Initialize DB schema & performance pragmas
 db.serialize(() => {
+    // Enable WAL Mode & Fast Pragmas
+    db.run("PRAGMA journal_mode = WAL;");
+    db.run("PRAGMA synchronous = NORMAL;");
+    db.run("PRAGMA temp_store = MEMORY;");
+    db.run("PRAGMA cache_size = -64000;");
+
     // 0. Settings table
     db.run(`CREATE TABLE IF NOT EXISTS settings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

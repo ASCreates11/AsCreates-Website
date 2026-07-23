@@ -738,10 +738,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z" fill="currentColor" />
                         </svg>
                     </div>
-                    <p class="body-md testimonial-text">"${item.quote}"</p>
+                    <p class="body-md testimonial-text">"${item.quote || ''}"</p>
+                    <div style="color: var(--color-warning); font-size: 14px; margin: 6px 0 14px;">${'★'.repeat(item.rating || 5)}</div>
                     <div class="testimonial-author">
                         <div class="author-img">
-                            <img alt="${item.name || 'Client'} portrait" src="${item.avatar || 'https://via.placeholder.com/100'}" />
+                            <img alt="${item.name || 'Client'} portrait" src="${item.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'" />
                         </div>
                         <div class="author-details">
                             <h4>${item.name || 'Client'}</h4>
@@ -750,8 +751,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `).join('');
+
+            if (typeof startTestimonialAutoplay === 'function') {
+                startTestimonialAutoplay();
+            }
         } catch (err) {
-            console.warn('Dynamic testimonials failed, using fallback static HTML:', err);
+            console.warn('Dynamic testimonials load failed, preserving static HTML:', err);
         }
     };
 

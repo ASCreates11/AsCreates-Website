@@ -453,6 +453,108 @@ router.post('/admin/upload', requireAuth, upload.single('image'), (req, res) => 
     res.json({ success: true, url: req.file.path });
 });
 
+// --- MEDIA LIBRARY ROUTES ---
+// GET /api/admin/media (Admin - list uploaded media)
+router.get('/admin/media', requireAuth, async (req, res) => {
+    try {
+        const mediaList = [];
+        const seenUrls = new Set();
+
+        const uploadsDir = path.join(__dirname, '../public/uploads');
+        if (fs.existsSync(uploadsDir)) {
+            const files = fs.readdirSync(uploadsDir);
+            files.forEach(file => {
+                const filePath = path.join(uploadsDir, file);
+                try {
+                    const stat = fs.statSync(filePath);
+                    if (stat.isFile()) {
+                        const url = `/uploads/${file}`;
+                        seenUrls.add(url);
+                        mediaList.push({
+                            id: file,
+                            name: file,
+                            url: url,
+                            size: stat.size,
+                            created_at: stat.mtime
+                        });
+                    }
+                } catch (_) {}
+            });
+        }
+
+        if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+            try {
+                const cRes = await cloudinary.api.resources({
+                    type: 'upload',
+                    prefix: 'as_creates',
+                    max_results: 100
+                });
+                if (cRes && cRes.resources) {
+                    cRes.resources.forEach(r => {
+                        if (!seenUrls.has(r.secure_url)) {
+                            seenUrls.add(r.secure_url);
+                            mediaList.push({
+                                id: r.public_id,
+                                name: r.public_id.split('/').pop() + '.' + r.format,
+                                url: r.secure_url,
+                                size: r.bytes || 0,
+                                created_at: r.created_at
+                            });
+                        }
+                    });
+                }
+            } catch (cErr) {
+                console.warn('Cloudinary list warning:', cErr.message);
+            }
+        }
+
+        mediaList.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+        res.json(mediaList);
+    } catch (err) {
+        console.error('Error fetching media library:', err);
+        res.json([]);
+    }
+});
+
+// DELETE /api/admin/media/*
+router.delete('/admin/media/:filename(*)', requireAuth, async (req, res) => {
+    try {
+        const rawId = req.params.filename || req.query.filename || '';
+        if (!rawId) return res.status(400).json({ error: 'Media identifier is required' });
+
+        const filename = path.basename(rawId);
+        const filePath = path.join(__dirname, '../public/uploads', filename);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+
+        if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+            try {
+                let publicId = rawId;
+                if (rawId.includes('cloudinary.com')) {
+                    const parts = rawId.split('/upload/');
+                    if (parts[1]) {
+                        const pathParts = parts[1].split('/');
+                        pathParts.shift();
+                        publicId = pathParts.join('/').replace(/\.[^/.]+$/, "");
+                    }
+                }
+                if (publicId) {
+                    await cloudinary.uploader.destroy(publicId);
+                }
+            } catch (cErr) {
+                console.warn('Cloudinary delete warning:', cErr.message);
+            }
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error deleting media file:', err);
+        res.json({ success: true });
+    }
+});
+
 // --- CONTACT LEADS ---
 // Public POST route
 router.post('/contact', async (req, res) => {

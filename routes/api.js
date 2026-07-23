@@ -570,28 +570,46 @@ router.get('/admin/leads', requireAuth, (req, res) => {
 
 // GET /api/admin/summary (Fast Consolidated Dashboard Payload)
 router.get('/admin/summary', requireAuth, async (req, res) => {
-    db.all('SELECT * FROM leads ORDER BY id DESC', async (err, leads) => {
-        const leadsList = Array.isArray(leads) ? leads : [];
-        const settings = await getSettings();
-        
-        db.get('SELECT COUNT(*) as count FROM portfolio', (err2, portRow) => {
-            db.get('SELECT COUNT(*) as count FROM services', (err3, servRow) => {
-                db.get('SELECT COUNT(*) as count FROM team', (err4, teamRow) => {
-                    res.json({
-                        leads: leadsList,
-                        stats: {
-                            totalLeads: leadsList.length,
-                            unreadLeads: leadsList.filter(l => !l.is_read).length,
-                            portfolioCount: (portRow && portRow.count) || 0,
-                            servicesCount: (servRow && servRow.count) || 0,
-                            teamCount: (teamRow && teamRow.count) || 0
-                        },
-                        settings: settings
+    try {
+        db.all('SELECT * FROM leads ORDER BY id DESC', (err, leads) => {
+            db.all('SELECT * FROM portfolio ORDER BY display_order ASC, id DESC', (err2, portfolio) => {
+                db.all('SELECT * FROM services ORDER BY display_order ASC, id DESC', (err3, services) => {
+                    db.all('SELECT * FROM home_services ORDER BY display_order ASC, id DESC', (err4, homeServices) => {
+                        db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, published, display_order FROM testimonials ORDER BY display_order ASC, id DESC', (err5, testimonials) => {
+                            db.all('SELECT * FROM team ORDER BY is_founder DESC, display_order ASC, id DESC', async (err6, team) => {
+                                const settings = await getSettings();
+                                const leadsList = Array.isArray(leads) ? leads : [];
+                                const portList = Array.isArray(portfolio) ? portfolio : [];
+                                const servList = Array.isArray(services) ? services : [];
+                                const hsList = Array.isArray(homeServices) ? homeServices : [];
+                                const testList = Array.isArray(testimonials) ? testimonials : [];
+                                const teamList = Array.isArray(team) ? team : [];
+
+                                res.json({
+                                    leads: leadsList,
+                                    portfolio: portList,
+                                    services: servList,
+                                    homeServices: hsList,
+                                    testimonials: testList,
+                                    team: teamList,
+                                    stats: {
+                                        totalLeads: leadsList.length,
+                                        unreadLeads: leadsList.filter(l => !l.is_read).length,
+                                        portfolioCount: portList.length,
+                                        servicesCount: servList.length,
+                                        teamCount: teamList.length
+                                    },
+                                    settings: settings
+                                });
+                            });
+                        });
                     });
                 });
             });
         });
-    });
+    } catch (err) {
+        res.status(500).json({ error: 'DB Error' });
+    }
 });
 
 // Admin DELETE route

@@ -2034,6 +2034,9 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
 });
 
     async function loadPortfolio() {
+        if (Array.isArray(portfolioData) && portfolioData.length > 0) {
+            renderPortfolio(portfolioData);
+        }
         try {
             const res  = await fetch('/api/admin/portfolio', { credentials: 'same-origin' });
             const data = await res.json();
@@ -2041,8 +2044,9 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
             renderPortfolio(portfolioData);
             document.getElementById('stat-portfolio').textContent = portfolioData.length;
         } catch (_) {
-            renderPortfolio([]);
-            document.getElementById('stat-portfolio').textContent = '—';
+            if (!Array.isArray(portfolioData) || portfolioData.length === 0) {
+                renderPortfolio([]);
+            }
         }
     }
 
@@ -2178,6 +2182,9 @@ document.getElementById('saveServiceBtn').addEventListener('click', async () => 
 });
 
 async function loadServices() {
+    if (Array.isArray(servicesData) && servicesData.length > 0) {
+        renderServices(servicesData);
+    }
     try {
         const res  = await fetch('/api/admin/services', { credentials: 'same-origin' });
         const data = await res.json();
@@ -2185,8 +2192,9 @@ async function loadServices() {
         renderServices(servicesData);
         document.getElementById('stat-services').textContent = servicesData.length;
     } catch (_) {
-        renderServices([]);
-        document.getElementById('stat-services').textContent = '—';
+        if (!Array.isArray(servicesData) || servicesData.length === 0) {
+            renderServices([]);
+        }
     }
 }
 
@@ -2315,6 +2323,9 @@ document.getElementById('saveTestimonialBtn').addEventListener('click', async ()
 });
 
 async function loadTestimonials() {
+    if (Array.isArray(testimonialsData) && testimonialsData.length > 0) {
+        renderTestimonials(testimonialsData);
+    }
     try {
         const res  = await fetch('/api/admin/testimonials', { credentials: 'same-origin' });
         if (!res.ok) {
@@ -2325,8 +2336,9 @@ async function loadTestimonials() {
         testimonialsData = Array.isArray(data) ? data : (data.items || []);
         renderTestimonials(testimonialsData);
     } catch (err) {
-        console.error('Failed to load testimonials:', err);
-        renderTestimonials([]);
+        if (!Array.isArray(testimonialsData) || testimonialsData.length === 0) {
+            renderTestimonials([]);
+        }
     }
 }
 
@@ -2487,6 +2499,9 @@ document.getElementById('saveTeamBtn').addEventListener('click', async () => {
 });
 
 async function loadTeam() {
+    if (Array.isArray(teamData) && teamData.length > 0) {
+        renderTeam(teamData);
+    }
     try {
         const res  = await fetch('/api/admin/team', { credentials: 'same-origin' });
         if (!res.ok) {
@@ -2499,10 +2514,9 @@ async function loadTeam() {
         const statEl = document.getElementById('stat-team');
         if (statEl) statEl.textContent = teamData.length;
     } catch (err) {
-        console.error('Failed to load team:', err);
-        renderTeam([]);
-        const statEl = document.getElementById('stat-team');
-        if (statEl) statEl.textContent = '—';
+        if (!Array.isArray(teamData) || teamData.length === 0) {
+            renderTeam([]);
+        }
     }
 }
 
@@ -2795,13 +2809,18 @@ document.getElementById('saveHomeServiceBtn').addEventListener('click', async ()
 });
 
 async function loadHomeServices() {
+    if (Array.isArray(homeServicesData) && homeServicesData.length > 0) {
+        renderHomeServices(homeServicesData);
+    }
     try {
         const res = await fetch('/api/admin/home-services', { credentials: 'same-origin' });
         const data = await res.json();
         homeServicesData = Array.isArray(data) ? data : [];
         renderHomeServices(homeServicesData);
     } catch (_) {
-        renderHomeServices([]);
+        if (!Array.isArray(homeServicesData) || homeServicesData.length === 0) {
+            renderHomeServices([]);
+        }
     }
 }
 
@@ -2860,13 +2879,18 @@ function renderMediaLibrary(items) {
 }
 
 async function loadMediaLibrary() {
+    if (Array.isArray(mediaData) && mediaData.length > 0) {
+        renderMediaLibrary(mediaData);
+    }
     try {
         const res = await fetch('/api/admin/media', { credentials: 'same-origin' });
         const data = await res.json();
         mediaData = Array.isArray(data) ? data : [];
         renderMediaLibrary(mediaData);
     } catch (_) {
-        renderMediaLibrary([]);
+        if (!Array.isArray(mediaData) || mediaData.length === 0) {
+            renderMediaLibrary([]);
+        }
     }
 }
 
@@ -3676,11 +3700,13 @@ async function loadAll() {
         if (summaryRes.ok) {
             const summary = await summaryRes.json();
             
-            // Instantly populate Leads inbox
-            if (summary.leads) {
-                leadsData = summary.leads;
-                renderLeads(leadsData);
-            }
+            // Instantly populate all sections from summary payload (0ms tab switching)
+            if (summary.leads) { leadsData = summary.leads; renderLeads(leadsData); }
+            if (summary.portfolio) { portfolioData = summary.portfolio; renderPortfolio(portfolioData); }
+            if (summary.services) { servicesData = summary.services; renderServices(servicesData); }
+            if (summary.homeServices) { homeServicesData = summary.homeServices; renderHomeServices(homeServicesData); }
+            if (summary.testimonials) { testimonialsData = summary.testimonials; renderTestimonials(testimonialsData); }
+            if (summary.team) { teamData = summary.team; renderTeam(teamData); }
             
             // Instantly populate Overview stats counters
             if (summary.stats) {

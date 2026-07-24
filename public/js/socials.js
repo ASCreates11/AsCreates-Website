@@ -103,6 +103,7 @@
             toggleBtn.href = 'javascript:void(0)';
             toggleBtn.className = opts.class || 'social-connect-btn';
             toggleBtn.title = 'Show More';
+            toggleBtn.setAttribute('aria-label', 'Show more social profiles');
             // Plus icon
             toggleBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`;
             
@@ -113,10 +114,12 @@
                     // Plus icon
                     toggleBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`;
                     toggleBtn.title = 'Show More';
+                    toggleBtn.setAttribute('aria-label', 'Show more social profiles');
                 } else {
                     // Minus icon
                     toggleBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>`;
                     toggleBtn.title = 'Show Less';
+                    toggleBtn.setAttribute('aria-label', 'Show fewer social profiles');
                 }
             });
             moreWrap.appendChild(toggleBtn);

@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
+const compression = require('compression');
 require('dotenv').config();
 const db = require('./db');
 
@@ -16,6 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(compression());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
@@ -38,7 +40,7 @@ app.use((req, res, next) => {
 
             const isAdmin = req.path.startsWith('/admin') || req.path.startsWith('/api/admin');
             const isApi = req.path.startsWith('/api');
-            const isStatic = req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg|mp4|webm|webp|ico)$/i) || req.path.startsWith('/Video/') || req.path.startsWith('/uploads/');
+            const isStatic = req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg|mp4|webm|webp|ico|txt|xml)$/i) || req.path.startsWith('/Video/') || req.path.startsWith('/uploads/');
 
             if (!isAdmin && !isApi && !isStatic && req.method === 'GET') {
                 if (!isDeployed) {

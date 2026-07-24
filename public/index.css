@@ -2,9 +2,6 @@
    AS Creates - Premium Design System Stylesheet
    ========================================================================== */
 
-/* --- Fonts Import --- */
-@import url('https://fonts.googleapis.com/css2?family=Crafty+Girls&family=Hanken+Grotesk:wght@400;600;700;800&display=swap');
-
 /* --- Design Tokens & Variables --- */
 :root {
     /* Colors */

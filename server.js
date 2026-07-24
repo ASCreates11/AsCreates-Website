@@ -93,6 +93,10 @@ app.get('/admin/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'pub
 
 // Dynamic Sitemap Route
 app.get('/sitemap.xml', (req, res) => {
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
+
     db.all('SELECT id FROM portfolio WHERE published=1', (err, rows) => {
         let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
         xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
@@ -100,14 +104,14 @@ app.get('/sitemap.xml', (req, res) => {
         // Static Pages
         const staticPages = ['', 'about', 'services', 'portfolio', 'contact'];
         staticPages.forEach(p => {
-            const loc = p ? `https://ascreates.vercel.app/${p}` : `https://ascreates.vercel.app/`;
+            const loc = p ? `${baseUrl}/${p}` : `${baseUrl}/`;
             xml += `  <url>\n    <loc>${loc}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>${p ? '0.8' : '1.0'}</priority>\n  </url>\n`;
         });
         
         // Dynamic Case Studies
         if (!err && rows) {
             rows.forEach(item => {
-                xml += `  <url>\n    <loc>https://ascreates.vercel.app/portfolio?project=${item.id}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+                xml += `  <url>\n    <loc>${baseUrl}/portfolio?project=${item.id}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
             });
         }
         

@@ -978,7 +978,14 @@ async function loadGlobalDynamicSettings() {
             }
             
             if (g.siteName) {
-                document.title = g.siteName + ' | Digital Agency & Technology Solutions';
+                const currentTitle = document.title;
+                const separatorIndex = currentTitle.indexOf('|');
+                if (separatorIndex !== -1) {
+                    const pagePrefix = currentTitle.substring(0, separatorIndex).trim();
+                    document.title = pagePrefix + ' | ' + g.siteName;
+                } else {
+                    document.title = g.siteName + ' | Digital Agency & Technology Solutions';
+                }
                 document.querySelectorAll('.footer-logo span').forEach(el => el.textContent = g.siteName);
             }
             if (g.tagline) {
@@ -987,7 +994,40 @@ async function loadGlobalDynamicSettings() {
             }
             if (g.description) {
                 const metaDesc = document.querySelector('meta[name="description"]');
-                if (metaDesc) metaDesc.setAttribute('content', g.description);
+                if (metaDesc) {
+                    const path = window.location.pathname;
+                    const isHomePage = path === '/' || path.endsWith('index.html') || path === '';
+                    if (isHomePage || !metaDesc.getAttribute('content')) {
+                        metaDesc.setAttribute('content', g.description);
+                    }
+                }
+            }
+
+            // Dynamic JSON-LD Schema Markup injection for rich search snippets
+            if (data.contact && g.siteName) {
+                const existingSchema = document.getElementById('dynamic-schema-ld');
+                if (existingSchema) existingSchema.remove();
+
+                const schema = {
+                    "@context": "https://schema.org",
+                    "@type": "ProfessionalService",
+                    "name": g.siteName,
+                    "description": g.description || "",
+                    "url": window.location.origin,
+                    "logo": window.location.origin + "/favicon.png",
+                    "image": window.location.origin + "/favicon.png",
+                    "telephone": data.contact.phone || "",
+                    "email": data.contact.email || "",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": data.contact.address || ""
+                    }
+                };
+                const script = document.createElement('script');
+                script.id = 'dynamic-schema-ld';
+                script.type = 'application/ld+json';
+                script.text = JSON.stringify(schema);
+                document.head.appendChild(script);
             }
         }
         

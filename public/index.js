@@ -526,13 +526,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (founders.length === 0) {
                     foundersGridHome.style.display = 'none';
                 } else if (founders.length === 2) {
-                    foundersGridHome.style.display = 'grid';
+                    foundersGridHome.style.display = '';
                     foundersGridHome.innerHTML = twoFounderLayoutHTML(founders[0], founders[1], 'Home');
                     bindInteractivePOVHome();
                 } else {
                     // 1 or 3+ founders — render all as cards (no POV box)
-                    foundersGridHome.style.display = 'grid';
-                    foundersGridHome.style.gridTemplateColumns = 'repeat(auto-fit, minmax(260px, 1fr))';
+                    foundersGridHome.style.display = '';
+                    foundersGridHome.style.flexWrap = 'wrap';
+                    foundersGridHome.style.justifyContent = 'center';
                     foundersGridHome.innerHTML = founders.map(f => founderCardHTML(f)).join('');
                 }
                 renderMemberGrid(document.getElementById('teamMembersGridHome'), otherMembers, true);
@@ -544,13 +545,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (founders.length === 0) {
                     foundersGridAbout.style.display = 'none';
                 } else if (founders.length === 2) {
-                    foundersGridAbout.style.display = 'grid';
+                    foundersGridAbout.style.display = '';
                     foundersGridAbout.innerHTML = twoFounderLayoutHTML(founders[0], founders[1], 'About');
                     bindInteractivePOVAbout();
                 } else {
                     // 1 or 3+ founders — render all as simple cards
-                    foundersGridAbout.style.display = 'grid';
-                    foundersGridAbout.style.gridTemplateColumns = 'repeat(auto-fit, minmax(260px, 1fr))';
+                    foundersGridAbout.style.display = '';
+                    foundersGridAbout.style.flexWrap = 'wrap';
+                    foundersGridAbout.style.justifyContent = 'center';
                     foundersGridAbout.innerHTML = founders.map(f => founderCardHTML(f)).join('');
                 }
                 renderMemberGrid(document.getElementById('teamMembersGrid'), otherMembers, false);

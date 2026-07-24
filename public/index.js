@@ -977,6 +977,16 @@ async function loadGlobalDynamicSettings() {
                 }
             }
             
+            // Dynamically set canonical link to avoid mismatches
+            let canonicalLink = document.querySelector('link[rel="canonical"]');
+            if (!canonicalLink) {
+                canonicalLink = document.createElement('link');
+                canonicalLink.setAttribute('rel', 'canonical');
+                document.head.appendChild(canonicalLink);
+            }
+            const cleanPath = window.location.pathname.replace(/\.html$/, '');
+            canonicalLink.setAttribute('href', window.location.origin + cleanPath);
+
             if (g.siteName) {
                 const currentTitle = document.title;
                 const separatorIndex = currentTitle.indexOf('|');

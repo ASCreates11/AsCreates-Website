@@ -98,12 +98,18 @@
             hidden.forEach(s => hiddenWrap.appendChild(makeLink(s, opts.class)));
             moreWrap.appendChild(hiddenWrap);
 
-            toggleBtn = document.createElement('a');
-            toggleBtn.role = 'button';
-            toggleBtn.href = 'javascript:void(0)';
+            toggleBtn = document.createElement('button');
             toggleBtn.className = opts.class || 'social-connect-btn';
             toggleBtn.title = 'Show More';
             toggleBtn.setAttribute('aria-label', 'Show more social profiles');
+            toggleBtn.style.background = 'none';
+            toggleBtn.style.border = 'none';
+            toggleBtn.style.cursor = 'pointer';
+            toggleBtn.style.padding = '0';
+            toggleBtn.style.color = 'inherit';
+            toggleBtn.style.display = 'inline-flex';
+            toggleBtn.style.alignItems = 'center';
+            toggleBtn.style.justifyContent = 'center';
             // Plus icon
             toggleBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`;
             

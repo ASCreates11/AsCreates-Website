@@ -1657,6 +1657,8 @@ const Toast = (() => {
     return { show };
 })();
 
+/* --- PREMIUM DELAY SYSTEM --- */
+const premiumDelay = () => new Promise(r => setTimeout(r, 800));
 
 /* --- MODAL SYSTEM --- */
 const Modal = (() => {
@@ -2021,6 +2023,7 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
     };
 
     try {
+        await premiumDelay();
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/portfolio/${id}` : '/api/admin/portfolio';
         const res    = await fetch(url, {
@@ -2152,11 +2155,16 @@ document.getElementById('addServiceBtn').addEventListener('click', () => {
 });
 
 document.getElementById('saveServiceBtn').addEventListener('click', async () => {
+    const saveBtn = document.getElementById('saveServiceBtn');
+    const originalHtml = saveBtn.innerHTML;
     const id     = document.getElementById('serviceId').value;
     const title  = document.getElementById('svcTitle').value.trim();
     const desc   = document.getElementById('svcDescription').value.trim();
     const icon   = document.getElementById('svcIconSvg').value.trim();
     if (!title || !desc || !icon) { Toast.show('Title, Description and Icon SVG are required.', 'error'); return; }
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
 
     let features = '[]';
     const raw = document.getElementById('svcFeatures').value.trim();
@@ -2180,6 +2188,7 @@ document.getElementById('saveServiceBtn').addEventListener('click', async () => 
     };
 
     try {
+        await premiumDelay();
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/services/${id}` : '/api/admin/services';
         const res    = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
@@ -2192,6 +2201,9 @@ document.getElementById('saveServiceBtn').addEventListener('click', async () => 
         await loadServices(true);
     } catch (err) {
         Toast.show(err.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
     }
 });
 
@@ -2330,6 +2342,7 @@ document.getElementById('saveTestimonialBtn').addEventListener('click', async ()
     };
 
     try {
+        await premiumDelay();
         saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/testimonials/${id}` : '/api/admin/testimonials';
@@ -2524,6 +2537,7 @@ document.getElementById('saveTeamBtn').addEventListener('click', async () => {
     };
 
     try {
+        await premiumDelay();
         saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
         const method = id ? 'PUT' : 'POST';
         const url    = id ? `/api/admin/team/${id}` : '/api/admin/team';
@@ -2817,11 +2831,16 @@ document.getElementById('addHomeServiceBtn').addEventListener('click', () => {
 });
 
 document.getElementById('saveHomeServiceBtn').addEventListener('click', async () => {
+    const saveBtn = document.getElementById('saveHomeServiceBtn');
+    const originalHtml = saveBtn.innerHTML;
     const id = document.getElementById('homeServiceId').value;
     const title = document.getElementById('hsTitle').value.trim();
     const desc = document.getElementById('hsDescription').value.trim();
     const icon = document.getElementById('hsIcon').value.trim();
     if (!title || !desc || !icon) { Toast.show('Title, Description and Icon SVG code are required.', 'error'); return; }
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
 
     const payload = {
         title,
@@ -2833,6 +2852,7 @@ document.getElementById('saveHomeServiceBtn').addEventListener('click', async ()
     };
 
     try {
+        await premiumDelay();
         const method = id ? 'PUT' : 'POST';
         const url = id ? `/api/admin/home-services/${id}` : '/api/admin/home-services';
         const res = await fetch(url, {
@@ -2850,6 +2870,9 @@ document.getElementById('saveHomeServiceBtn').addEventListener('click', async ()
         await loadHomeServices(true);
     } catch (err) {
         Toast.show(err.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalHtml;
     }
 });
 
@@ -3054,6 +3077,7 @@ if (saveMediaBtn) {
             }
         };
         try {
+            await premiumDelay();
             await fetch('/api/admin/settings/media', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -3237,6 +3261,7 @@ document.getElementById('saveSocialsBtn').addEventListener('click', async () => 
     window.syncSocialsData();
 
     try {
+        await premiumDelay();
         await fetch('/api/admin/settings/socials', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -3322,6 +3347,7 @@ document.getElementById('generalSettingsForm').addEventListener('submit', async 
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Saving...';
 
+    await premiumDelay();
     await saveGeneralSettings();
     Toast.show('General settings saved!', 'success');
 
@@ -3344,6 +3370,7 @@ document.getElementById('promoBarForm').addEventListener('submit', async (e) => 
         speed:    parseInt(document.getElementById('promoSpeed').value, 10) || 15,
     };
     try {
+        await premiumDelay();
         await fetch('/api/admin/settings/promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
         Toast.show('Promotion bar saved!', 'success');
     } catch (_) { Toast.show('Promotion bar saved! (offline mode)', 'info'); }
@@ -3470,6 +3497,7 @@ document.getElementById('promoPopupForm').addEventListener('submit', async (e) =
         }
 
         saveBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Finalizing...';
+        await premiumDelay();
         await fetch('/api/admin/settings/promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
         Toast.show('Popup saved!', 'success');
         
@@ -3500,6 +3528,7 @@ document.getElementById('promoPopupForm').addEventListener('submit', async (e) =
         phone:         document.getElementById('contactPhone').value.trim(),
     };
     try {
+        await premiumDelay();
         await fetch('/api/admin/settings/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
         Toast.show('Contact info saved!', 'success');
     } catch (_) { Toast.show('Contact info saved! (offline mode)', 'info'); }
@@ -3525,6 +3554,7 @@ document.getElementById('accountForm').addEventListener('submit', async (e) => {
         password: newPass || undefined,
     };
     try {
+        await premiumDelay();
         await fetch('/api/admin/account', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'same-origin' });
         Toast.show('Account updated!', 'success');
         document.getElementById('newPassword').value     = '';
@@ -3622,6 +3652,7 @@ document.getElementById('contactFormSettingsForm')?.addEventListener('submit', a
     };
 
     try {
+        await premiumDelay();
         const res = await fetch('/api/admin/settings/contact-form', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

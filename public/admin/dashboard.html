@@ -757,7 +757,7 @@ window.addEventListener("unhandledrejection", function(event) {
                         <span class="material-symbols-outlined">upload</span>
                         Upload Image
                     </button>
-                    <input type="file" id="mediaLibraryFileInput" accept="image/*" style="display:none;">
+                    <input type="file" id="mediaLibraryFileInput" accept="image/*" style="display:none;" multiple>
                 </div>
             </div>
             <div class="card" style="margin-bottom: var(--space-4);">
@@ -2981,25 +2981,53 @@ async function loadMediaLibrary() {
 const mediaInput = document.getElementById('mediaLibraryFileInput');
 if (mediaInput) {
     mediaInput.addEventListener('change', async () => {
-        const file = mediaInput.files[0];
-        if (!file) return;
+        const files = Array.from(mediaInput.files);
+        if (files.length === 0) return;
 
-        const formData = new FormData();
-        formData.append('image', file);
+        const uploadBtn = document.getElementById('uploadMediaBtn');
+        const originalHtml = uploadBtn.innerHTML;
+        uploadBtn.disabled = true;
+
+        let successCount = 0;
+        let failCount = 0;
 
         try {
-            const res = await fetch('/api/admin/upload', {
-                method: 'POST',
-                body: formData,
-                credentials: 'same-origin'
-            });
-            const result = await res.json();
-            if (!result.success) throw new Error(result.error || 'Upload failed');
-            Toast.show('Image uploaded successfully!', 'success');
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                uploadBtn.innerHTML = `<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:6px; vertical-align:middle;"></span> Uploading ${i + 1} of ${files.length}...`;
+                
+                const formData = new FormData();
+                formData.append('image', file);
+
+                try {
+                    const res = await premiumDelay(fetch('/api/admin/upload', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'same-origin'
+                    }));
+                    const result = await res.json();
+                    if (result.success) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                        console.error('File upload failed:', file.name, result.error);
+                    }
+                } catch (err) {
+                    failCount++;
+                    console.error('File upload error:', file.name, err);
+                }
+            }
+
+            if (successCount > 0) {
+                Toast.show(`Successfully uploaded ${successCount} image${successCount > 1 ? 's' : ''}!`, 'success');
+            }
+            if (failCount > 0) {
+                Toast.show(`Failed to upload ${failCount} image${failCount > 1 ? 's' : ''}.`, 'error');
+            }
             loadMediaLibrary();
-        } catch (err) {
-            Toast.show(err.message, 'error');
         } finally {
+            uploadBtn.disabled = false;
+            uploadBtn.innerHTML = originalHtml;
             mediaInput.value = '';
         }
     });

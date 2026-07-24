@@ -446,194 +446,114 @@ document.addEventListener('DOMContentLoaded', () => {
             const founders = team.filter(isFounder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
             const otherMembers = team.filter(m => !isFounder(m)).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
-            // Hydrate homepage if elements exist
+            // Helper: render a simple founder card (used for 1 or 3+ founders)
+            const founderCardHTML = (f, id = '') => `
+                <div class="founder-card" ${id ? `id="${id}"` : ''}>
+                    <div class="founder-img-container">
+                        <img alt="${f.name}" src="${f.photo || f.image_url || ''}" width="400" height="400" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';" />
+                    </div>
+                    <h3 class="headline-sm">${f.name}</h3>
+                    <p class="founder-role">${f.role || ''}</p>
+                    <p class="founder-bio">${f.bio || ''}</p>
+                </div>
+            `;
+
+            // Helper: render the 2-founder POV layout
+            const twoFounderLayoutHTML = (f1, f2, suffix) => `
+                ${founderCardHTML(f1, `founderCard${suffix}0`)}
+                <div class="pov-box" id="povBox${suffix}">
+                    <div class="pov-content" id="povContent${suffix}0">
+                        <span class="pov-pre-heading">${f1.pov_pre_heading || 'Shaping the Future'}</span>
+                        <h3 class="pov-title">${f1.pov_title || 'Vision'}</h3>
+                        <p class="pov-text">"${(f1.pov_text || '').replace(/^"|"$/g, '')}"</p>
+                    </div>
+                    <div class="pov-content" id="povContent${suffix}1">
+                        <span class="pov-pre-heading">${f2.pov_pre_heading || 'Architecting Scale'}</span>
+                        <h3 class="pov-title">${f2.pov_title || 'Engineering'}</h3>
+                        <p class="pov-text">"${(f2.pov_text || '').replace(/^"|"$/g, '')}"</p>
+                    </div>
+                </div>
+                ${founderCardHTML(f2, `founderCard${suffix}1`)}
+            `;
+
+            // Helper: render member grid with show more toggle
+            const renderMemberGrid = (grid, members, withToggle = true) => {
+                if (!grid) return;
+                if (members.length === 0) {
+                    grid.style.display = 'none';
+                    return;
+                }
+                grid.style.display = 'grid';
+                const visibleCount = 4;
+                grid.innerHTML = members.map((m, index) => {
+                    const hide = withToggle && index >= visibleCount;
+                    return `
+                        <div class="team-member-card"${hide ? ' data-hidden="true" style="display:none;"' : ''}>
+                            <div class="member-img-container">
+                                <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
+                            </div>
+                            <h4>${m.name}</h4>
+                            <div class="member-role">${m.role || ''}</div>
+                            <p class="member-bio">${m.bio || ''}</p>
+                        </div>
+                    `;
+                }).join('');
+
+                if (withToggle && members.length > visibleCount) {
+                    const oldWrapper = grid.parentNode.querySelector('.show-more-wrapper');
+                    if (oldWrapper) oldWrapper.remove();
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = 'btn btn-secondary';
+                    toggleBtn.style.cssText = 'padding: 10px 24px; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;';
+                    toggleBtn.textContent = 'Show More';
+                    let expanded = false;
+                    toggleBtn.addEventListener('click', () => {
+                        expanded = !expanded;
+                        grid.querySelectorAll('[data-hidden="true"]').forEach(c => { c.style.display = expanded ? 'flex' : 'none'; });
+                        toggleBtn.textContent = expanded ? 'Show Less' : 'Show More';
+                    });
+                    const wrap = document.createElement('div');
+                    wrap.className = 'show-more-wrapper';
+                    wrap.style.cssText = 'grid-column: span 12; display: flex; justify-content: center; margin-top: 1.5rem;';
+                    wrap.appendChild(toggleBtn);
+                    grid.parentNode.insertBefore(wrap, grid.nextSibling);
+                }
+            };
+
+            // --- Homepage ---
             const foundersGridHome = document.getElementById('foundersGridHome');
             if (foundersGridHome) {
                 if (founders.length === 0) {
                     foundersGridHome.style.display = 'none';
-                } else if (founders.length === 1) {
+                } else if (founders.length === 2) {
                     foundersGridHome.style.display = 'grid';
-                    foundersGridHome.innerHTML = `
-                        <div class="founder-card" style="grid-column: span 12; max-width: 400px; margin: 0 auto;">
-                            <div class="founder-img-container">
-                                <img alt="${founders[0].name}" src="${founders[0].photo || founders[0].image_url || ''}" width="400" height="400" />
-                            </div>
-                            <h3 class="headline-sm">${founders[0].name}</h3>
-                            <p class="founder-role">${founders[0].role || ''}</p>
-                            <p class="founder-bio">${founders[0].bio || ''}</p>
-                        </div>
-                    `;
-                } else {
-                    foundersGridHome.style.display = 'grid';
-                    const f1 = founders[0];
-                    const f2 = founders[1];
-                    foundersGridHome.innerHTML = `
-                        <!-- Founder 1 -->
-                        <div class="founder-card" id="founderCardSriyankaHome">
-                            <div class="founder-img-container">
-                                <img alt="${f1.name}" src="${f1.photo || f1.image_url || ''}" width="400" height="400" />
-                            </div>
-                            <h3 class="headline-sm">${f1.name}</h3>
-                            <p class="founder-role">${f1.role || ''}</p>
-                            <p class="founder-bio">${f1.bio || ''}</p>
-                        </div>
-
-                        <!-- Center POV Box -->
-                        <div class="pov-box" id="povBoxHome">
-                            <div class="pov-content" id="povContentSriyankaHome">
-                                <span class="pov-pre-heading">${f1.pov_pre_heading || 'Shaping the Future'}</span>
-                                <h3 class="pov-title">${f1.pov_title || 'Vision'}</h3>
-                                <p class="pov-text">"${(f1.pov_text || '').replace(/^"|"$/g, '')}"</p>
-                            </div>
-                            <div class="pov-content" id="povContentAsishHome">
-                                <span class="pov-pre-heading">${f2.pov_pre_heading || 'Architecting Scale'}</span>
-                                <h3 class="pov-title">${f2.pov_title || 'Engineering'}</h3>
-                                <p class="pov-text">"${(f2.pov_text || '').replace(/^"|"$/g, '')}"</p>
-                            </div>
-                        </div>
-
-                        <!-- Founder 2 -->
-                        <div class="founder-card" id="founderCardAsishHome">
-                            <div class="founder-img-container">
-                                <img alt="${f2.name}" src="${f2.photo || f2.image_url || ''}" width="400" height="400" />
-                            </div>
-                            <h3 class="headline-sm">${f2.name}</h3>
-                            <p class="founder-role">${f2.role || ''}</p>
-                            <p class="founder-bio">${f2.bio || ''}</p>
-                        </div>
-                    `;
-                    
+                    foundersGridHome.innerHTML = twoFounderLayoutHTML(founders[0], founders[1], 'Home');
                     bindInteractivePOVHome();
+                } else {
+                    // 1 or 3+ founders — render all as cards (no POV box)
+                    foundersGridHome.style.display = 'grid';
+                    foundersGridHome.style.gridTemplateColumns = 'repeat(auto-fit, minmax(260px, 1fr))';
+                    foundersGridHome.innerHTML = founders.map(f => founderCardHTML(f)).join('');
                 }
-
-                const teamGridHome = document.getElementById('teamMembersGridHome');
-                if (teamGridHome) {
-                    if (otherMembers.length === 0) {
-                        teamGridHome.style.display = 'none';
-                    } else {
-                        teamGridHome.style.display = 'grid';
-                        const visibleCount = 4;
-                        teamGridHome.innerHTML = otherMembers.map((m, index) => {
-                            const hiddenAttr = index >= visibleCount ? 'data-hidden="true" style="display: none;"' : '';
-                            return `
-                                <div class="team-member-card" ${hiddenAttr}>
-                                    <div class="member-img-container">
-                                        <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
-                                    </div>
-                                    <h4>${m.name}</h4>
-                                    <div class="member-role">${m.role || ''}</div>
-                                    <p class="member-bio">${m.bio || ''}</p>
-                                </div>
-                            `;
-                        }).join('');
-
-                        if (otherMembers.length > visibleCount) {
-                            const oldWrapper = teamGridHome.parentNode.querySelector('.show-more-wrapper');
-                            if (oldWrapper) oldWrapper.remove();
-
-                            const toggleBtn = document.createElement('button');
-                            toggleBtn.className = 'btn btn-secondary';
-                            toggleBtn.style.cssText = 'padding: 10px 24px; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; justify-self: center; width: auto;';
-                            toggleBtn.innerHTML = 'Show More';
-                            
-                            let isExpanded = false;
-                            toggleBtn.addEventListener('click', () => {
-                                const hiddenCards = teamGridHome.querySelectorAll('[data-hidden="true"]');
-                                isExpanded = !isExpanded;
-                                hiddenCards.forEach(card => {
-                                    card.style.display = isExpanded ? 'flex' : 'none';
-                                });
-                                toggleBtn.innerHTML = isExpanded ? 'Show Less' : 'Show More';
-                            });
-                            
-                            const btnWrapper = document.createElement('div');
-                            btnWrapper.className = 'show-more-wrapper';
-                            btnWrapper.style.cssText = 'grid-column: span 12; display: flex; justify-content: center; margin-top: 1.5rem;';
-                            btnWrapper.appendChild(toggleBtn);
-                            teamGridHome.parentNode.insertBefore(btnWrapper, teamGridHome.nextSibling);
-                        }
-                    }
-                }
+                renderMemberGrid(document.getElementById('teamMembersGridHome'), otherMembers, true);
             }
 
-            // Hydrate about page if elements exist
+            // --- About Page ---
             const foundersGridAbout = document.getElementById('foundersGrid');
             if (foundersGridAbout) {
                 if (founders.length === 0) {
                     foundersGridAbout.style.display = 'none';
-                } else if (founders.length === 1) {
+                } else if (founders.length === 2) {
                     foundersGridAbout.style.display = 'grid';
-                    foundersGridAbout.innerHTML = `
-                        <div class="founder-card" style="grid-column: span 12; max-width: 400px; margin: 0 auto;">
-                            <div class="founder-img-container">
-                                <img alt="${founders[0].name}" src="${founders[0].photo || founders[0].image_url || ''}" width="400" height="400" />
-                            </div>
-                            <h3 class="headline-sm">${founders[0].name}</h3>
-                            <p class="founder-role">${founders[0].role || ''}</p>
-                            <p class="founder-bio">${founders[0].bio || ''}</p>
-                        </div>
-                    `;
-                } else {
-                    foundersGridAbout.style.display = 'grid';
-                    const f1 = founders[0];
-                    const f2 = founders[1];
-                    foundersGridAbout.innerHTML = `
-                        <!-- Founder 1 -->
-                        <div class="founder-card" id="founderCardSriyanka">
-                            <div class="founder-img-container">
-                                <img alt="${f1.name}" src="${f1.photo || f1.image_url || ''}" width="400" height="400" />
-                            </div>
-                            <h3 class="headline-sm">${f1.name}</h3>
-                            <p class="founder-role">${f1.role || ''}</p>
-                            <p class="founder-bio">${f1.bio || ''}</p>
-                        </div>
-
-                        <!-- Center POV Box -->
-                        <div class="pov-box" id="povBox">
-                            <div class="pov-content" id="povContentSriyanka">
-                                <span class="pov-pre-heading">${f1.pov_pre_heading || 'Shaping the Future'}</span>
-                                <h3 class="pov-title">${f1.pov_title || 'Vision'}</h3>
-                                <p class="pov-text">"${(f1.pov_text || '').replace(/^"|"$/g, '')}"</p>
-                            </div>
-                            <div class="pov-content" id="povContentAsish">
-                                <span class="pov-pre-heading">${f2.pov_pre_heading || 'Architecting Scale'}</span>
-                                <h3 class="pov-title">${f2.pov_title || 'Engineering'}</h3>
-                                <p class="pov-text">"${(f2.pov_text || '').replace(/^"|"$/g, '')}"</p>
-                            </div>
-                        </div>
-
-                        <!-- Founder 2 -->
-                        <div class="founder-card" id="founderCardAsish">
-                            <div class="founder-img-container">
-                                <img alt="${f2.name}" src="${f2.photo || f2.image_url || ''}" width="400" height="400" />
-                            </div>
-                            <h3 class="headline-sm">${f2.name}</h3>
-                            <p class="founder-role">${f2.role || ''}</p>
-                            <p class="founder-bio">${f2.bio || ''}</p>
-                        </div>
-                    `;
-                    
+                    foundersGridAbout.innerHTML = twoFounderLayoutHTML(founders[0], founders[1], 'About');
                     bindInteractivePOVAbout();
+                } else {
+                    // 1 or 3+ founders — render all as simple cards
+                    foundersGridAbout.style.display = 'grid';
+                    foundersGridAbout.style.gridTemplateColumns = 'repeat(auto-fit, minmax(260px, 1fr))';
+                    foundersGridAbout.innerHTML = founders.map(f => founderCardHTML(f)).join('');
                 }
-
-                const teamGridAbout = document.getElementById('teamMembersGrid');
-                if (teamGridAbout) {
-                    if (otherMembers.length === 0) {
-                        teamGridAbout.style.display = 'none';
-                    } else {
-                        teamGridAbout.style.display = 'grid';
-                        teamGridAbout.innerHTML = otherMembers.map(m => `
-                            <div class="team-member-card">
-                                <div class="member-img-container">
-                                    <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
-                                </div>
-                                <h4>${m.name}</h4>
-                                <div class="member-role">${m.role || ''}</div>
-                                <p class="member-bio">${m.bio || ''}</p>
-                            </div>
-                        `).join('');
-                    }
-                }
+                renderMemberGrid(document.getElementById('teamMembersGrid'), otherMembers, false);
             }
         } catch(e) { console.warn('Dynamic team hydration failed:', e); }
     };

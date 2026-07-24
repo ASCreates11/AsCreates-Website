@@ -962,6 +962,21 @@ async function loadGlobalDynamicSettings() {
                 }
             }
             
+            if (g.googleAnalyticsId) {
+                if (!window.gtag) {
+                    const gaId = g.googleAnalyticsId;
+                    const script = document.createElement('script');
+                    script.async = true;
+                    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+                    document.head.appendChild(script);
+
+                    window.dataLayer = window.dataLayer || [];
+                    window.gtag = function(){ dataLayer.push(arguments); };
+                    gtag('js', new Date());
+                    gtag('config', gaId);
+                }
+            }
+            
             if (g.siteName) {
                 document.title = g.siteName + ' | Digital Agency & Technology Solutions';
                 document.querySelectorAll('.footer-logo span').forEach(el => el.textContent = g.siteName);

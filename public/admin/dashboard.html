@@ -1079,6 +1079,11 @@ window.addEventListener("unhandledrejection", function(event) {
                                 <textarea class="field-textarea" id="siteDescription" rows="3" placeholder="Brief description shown in search results…"></textarea>
                                 <span class="field-hint">Keep under 160 characters for best SEO results.</span>
                             </div>
+                            <div class="field-group" style="margin-bottom: var(--space-4);">
+                                <label class="field-label" for="googleAnalyticsId">Google Analytics Measurement ID</label>
+                                <input class="field-input" type="text" id="googleAnalyticsId" placeholder="e.g. G-XXXXXXXXXX">
+                                <span class="field-hint">Paste your Google Analytics 4 (GA4) Measurement ID to track site visits.</span>
+                            </div>
                             <div class="divider"></div>
                             
                             <div class="toggle-row" style="margin-bottom: var(--space-3);">
@@ -3370,6 +3375,7 @@ async function saveGeneralSettings() {
         siteName:      document.getElementById('siteName').value.trim(),
         tagline:       document.getElementById('siteTagline').value.trim(),
         description:   document.getElementById('siteDescription').value.trim(),
+        googleAnalyticsId: document.getElementById('googleAnalyticsId').value.trim(),
         maintenance:   document.getElementById('maintenanceMode').checked,
         contactForm:   document.getElementById('contactFormEnabled').checked,
         isDeployed:    isSiteDeployed
@@ -3907,6 +3913,7 @@ function populateSettingsFromData(data) {
         document.getElementById('siteName').value        = data.general.siteName || 'AS Creates';
         document.getElementById('siteTagline').value    = data.general.tagline || '';
         document.getElementById('siteDescription').value= data.general.description || '';
+        document.getElementById('googleAnalyticsId').value = data.general.googleAnalyticsId || '';
         document.getElementById('maintenanceMode').checked   = !!data.general.maintenance;
         document.getElementById('contactFormEnabled').checked = data.general.contactForm !== false;
         

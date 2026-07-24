@@ -204,248 +204,232 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Team Section Interactive POV Logic (About Us Page) ---
     const foundersGrid = document.getElementById('foundersGrid');
-    const founderCardSriyanka = document.getElementById('founderCardSriyanka');
-    const founderCardAsish = document.getElementById('founderCardAsish');
-    const povBox = document.getElementById('povBox');
-    const povContentSriyanka = document.getElementById('povContentSriyanka');
-    const povContentAsish = document.getElementById('povContentAsish');
+    if (foundersGrid) {
+        const cards = foundersGrid.querySelectorAll('.founder-card');
+        const povBox = foundersGrid.querySelector('.pov-box');
+        const povContents = povBox ? povBox.querySelectorAll('.pov-content') : [];
+        const card1 = cards[0];
+        const card2 = cards[1];
+        const povContent1 = povContents[0];
+        const povContent2 = povContents[1];
 
-    if (foundersGrid && founderCardSriyanka && founderCardAsish && povBox) {
-        let activeScrollY = 0;
-        let autoCycleActive = true;
-        let currentPOV = 'sriyanka';
-        let autoCycleInterval = null;
+        if (card1 && card2 && povBox && povContent1 && povContent2) {
+            let activeScrollY = 0;
+            let autoCycleActive = true;
+            let currentPOV = 0; // 0 for card1, 1 for card2
+            let autoCycleInterval = null;
 
-        const showSriyankaPOV = () => {
-            povContentAsish.style.display = 'none';
-            povContentSriyanka.style.display = 'block';
-            foundersGrid.classList.add('show-pov-sriyanka');
-            foundersGrid.classList.remove('show-pov-asish');
-        };
-
-        const showAsishPOV = () => {
-            povContentSriyanka.style.display = 'none';
-            povContentAsish.style.display = 'block';
-            foundersGrid.classList.add('show-pov-asish');
-            foundersGrid.classList.remove('show-pov-sriyanka');
-        };
-
-        const clearPOV = (force = false) => {
-            if (!force && (foundersGrid.classList.contains('active-sriyanka') || foundersGrid.classList.contains('active-asish'))) {
-                return;
-            }
-            foundersGrid.classList.remove('show-pov-sriyanka', 'show-pov-asish');
-        };
-
-        const startTimer = () => {
-            if (!autoCycleActive) return;
-            if (autoCycleInterval) clearInterval(autoCycleInterval);
-            
-            autoCycleInterval = setInterval(() => {
-                currentPOV = (currentPOV === 'sriyanka') ? 'asish' : 'sriyanka';
-                if (currentPOV === 'sriyanka') {
-                    showSriyankaPOV();
+            const showPOV = (idx) => {
+                if (idx === 0) {
+                    povContent2.style.display = 'none';
+                    povContent1.style.display = 'block';
+                    foundersGrid.classList.add('show-pov-sriyanka');
+                    foundersGrid.classList.remove('show-pov-asish');
                 } else {
-                    showAsishPOV();
+                    povContent1.style.display = 'none';
+                    povContent2.style.display = 'block';
+                    foundersGrid.classList.add('show-pov-asish');
+                    foundersGrid.classList.remove('show-pov-sriyanka');
                 }
-            }, 3500);
-        };
+            };
 
-        const stopAutoCycle = () => {
-            autoCycleActive = false;
-            if (autoCycleInterval) {
-                clearInterval(autoCycleInterval);
-                autoCycleInterval = null;
-            }
-        };
+            const clearPOV = (force = false) => {
+                if (!force && (foundersGrid.classList.contains('active-sriyanka') || foundersGrid.classList.contains('active-asish'))) {
+                    return;
+                }
+                foundersGrid.classList.remove('show-pov-sriyanka', 'show-pov-asish');
+            };
 
-        const pauseAutoCycle = () => {
-            if (autoCycleInterval) {
-                clearInterval(autoCycleInterval);
-                autoCycleInterval = null;
-            }
-        };
+            const startTimer = () => {
+                if (!autoCycleActive) return;
+                if (autoCycleInterval) clearInterval(autoCycleInterval);
+                
+                autoCycleInterval = setInterval(() => {
+                    currentPOV = (currentPOV === 0) ? 1 : 0;
+                    showPOV(currentPOV);
+                }, 3500);
+            };
 
-        // Initialize auto cycle on page load
-        showSriyankaPOV();
-        startTimer();
+            const pauseAutoCycle = () => {
+                if (autoCycleInterval) {
+                    clearInterval(autoCycleInterval);
+                    autoCycleInterval = null;
+                }
+            };
 
-        // Sriyanka Hover
-        founderCardSriyanka.addEventListener('mouseenter', () => {
-            if (autoCycleActive) {
+            // Initialize auto cycle
+            showPOV(0);
+            startTimer();
+
+            card1.addEventListener('mouseenter', () => {
+                if (autoCycleActive) {
+                    pauseAutoCycle();
+                    showPOV(0);
+                    currentPOV = 0;
+                } else if (!foundersGrid.classList.contains('active-sriyanka') && !foundersGrid.classList.contains('active-asish')) {
+                    showPOV(0);
+                }
+            });
+
+            card2.addEventListener('mouseenter', () => {
+                if (autoCycleActive) {
+                    pauseAutoCycle();
+                    showPOV(1);
+                    currentPOV = 1;
+                } else if (!foundersGrid.classList.contains('active-sriyanka') && !foundersGrid.classList.contains('active-asish')) {
+                    showPOV(1);
+                }
+            });
+
+            foundersGrid.addEventListener('mouseleave', () => {
+                if (autoCycleActive) {
+                    startTimer();
+                } else {
+                    clearPOV();
+                }
+            });
+
+            card1.addEventListener('click', (e) => {
+                e.stopPropagation();
+                autoCycleActive = false;
                 pauseAutoCycle();
-                showSriyankaPOV();
-                currentPOV = 'sriyanka';
-            } else if (!foundersGrid.classList.contains('active-sriyanka') && !foundersGrid.classList.contains('active-asish')) {
-                showSriyankaPOV();
-            }
-        });
+                if (foundersGrid.classList.contains('active-sriyanka')) {
+                    foundersGrid.classList.remove('active-sriyanka');
+                    clearPOV(true);
+                } else {
+                    foundersGrid.classList.remove('active-asish');
+                    foundersGrid.classList.add('active-sriyanka');
+                    showPOV(0);
+                    activeScrollY = window.scrollY;
+                }
+            });
 
-        // Asish Hover
-        founderCardAsish.addEventListener('mouseenter', () => {
-            if (autoCycleActive) {
+            card2.addEventListener('click', (e) => {
+                e.stopPropagation();
+                autoCycleActive = false;
                 pauseAutoCycle();
-                showAsishPOV();
-                currentPOV = 'asish';
-            } else if (!foundersGrid.classList.contains('active-sriyanka') && !foundersGrid.classList.contains('active-asish')) {
-                showAsishPOV();
-            }
-        });
+                if (foundersGrid.classList.contains('active-asish')) {
+                    foundersGrid.classList.remove('active-asish');
+                    clearPOV(true);
+                } else {
+                    foundersGrid.classList.remove('active-sriyanka');
+                    foundersGrid.classList.add('active-asish');
+                    showPOV(1);
+                    activeScrollY = window.scrollY;
+                }
+            });
 
-        // Grid Mouse Leave
-        foundersGrid.addEventListener('mouseleave', () => {
-            if (autoCycleActive) {
-                startTimer();
-            } else {
-                clearPOV();
-            }
-        });
-
-        // Sriyanka Click
-        founderCardSriyanka.addEventListener('click', (e) => {
-            e.stopPropagation();
-            stopAutoCycle(); // Disable auto-cycle permanently
-            if (foundersGrid.classList.contains('active-sriyanka')) {
-                foundersGrid.classList.remove('active-sriyanka');
-                clearPOV(true);
-            } else {
-                foundersGrid.classList.remove('active-asish');
-                foundersGrid.classList.add('active-sriyanka');
-                showSriyankaPOV();
-                activeScrollY = window.scrollY;
-            }
-        });
-
-        // Asish Click
-        founderCardAsish.addEventListener('click', (e) => {
-            e.stopPropagation();
-            stopAutoCycle(); // Disable auto-cycle permanently
-            if (foundersGrid.classList.contains('active-asish')) {
-                foundersGrid.classList.remove('active-asish');
-                clearPOV(true);
-            } else {
-                foundersGrid.classList.remove('active-sriyanka');
-                foundersGrid.classList.add('active-asish');
-                showAsishPOV();
-                activeScrollY = window.scrollY;
-            }
-        });
-
-        // Click outside to close
-        document.addEventListener('click', (e) => {
-            if (!foundersGrid.contains(e.target)) {
-                foundersGrid.classList.remove('active-sriyanka', 'active-asish');
-                clearPOV(true);
-            }
-        });
-
-        // Scroll reset logic (resets if user scrolls by more than 200px)
-        window.addEventListener('scroll', () => {
-            if (foundersGrid.classList.contains('active-sriyanka') || foundersGrid.classList.contains('active-asish')) {
-                if (Math.abs(window.scrollY - activeScrollY) > 200) {
+            document.addEventListener('click', (e) => {
+                if (!foundersGrid.contains(e.target)) {
                     foundersGrid.classList.remove('active-sriyanka', 'active-asish');
                     clearPOV(true);
                 }
-            }
-        });
+            });
+
+            window.addEventListener('scroll', () => {
+                if (foundersGrid.classList.contains('active-sriyanka') || foundersGrid.classList.contains('active-asish')) {
+                    if (Math.abs(window.scrollY - activeScrollY) > 200) {
+                        foundersGrid.classList.remove('active-sriyanka', 'active-asish');
+                        clearPOV(true);
+                    }
+                }
+            });
+        }
     }
 
     // --- Team Section Interactive POV Logic (Home landing Page) ---
     const foundersGridHome = document.getElementById('foundersGridHome');
-    const founderCardSriyankaHome = document.getElementById('founderCardSriyankaHome');
-    const founderCardAsishHome = document.getElementById('founderCardAsishHome');
-    const povBoxHome = document.getElementById('povBoxHome');
-    const povContentSriyankaHome = document.getElementById('povContentSriyankaHome');
-    const povContentAsishHome = document.getElementById('povContentAsishHome');
+    if (foundersGridHome) {
+        const cards = foundersGridHome.querySelectorAll('.founder-card');
+        const povBoxHome = foundersGridHome.querySelector('.pov-box');
+        const povContentsHome = povBoxHome ? povBoxHome.querySelectorAll('.pov-content') : [];
+        const card1Home = cards[0];
+        const card2Home = cards[1];
+        const povContent1Home = povContentsHome[0];
+        const povContent2Home = povContentsHome[1];
 
-    if (foundersGridHome && founderCardSriyankaHome && founderCardAsishHome && povBoxHome) {
-        let activeScrollYHome = 0;
+        if (card1Home && card2Home && povBoxHome && povContent1Home && povContent2Home) {
+            let activeScrollYHome = 0;
 
-        const showSriyankaPOVHome = () => {
-            povContentAsishHome.style.display = 'none';
-            povContentSriyankaHome.style.display = 'block';
-            foundersGridHome.classList.add('show-pov-sriyanka');
-            foundersGridHome.classList.remove('show-pov-asish');
-        };
+            const showPOVHome = (idx) => {
+                if (idx === 0) {
+                    povContent2Home.style.display = 'none';
+                    povContent1Home.style.display = 'block';
+                    foundersGridHome.classList.add('show-pov-sriyanka');
+                    foundersGridHome.classList.remove('show-pov-asish');
+                } else {
+                    povContent1Home.style.display = 'none';
+                    povContent2Home.style.display = 'block';
+                    foundersGridHome.classList.add('show-pov-asish');
+                    foundersGridHome.classList.remove('show-pov-sriyanka');
+                }
+            };
 
-        const showAsishPOVHome = () => {
-            povContentSriyankaHome.style.display = 'none';
-            povContentAsishHome.style.display = 'block';
-            foundersGridHome.classList.add('show-pov-asish');
-            foundersGridHome.classList.remove('show-pov-sriyanka');
-        };
+            const clearPOVHome = (force = false) => {
+                if (!force && (foundersGridHome.classList.contains('active-sriyanka') || foundersGridHome.classList.contains('active-asish'))) {
+                    return;
+                }
+                foundersGridHome.classList.remove('show-pov-sriyanka', 'show-pov-asish');
+            };
 
-        const clearPOVHome = (force = false) => {
-            if (!force && (foundersGridHome.classList.contains('active-sriyanka') || foundersGridHome.classList.contains('active-asish'))) {
-                return;
-            }
-            foundersGridHome.classList.remove('show-pov-sriyanka', 'show-pov-asish');
-        };
+            card1Home.addEventListener('mouseenter', () => {
+                if (!foundersGridHome.classList.contains('active-sriyanka') && !foundersGridHome.classList.contains('active-asish')) {
+                    showPOVHome(0);
+                }
+            });
 
-        // Sriyanka Hover
-        founderCardSriyankaHome.addEventListener('mouseenter', () => {
-            if (!foundersGridHome.classList.contains('active-sriyanka') && !foundersGridHome.classList.contains('active-asish')) {
-                showSriyankaPOVHome();
-            }
-        });
+            card2Home.addEventListener('mouseenter', () => {
+                if (!foundersGridHome.classList.contains('active-sriyanka') && !foundersGridHome.classList.contains('active-asish')) {
+                    showPOVHome(1);
+                }
+            });
 
-        // Asish Hover
-        founderCardAsishHome.addEventListener('mouseenter', () => {
-            if (!foundersGridHome.classList.contains('active-sriyanka') && !foundersGridHome.classList.contains('active-asish')) {
-                showAsishPOVHome();
-            }
-        });
+            foundersGridHome.addEventListener('mouseleave', () => {
+                clearPOVHome();
+            });
 
-        // Grid Mouse Leave
-        foundersGridHome.addEventListener('mouseleave', () => {
-            clearPOVHome();
-        });
+            card1Home.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (foundersGridHome.classList.contains('active-sriyanka')) {
+                    foundersGridHome.classList.remove('active-sriyanka');
+                    clearPOVHome(true);
+                } else {
+                    foundersGridHome.classList.remove('active-asish');
+                    foundersGridHome.classList.add('active-sriyanka');
+                    showPOVHome(0);
+                    activeScrollYHome = window.scrollY;
+                }
+            });
 
-        // Sriyanka Click
-        founderCardSriyankaHome.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (foundersGridHome.classList.contains('active-sriyanka')) {
-                foundersGridHome.classList.remove('active-sriyanka');
-                clearPOVHome(true);
-            } else {
-                foundersGridHome.classList.remove('active-asish');
-                foundersGridHome.classList.add('active-sriyanka');
-                showSriyankaPOVHome();
-                activeScrollYHome = window.scrollY;
-            }
-        });
+            card2Home.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (foundersGridHome.classList.contains('active-asish')) {
+                    foundersGridHome.classList.remove('active-asish');
+                    clearPOVHome(true);
+                } else {
+                    foundersGridHome.classList.remove('active-sriyanka');
+                    foundersGridHome.classList.add('active-asish');
+                    showPOVHome(1);
+                    activeScrollYHome = window.scrollY;
+                }
+            });
 
-        // Asish Click
-        founderCardAsishHome.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (foundersGridHome.classList.contains('active-asish')) {
-                foundersGridHome.classList.remove('active-asish');
-                clearPOVHome(true);
-            } else {
-                foundersGridHome.classList.remove('active-sriyanka');
-                foundersGridHome.classList.add('active-asish');
-                showAsishPOVHome();
-                activeScrollYHome = window.scrollY;
-            }
-        });
-
-        // Click outside to close
-        document.addEventListener('click', (e) => {
-            if (!foundersGridHome.contains(e.target)) {
-                foundersGridHome.classList.remove('active-sriyanka', 'active-asish');
-                clearPOVHome(true);
-            }
-        });
-
-        // Scroll reset logic
-        window.addEventListener('scroll', () => {
-            if (foundersGridHome.classList.contains('active-sriyanka') || foundersGridHome.classList.contains('active-asish')) {
-                if (Math.abs(window.scrollY - activeScrollYHome) > 200) {
+            document.addEventListener('click', (e) => {
+                if (!foundersGridHome.contains(e.target)) {
                     foundersGridHome.classList.remove('active-sriyanka', 'active-asish');
                     clearPOVHome(true);
                 }
-            }
-        });
+            });
+
+            window.addEventListener('scroll', () => {
+                if (foundersGridHome.classList.contains('active-sriyanka') || foundersGridHome.classList.contains('active-asish')) {
+                    if (Math.abs(window.scrollY - activeScrollYHome) > 200) {
+                        foundersGridHome.classList.remove('active-sriyanka', 'active-asish');
+                        clearPOVHome(true);
+                    }
+                }
+            });
+        }
     }
 
     // --- Dynamic Team & Founders Hydration ---
@@ -457,77 +441,140 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!Array.isArray(team) || team.length === 0) return;
 
             const isFounder = m => m.is_founder === 1 || m.is_founder === true || String(m.is_founder) === '1';
-            const founders = team.filter(isFounder);
+            const founders = team.filter(isFounder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+            const otherMembers = team.filter(m => !isFounder(m)).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
-            if (founders.length > 0) {
-                // Find Sriyanka & Asish specifically by name or role to avoid order swapping
-                const f1 = founders.find(m => (m.name && m.name.toLowerCase().includes('sriyanka')) || (m.role && m.role.toLowerCase().includes('ceo'))) || founders[0];
-                const f2 = founders.find(m => m !== f1 && ((m.name && m.name.toLowerCase().includes('asish')) || (m.role && m.role.toLowerCase().includes('cto')))) || founders[1] || f1;
+            // Hydrate homepage if elements exist
+            const foundersGridHome = document.getElementById('foundersGridHome');
+            if (foundersGridHome) {
+                const cards = foundersGridHome.querySelectorAll('.founder-card');
+                const povBoxEl = foundersGridHome.querySelector('.pov-box');
+                const povContents = povBoxEl ? povBoxEl.querySelectorAll('.pov-content') : [];
 
-                const f1Card = document.getElementById('founderCardSriyankaHome');
-                if (f1Card && f1) {
-                    const img = f1Card.querySelector('img');
-                    if (img && (f1.photo || f1.image_url)) img.src = f1.photo || f1.image_url;
-                    const h3 = f1Card.querySelector('h3');
-                    if (h3 && f1.name) h3.textContent = f1.name;
-                    const role = f1Card.querySelector('.founder-role');
-                    if (role && f1.role) role.textContent = f1.role;
-                    const bio = f1Card.querySelector('.founder-bio');
-                    if (bio && f1.bio) bio.textContent = f1.bio;
-                }
-                const pov1 = document.getElementById('povContentSriyankaHome');
-                if (pov1 && f1) {
-                    const pre = pov1.querySelector('.pov-pre-heading');
-                    if (pre && f1.pov_pre_heading) pre.textContent = f1.pov_pre_heading;
-                    const title = pov1.querySelector('.pov-title');
-                    if (title && f1.pov_title) title.textContent = f1.pov_title;
-                    const text = pov1.querySelector('.pov-text');
-                    if (text && f1.pov_text) text.textContent = `"${f1.pov_text.replace(/^"|"$/g, '')}"`;
-                }
-
-                if (f2 && f2 !== f1) {
-                    const f2Card = document.getElementById('founderCardAsishHome');
-                    if (f2Card) {
-                        const img = f2Card.querySelector('img');
-                        if (img && (f2.photo || f2.image_url)) img.src = f2.photo || f2.image_url;
-                        const h3 = f2Card.querySelector('h3');
-                        if (h3 && f2.name) h3.textContent = f2.name;
-                        const role = f2Card.querySelector('.founder-role');
-                        if (role && f2.role) role.textContent = f2.role;
-                        const bio = f2Card.querySelector('.founder-bio');
-                        if (bio && f2.bio) bio.textContent = f2.bio;
+                founders.forEach((f, idx) => {
+                    const card = cards[idx];
+                    if (card) {
+                        const img = card.querySelector('img');
+                        if (img && (f.photo || f.image_url)) img.src = f.photo || f.image_url;
+                        if (img) img.alt = `${f.name}, ${f.role} at AS Creates`;
+                        const h3 = card.querySelector('h3');
+                        if (h3) h3.textContent = f.name || '';
+                        const role = card.querySelector('.founder-role');
+                        if (role) role.textContent = f.role || '';
+                        const bio = card.querySelector('.founder-bio');
+                        if (bio) bio.textContent = f.bio || '';
                     }
-                    const pov2 = document.getElementById('povContentAsishHome');
-                    if (pov2) {
-                        const pre = pov2.querySelector('.pov-pre-heading');
-                        if (pre && f2.pov_pre_heading) pre.textContent = f2.pov_pre_heading;
-                        const title = pov2.querySelector('.pov-title');
-                        if (title && f2.pov_title) title.textContent = f2.pov_title;
-                        const text = pov2.querySelector('.pov-text');
-                        if (text && f2.pov_text) text.textContent = `"${f2.pov_text.replace(/^"|"$/g, '')}"`;
+
+                    const pov = povContents[idx];
+                    if (pov) {
+                        const pre = pov.querySelector('.pov-pre-heading');
+                        if (pre) pre.textContent = f.pov_pre_heading || '';
+                        const title = pov.querySelector('.pov-title');
+                        if (title) title.textContent = f.pov_title || '';
+                        const text = pov.querySelector('.pov-text');
+                        if (text) text.textContent = f.pov_text ? `"${f.pov_text.replace(/^"|"$/g, '')}"` : '""';
+                    }
+                });
+
+                const teamGridHome = document.getElementById('teamMembersGridHome');
+                if (teamGridHome) {
+                    if (otherMembers.length === 0) {
+                        teamGridHome.style.display = 'none';
+                    } else {
+                        teamGridHome.style.display = 'grid';
+                        const visibleCount = 4;
+                        teamGridHome.innerHTML = otherMembers.map((m, index) => {
+                            const hiddenAttr = index >= visibleCount ? 'data-hidden="true" style="display: none;"' : '';
+                            return `
+                                <div class="team-member-card" ${hiddenAttr}>
+                                    <div class="member-img-container">
+                                        <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
+                                    </div>
+                                    <h4>${m.name}</h4>
+                                    <div class="member-role">${m.role || ''}</div>
+                                    <p class="member-bio">${m.bio || ''}</p>
+                                </div>
+                            `;
+                        }).join('');
+
+                        if (otherMembers.length > visibleCount) {
+                            const oldWrapper = teamGridHome.parentNode.querySelector('.show-more-wrapper');
+                            if (oldWrapper) oldWrapper.remove();
+
+                            const toggleBtn = document.createElement('button');
+                            toggleBtn.className = 'btn btn-secondary';
+                            toggleBtn.style.cssText = 'padding: 10px 24px; border-radius: 9999px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; justify-self: center; width: auto;';
+                            toggleBtn.innerHTML = 'Show More';
+                            
+                            let isExpanded = false;
+                            toggleBtn.addEventListener('click', () => {
+                                const hiddenCards = teamGridHome.querySelectorAll('[data-hidden="true"]');
+                                isExpanded = !isExpanded;
+                                hiddenCards.forEach(card => {
+                                    card.style.display = isExpanded ? 'flex' : 'none';
+                                });
+                                toggleBtn.innerHTML = isExpanded ? 'Show Less' : 'Show More';
+                            });
+                            
+                            const btnWrapper = document.createElement('div');
+                            btnWrapper.className = 'show-more-wrapper';
+                            btnWrapper.style.cssText = 'grid-column: span 12; display: flex; justify-content: center; margin-top: 1.5rem;';
+                            btnWrapper.appendChild(toggleBtn);
+                            teamGridHome.parentNode.insertBefore(btnWrapper, teamGridHome.nextSibling);
+                        }
                     }
                 }
             }
 
-            const teamGrid = document.getElementById('teamMembersGridHome');
-            const mainFounderIds = new Set(team.filter(isFounder).slice(0, 2).map(m => m.id));
-            const otherMembers = team.filter(m => !isFounder(m) && !mainFounderIds.has(m.id));
-            
-            if (teamGrid) {
-                if (otherMembers.length === 0) {
-                    teamGrid.style.display = 'none';
-                } else {
-                    teamGrid.style.display = 'grid';
-                    teamGrid.innerHTML = otherMembers.map(m => `
-                        <div class="team-member-card">
-                            <div class="member-img-container">
-                                <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
+            // Hydrate about page if elements exist
+            const foundersGridAbout = document.getElementById('foundersGrid');
+            if (foundersGridAbout) {
+                const cards = foundersGridAbout.querySelectorAll('.founder-card');
+                const povBoxEl = foundersGridAbout.querySelector('.pov-box');
+                const povContents = povBoxEl ? povBoxEl.querySelectorAll('.pov-content') : [];
+
+                founders.forEach((f, idx) => {
+                    const card = cards[idx];
+                    if (card) {
+                        const img = card.querySelector('img');
+                        if (img && (f.photo || f.image_url)) img.src = f.photo || f.image_url;
+                        if (img) img.alt = `${f.name}, ${f.role} at AS Creates`;
+                        const h3 = card.querySelector('h3');
+                        if (h3) h3.textContent = f.name || '';
+                        const role = card.querySelector('.founder-role');
+                        if (role) role.textContent = f.role || '';
+                        const bio = card.querySelector('.founder-bio');
+                        if (bio) bio.textContent = f.bio || '';
+                    }
+
+                    const pov = povContents[idx];
+                    if (pov) {
+                        const pre = pov.querySelector('.pov-pre-heading');
+                        if (pre) pre.textContent = f.pov_pre_heading || '';
+                        const title = pov.querySelector('.pov-title');
+                        if (title) title.textContent = f.pov_title || '';
+                        const text = pov.querySelector('.pov-text');
+                        if (text) text.textContent = f.pov_text ? `"${f.pov_text.replace(/^"|"$/g, '')}"` : '""';
+                    }
+                });
+
+                const teamGridAbout = document.getElementById('teamMembersGrid');
+                if (teamGridAbout) {
+                    if (otherMembers.length === 0) {
+                        teamGridAbout.style.display = 'none';
+                    } else {
+                        teamGridAbout.style.display = 'grid';
+                        teamGridAbout.innerHTML = otherMembers.map(m => `
+                            <div class="team-member-card">
+                                <div class="member-img-container">
+                                    <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
+                                </div>
+                                <h4>${m.name}</h4>
+                                <div class="member-role">${m.role || ''}</div>
+                                <p class="member-bio">${m.bio || ''}</p>
                             </div>
-                            <h4>${m.name}</h4>
-                            <div class="member-role">${m.role || ''}</div>
-                            <p class="member-bio">${m.bio || ''}</p>
-                        </div>
-                    `).join('');
+                        `).join('');
+                    }
                 }
             }
         } catch(e) { console.warn('Dynamic team hydration failed:', e); }

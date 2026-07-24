@@ -378,77 +378,7 @@
         </div>
     </footer>
 
-    <!-- Hydrate Dynamic Data -->
-    <script>
-        (async () => {
-            // Hydrate team
-            try {
-                const res = await fetch('/api/team');
-                const team = await res.json();
-                const founders = (team || []).filter(t => t.is_founder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
-                const members = (team || []).filter(t => !t.is_founder).sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
-                const suffix = document.getElementById('foundersGridHome') ? 'Home' : '';
-                
-                const t1 = founders[0];
-                const t2 = founders[1];
-                const card1 = document.getElementById('founderCardSriyanka' + suffix);
-                const card2 = document.getElementById('founderCardAsish' + suffix);
-                const pov1 = document.getElementById('povContentSriyanka' + suffix);
-                const pov2 = document.getElementById('povContentAsish' + suffix);
-
-                if (card1 && t1) {
-                    card1.querySelector('img').src = t1.image_url;
-                    card1.querySelector('img').alt = t1.name + ', ' + t1.role + ' at AS Creates';
-                    card1.querySelector('.headline-sm').innerText = t1.name;
-                    card1.querySelector('.founder-role').innerText = t1.role;
-                    card1.querySelector('.founder-bio').innerText = t1.bio;
-                }
-                if (card2 && t2) {
-                    card2.querySelector('img').src = t2.image_url;
-                    card2.querySelector('img').alt = t2.name + ', ' + t2.role + ' at AS Creates';
-                    card2.querySelector('.headline-sm').innerText = t2.name;
-                    card2.querySelector('.founder-role').innerText = t2.role;
-                    card2.querySelector('.founder-bio').innerText = t2.bio;
-                }
-                if (pov1 && t1) {
-                    pov1.querySelector('.pov-pre-heading').innerText = t1.pov_pre_heading;
-                    pov1.querySelector('.pov-title').innerText = t1.pov_title;
-                    pov1.querySelector('.pov-text').innerText = '"' + t1.pov_text + '"';
-                }
-                if (pov2 && t2) {
-                    pov2.querySelector('.pov-pre-heading').innerText = t2.pov_pre_heading;
-                    pov2.querySelector('.pov-title').innerText = t2.pov_title;
-                    pov2.querySelector('.pov-text').innerText = '"' + t2.pov_text + '"';
-                }
-                
-                // Render team members in a 4-per-row grid below founders
-                const membersGrid = document.getElementById('teamMembersGrid');
-                if (membersGrid && members.length > 0) {
-                    membersGrid.innerHTML = '';
-                    members.forEach(t => {
-                        const card = document.createElement('div');
-                        card.className = 'team-member-card';
-                        card.innerHTML = '<div class="member-img-container"><img class="member-img" alt="' + t.name + ', ' + t.role + ' at AS Creates" src="' + (t.image_url || t.photo || '') + '" width="400" height="400" onerror="this.src=\'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80\'" /></div><h4>' + t.name + '</h4><div class="member-role">' + t.role + '</div><p class="member-bio">' + (t.bio || '') + '</p>';
-                        membersGrid.appendChild(card);
-                    });
-                }
-            } catch (err) {
-                console.warn('Dream Team hydration failed:', err);
-            }
-
-            // Hydrate site images from media API
-            // Section media (video/image) is handled by index.js via data-media-section attributes
-            // Fallback: if index.js didn't run, use static images
-            try {
-                const aboutStoryImg = document.getElementById('aboutStoryImage');
-                if (aboutStoryImg && !aboutStoryImg.src.includes('data-media-section')) {
-                    // Image is already set in HTML, index.js will override if media settings exist
-                }
-            } catch (err) {
-                console.warn('Site images hydration failed:', err);
-            }
-        })();
-    </script>
+    <!-- Team hydration is handled dynamically by index.js -->
 
     <!-- Custom JavaScript -->
     <script src="/index.js?v=2"></script>

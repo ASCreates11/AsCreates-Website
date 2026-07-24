@@ -3,7 +3,7 @@
     "siteName": "AS Creates",
     "tagline": "Digital Agency & Technology Solutions",
     "description": "Transforming digital landscapes through technical precision and creative vision.",
-    "maintenance": true,
+    "maintenance": false,
     "contactForm": true,
     "isDeployed": true
   },

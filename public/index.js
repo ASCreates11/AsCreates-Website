@@ -762,172 +762,201 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadHomeServices();
     loadTestimonials();
-    initWhatsAppWidget();
-
-    // Fetch & Initialize Promotion Bar and Promo Popup
+    initWhatsAppWidget()    // Fetch & Initialize Promotion Bar and Promo Popup
     (async function initPromotionSystem() {
+        const cachedPromo = localStorage.getItem('as_creates_promotion');
+        if (cachedPromo) {
+            try {
+                const promo = JSON.parse(cachedPromo);
+                hydratePromotionDOM(promo);
+            } catch (e) {
+                console.warn('Failed to parse cached promotion', e);
+            }
+        }
+
         try {
             const res = await fetch('/api/promotion');
             if (!res.ok) return;
             const promo = await res.json();
-            if (!promo || !promo.is_active) return;
-
-            // 1. Dynamic DOM Injection: Ensure #promoPopup HTML container exists on every page
-            let overlay = document.getElementById('promoPopup');
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.id = 'promoPopup';
-                overlay.className = 'promo-popup-overlay';
-                overlay.style.display = 'none';
-                overlay.setAttribute('role', 'dialog');
-                overlay.setAttribute('aria-modal', 'true');
-                overlay.setAttribute('aria-label', 'Special Offer');
-                overlay.innerHTML = `
-                    <div class="promo-popup-card">
-                        <button class="promo-popup-close" id="promoPopupClose" aria-label="Close popup">&times;</button>
-                        <a id="promoPopupLink" href="#" class="promo-popup-image-link">
-                            <picture>
-                                <source media="(max-width: 768px)" id="promoPopupMobileSource" srcset="">
-                                <img id="promoPopupImage" src="" alt="Special Offer" class="promo-popup-image">
-                            </picture>
-                        </a>
-                    </div>
-                `;
-                document.body.appendChild(overlay);
-            }
-
-            const img = document.getElementById('promoPopupImage');
-            const mobileSource = document.getElementById('promoPopupMobileSource');
-            const link = document.getElementById('promoPopupLink');
-            const closeBtn = document.getElementById('promoPopupClose');
-
-            const popupConfig = promo.popup || {};
-            const popupEnabled = !!popupConfig.enabled;
-
-            // Dismiss handler
-            const dismissPopup = () => {
-                if (overlay) {
-                    overlay.classList.remove('active');
-                    setTimeout(() => { overlay.style.display = 'none'; }, 300);
-                }
-                try {
-                    localStorage.setItem('promoPopupDismissed', 'true');
-                } catch(e) {}
-            };
-
-            // Bind dismiss handlers ALWAYS so close button & backdrop never fail
-            if (closeBtn && !closeBtn._hasListener) {
-                closeBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dismissPopup();
-                });
-                closeBtn._hasListener = true;
-            }
-
-            if (overlay && !overlay._hasListener) {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        dismissPopup();
-                    }
-                });
-                overlay._hasListener = true;
-            }
-
-            // Function to open promo popup
-            const openPromoPopup = () => {
-                const isMobile = window.matchMedia('(max-width: 768px)').matches;
-                const imageUrl = isMobile
-                    ? (popupConfig.mobile_image || popupConfig.desktop_image)
-                    : (popupConfig.desktop_image || popupConfig.mobile_image);
-
-                if (!imageUrl) return false;
-
-                if (img) img.src = imageUrl;
-                if (mobileSource) {
-                    if (popupConfig.mobile_image && popupConfig.desktop_image) {
-                        mobileSource.srcset = popupConfig.mobile_image;
-                    } else {
-                        mobileSource.removeAttribute('srcset');
-                    }
-                }
-                if (link) link.href = popupConfig.link_url || promo.link_url || '#';
-
-                overlay.style.display = 'flex';
-                requestAnimationFrame(() => overlay.classList.add('active'));
-                return true;
-            };
-
-            // 2. Hydrate Promotion Bar
-            const bar = document.getElementById('promotionBar');
-            const marquee = document.getElementById('promotionMarquee');
-            if (bar && marquee && promo.text) {
-                const tag = popupEnabled ? 'button' : 'a';
-                const hrefAttr = popupEnabled ? '' : `href="${promo.link_url || '/contact'}"`;
-                const innerHtml = `
-                    <span class="promo-text-node">${promo.text}</span>
-                    <${tag} ${hrefAttr} class="promo-link-node promotion-bar-btn">${promo.link_text || "Today's Exclusive Pricing"}</${tag}>
-                `;
-                let marqueeHtml = '';
-                for (let i = 0; i < 20; i++) {
-                    marqueeHtml += `<div class="promotion-bar-inner" ${i > 0 ? 'aria-hidden="true"' : ''}>${innerHtml}</div>`;
-                }
-                marquee.innerHTML = marqueeHtml;
-
-                const speed = promo.speed || 15;
-                marquee.style.animationDuration = `${speed * 10}s`;
-
-                bar.style.display = 'flex';
-                document.body.classList.add('has-promo-bar');
-
-                const linkNodes = marquee.querySelectorAll('.promo-link-node');
-                if (popupEnabled) {
-                    linkNodes.forEach(el => {
-                        el.style.cursor = 'pointer';
-                        el.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            openPromoPopup();
-                        });
-                    });
-                }
-            }
-
-            // 3. Auto-show Promo Popup if enabled & not dismissed for current image configuration
-            if (popupEnabled) {
-                const isMobile = window.matchMedia('(max-width: 768px)').matches;
-                const imageUrl = isMobile
-                    ? (popupConfig.mobile_image || popupConfig.desktop_image)
-                    : (popupConfig.desktop_image || popupConfig.mobile_image);
-
-                if (imageUrl) {
-                    const currentPopupId = (popupConfig.desktop_image || '') + '||' + (popupConfig.mobile_image || '') + '||' + (popupConfig.link_url || '');
-                    const lastShownPopupId = localStorage.getItem('promoPopupShownId');
-
-                    if (lastShownPopupId !== currentPopupId) {
-                        localStorage.removeItem('promoPopupDismissed');
-                        localStorage.setItem('promoPopupShownId', currentPopupId);
-                    }
-
-                    if (!localStorage.getItem('promoPopupDismissed')) {
-                        setTimeout(() => {
-                            openPromoPopup();
-                        }, 800);
-                    }
-                }
+            if (promo) {
+                localStorage.setItem('as_creates_promotion', JSON.stringify(promo));
+                hydratePromotionDOM(promo);
             }
         } catch(err) {
             console.warn('Promotion system failed to load:', err);
         }
     })();
-});
 
+    function hydratePromotionDOM(promo) {
+        if (!promo || !promo.is_active) {
+            const bar = document.getElementById('promotionBar');
+            if (bar) {
+                bar.style.display = 'none';
+                document.body.classList.remove('has-promo-bar');
+            }
+            return;
+        }
 
-// --- Global Settings Hydration ---
-async function loadGlobalDynamicSettings() {
-    try {
-        const res = await fetch('/api/settings');
-        const data = await res.json();
-        
+        let overlay = document.getElementById('promoPopup');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'promoPopup';
+            overlay.className = 'promo-popup-overlay';
+            overlay.style.display = 'none';
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-label', 'Special Offer');
+            overlay.innerHTML = `
+                <div class="promo-popup-card">
+                    <button class="promo-popup-close" id="promoPopupClose" aria-label="Close popup">&times;</button>
+                    <a id="promoPopupLink" href="/contact" class="promo-popup-image-link">
+                        <picture>
+                            <source media="(max-width: 768px)" id="promoPopupMobileSource" srcset="">
+                            <img id="promoPopupImage" src="" alt="Special Offer" class="promo-popup-image" width="800" height="1200">
+                        </picture>
+                    </a>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        const img = document.getElementById('promoPopupImage');
+        const mobileSource = document.getElementById('promoPopupMobileSource');
+        const link = document.getElementById('promoPopupLink');
+        const closeBtn = document.getElementById('promoPopupClose');
+
+        const popupConfig = promo.popup || {};
+        const popupEnabled = !!popupConfig.enabled;
+
+        const dismissPopup = () => {
+            if (overlay) {
+                overlay.classList.remove('active');
+                setTimeout(() => { overlay.style.display = 'none'; }, 300);
+            }
+            try {
+                localStorage.setItem('promoPopupDismissed', 'true');
+            } catch(e) {}
+        };
+
+        if (closeBtn && !closeBtn._hasListener) {
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dismissPopup();
+            });
+            closeBtn._hasListener = true;
+        }
+
+        if (overlay && !overlay._hasListener) {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    dismissPopup();
+                }
+            });
+            overlay._hasListener = true;
+        }
+
+        const openPromoPopup = () => {
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            const imageUrl = isMobile
+                ? (popupConfig.mobile_image || popupConfig.desktop_image)
+                : (popupConfig.desktop_image || popupConfig.mobile_image);
+
+            if (!imageUrl) return false;
+
+            if (img) img.src = imageUrl;
+            if (mobileSource) {
+                if (popupConfig.mobile_image && popupConfig.desktop_image) {
+                    mobileSource.srcset = popupConfig.mobile_image;
+                } else {
+                    mobileSource.removeAttribute('srcset');
+                }
+            }
+            if (link) link.href = popupConfig.link_url || promo.link_url || '/contact';
+
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => overlay.classList.add('active'));
+            return true;
+        };
+
+        const bar = document.getElementById('promotionBar');
+        const marquee = document.getElementById('promotionMarquee');
+        if (bar && marquee && promo.text) {
+            const tag = popupEnabled ? 'button' : 'a';
+            const hrefAttr = popupEnabled ? '' : `href="${promo.link_url || '/contact'}"`;
+            const innerHtml = `
+                <span class="promo-text-node">${promo.text}</span>
+                <${tag} ${hrefAttr} class="promo-link-node promotion-bar-btn">${promo.link_text || "Today's Exclusive Pricing"}</${tag}>
+            `;
+            let marqueeHtml = '';
+            for (let i = 0; i < 20; i++) {
+                marqueeHtml += `<div class="promotion-bar-inner" ${i > 0 ? 'aria-hidden="true"' : ''}>${innerHtml}</div>`;
+            }
+            marquee.innerHTML = marqueeHtml;
+
+            const speed = promo.speed || 15;
+            marquee.style.animationDuration = `${speed * 10}s`;
+
+            bar.style.display = 'flex';
+            document.body.classList.add('has-promo-bar');
+
+            const linkNodes = marquee.querySelectorAll('.promo-link-node');
+            if (popupEnabled) {
+                linkNodes.forEach(el => {
+                    el.style.cursor = 'pointer';
+                    el.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openPromoPopup();
+                    });
+                });
+            }
+        }
+
+        if (popupEnabled) {
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            const currentImg = isMobile
+                ? (popupConfig.mobile_image || popupConfig.desktop_image)
+                : (popupConfig.desktop_image || popupConfig.mobile_image);
+
+            if (currentImg) {
+                const prevImg = localStorage.getItem('promoPopupImageSeen');
+                if (prevImg !== currentImg) {
+                    localStorage.removeItem('promoPopupDismissed');
+                    localStorage.setItem('promoPopupImageSeen', currentImg);
+                }
+
+                if (!localStorage.getItem('promoPopupDismissed')) {
+                    setTimeout(() => {
+                        openPromoPopup();
+                    }, 800);
+                }
+            }
+        }
+    }
+
+    // --- Global Settings Hydration ---
+    async function loadGlobalDynamicSettings() {
+        const cachedSettings = localStorage.getItem('as_creates_settings');
+        if (cachedSettings) {
+            try {
+                const data = JSON.parse(cachedSettings);
+                hydrateDOMWithSettings(data);
+            } catch (e) {
+                console.warn('Failed to parse cached settings', e);
+            }
+        }
+
+        try {
+            const res = await fetch('/api/settings');
+            const data = await res.json();
+            if (data.success || data.contact || data.general) {
+                localStorage.setItem('as_creates_settings', JSON.stringify(data));
+                hydrateDOMWithSettings(data);
+            }
+        } catch(e) { console.error('Failed to load global settings', e); }
+    }
+
+    function hydrateDOMWithSettings(data) {
         if (data.contact) {
             const addressEls = document.querySelectorAll('.maps-address');
             addressEls.forEach(el => el.textContent = data.contact.address || '');
@@ -945,8 +974,6 @@ async function loadGlobalDynamicSettings() {
         
         if (data.general) {
             const g = data.general;
-            
-            // Client-side guard for deployment status and maintenance mode across all pages
             const isNotAdmin = !window.location.pathname.startsWith('/admin');
             if (isNotAdmin) {
                 if (g.isDeployed === false && !window.location.pathname.includes('coming-soon')) {
@@ -974,7 +1001,6 @@ async function loadGlobalDynamicSettings() {
                 }
             }
             
-            // Dynamically set canonical link to avoid mismatches
             let canonicalLink = document.querySelector('link[rel="canonical"]');
             if (!canonicalLink) {
                 canonicalLink = document.createElement('link');
@@ -1010,7 +1036,6 @@ async function loadGlobalDynamicSettings() {
                 }
             }
 
-            // Dynamic JSON-LD Schema Markup injection for rich search snippets
             if (data.contact && g.siteName) {
                 const existingSchema = document.getElementById('dynamic-schema-ld');
                 if (existingSchema) existingSchema.remove();
@@ -1095,10 +1120,7 @@ async function loadGlobalDynamicSettings() {
             renderSectionMedia('our_agency', '[data-media-section="our_agency"]');
             renderSectionMedia('our_journey', '[data-media-section="our_journey"]');
             renderSectionMedia('methodology', '[data-media-section="methodology"]');
-        }
-        
-        // Social links are rendered by js/socials.js (single source of truth)
-    } catch(e) { console.error('Failed to load global settings', e); }
+        } }
 }
 
 document.addEventListener('DOMContentLoaded', loadGlobalDynamicSettings);

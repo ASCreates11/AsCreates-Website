@@ -771,6 +771,58 @@
             height: 100%;
             border: none;
         }
+
+        /* ===== PORTFOLIO SKELETON LOADER ===== */
+        .skeleton-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 480px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        .skeleton-img {
+            height: 260px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-pulse 1.5s infinite;
+        }
+        .skeleton-info {
+            padding: var(--space-4);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            flex-grow: 1;
+        }
+        .skeleton-line {
+            height: 16px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-pulse 1.5s infinite;
+            border-radius: var(--radius-sm);
+        }
+        .skeleton-line.title {
+            width: 60%;
+            height: 24px;
+            margin-bottom: var(--space-2);
+        }
+        .skeleton-line.desc-1 {
+            width: 90%;
+        }
+        .skeleton-line.desc-2 {
+            width: 75%;
+        }
+        .skeleton-line.category {
+            width: 30%;
+            height: 12px;
+        }
+
+        @keyframes skeleton-pulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
     <script src="/js/socials.js" defer></script>
 </head>
@@ -918,23 +970,32 @@
                 <div class="grid-12" id="portfolio-grid">
                     <div class="portfolio-grid-container" id="portfolioGridContainer">
 
-                        <!-- Static fallback card -->
-                        <div class="project-card col-8" data-category="Fintech" data-id="">
-                            <div class="project-img-box" style="position:relative;">
-                                <img alt="Apex Global Trading Terminal interface dashboard"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbMDy4kiO0tZG0xxRXhQ--GfOglD6NmsKaVoYh_7UtKYD7Kif1EVfWiJnNeYOCot0RpYF0CYGi-jYA4dQTI9o4EgawrItE-maEReCFr1WnDAob7L1_hkeKwkTvxKcAJ6fKYu1kgQTAWYoS7gwnkgxOjER2jvw7RuOshn9ULOx9b7t12qf1pHyFIKl7dsP9g0FwnkZKFX5SpWevjo4Q5TfDP8NCDcsxn1VOyE_FKXfgpcEynTzbxD_xBeJSNV9gwvXkTWb7w_6IArw" />
+                        <!-- Premium Dynamic Skeleton Loader Grid -->
+                        <div class="skeleton-card col-4">
+                            <div class="skeleton-img"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton-line category"></div>
+                                <div class="skeleton-line title"></div>
+                                <div class="skeleton-line desc-1"></div>
+                                <div class="skeleton-line desc-2"></div>
                             </div>
-                            <div class="project-info-box">
-                                <span>Fintech Infrastructure</span>
-                                <h3 class="headline-sm">Apex Global Trading Terminal</h3>
-                                <p>A high-performance trading platform designed for real-time asset management,
-                                    featuring custom data orchestration and ultra-low latency dashboards.</p>
-                                <span class="read-more-hint">
-                                    Read Case Study
-                                    <svg viewBox="0 0 24 24" fill="none">
-                                        <polyline points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </span>
+                        </div>
+                        <div class="skeleton-card col-4">
+                            <div class="skeleton-img"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton-line category"></div>
+                                <div class="skeleton-line title"></div>
+                                <div class="skeleton-line desc-1"></div>
+                                <div class="skeleton-line desc-2"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton-card col-4">
+                            <div class="skeleton-img"></div>
+                            <div class="skeleton-info">
+                                <div class="skeleton-line category"></div>
+                                <div class="skeleton-line title"></div>
+                                <div class="skeleton-line desc-1"></div>
+                                <div class="skeleton-line desc-2"></div>
                             </div>
                         </div>
 

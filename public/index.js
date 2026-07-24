@@ -711,7 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <h3 class="headline-sm">${item.title}</h3>
                     <p class="body-md">${item.description}</p>
-                    <a class="service-link" href="/services">Read More</a>
+                    <a class="service-link" href="/services">Read about ${item.title}</a>
                 `;
                 grid.appendChild(card);
             });
@@ -862,9 +862,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const bar = document.getElementById('promotionBar');
             const marquee = document.getElementById('promotionMarquee');
             if (bar && marquee && promo.text) {
+                const tag = popupEnabled ? 'button' : 'a';
+                const hrefAttr = popupEnabled ? '' : `href="${promo.link_url || '/contact'}"`;
                 const innerHtml = `
                     <span class="promo-text-node">${promo.text}</span>
-                    <a href="#" class="promo-link-node promotion-bar-btn">${promo.link_text || "Today's Exclusive Pricing"}</a>
+                    <${tag} ${hrefAttr} class="promo-link-node promotion-bar-btn">${promo.link_text || "Today's Exclusive Pricing"}</${tag}>
                 `;
                 let marqueeHtml = '';
                 for (let i = 0; i < 20; i++) {
@@ -881,16 +883,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const linkNodes = marquee.querySelectorAll('.promo-link-node');
                 if (popupEnabled) {
                     linkNodes.forEach(el => {
-                        el.removeAttribute('href');
                         el.style.cursor = 'pointer';
                         el.addEventListener('click', (e) => {
                             e.preventDefault();
                             openPromoPopup();
                         });
-                    });
-                } else {
-                    linkNodes.forEach(el => {
-                        el.href = promo.link_url || '#';
                     });
                 }
             }

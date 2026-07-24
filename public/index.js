@@ -459,22 +459,24 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             // Helper: render the 2-founder POV layout
-            const twoFounderLayoutHTML = (f1, f2, suffix) => `
-                ${founderCardHTML(f1, `founderCard${suffix}0`)}
-                <div class="pov-box" id="povBox${suffix}">
-                    <div class="pov-content" id="povContent${suffix}0">
+            // CSS selectors use #founderCardSriyanka, #founderCardAsish — same on both pages (one per page)
+            const twoFounderLayoutHTML = (f1, f2) => `
+                ${founderCardHTML(f1, 'founderCardSriyanka')}
+                <div class="pov-box" id="povBox">
+                    <div class="pov-content" id="povContentSriyanka">
                         <span class="pov-pre-heading">${f1.pov_pre_heading || 'Shaping the Future'}</span>
                         <h3 class="pov-title">${f1.pov_title || 'Vision'}</h3>
                         <p class="pov-text">"${(f1.pov_text || '').replace(/^"|"$/g, '')}"</p>
                     </div>
-                    <div class="pov-content" id="povContent${suffix}1">
+                    <div class="pov-content" id="povContentAsish">
                         <span class="pov-pre-heading">${f2.pov_pre_heading || 'Architecting Scale'}</span>
                         <h3 class="pov-title">${f2.pov_title || 'Engineering'}</h3>
                         <p class="pov-text">"${(f2.pov_text || '').replace(/^"|"$/g, '')}"</p>
                     </div>
                 </div>
-                ${founderCardHTML(f2, `founderCard${suffix}1`)}
+                ${founderCardHTML(f2, 'founderCardAsish')}
             `;
+
 
             // Helper: render member grid with show more toggle
             const renderMemberGrid = (grid, members, withToggle = true) => {
@@ -527,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     foundersGridHome.style.display = 'none';
                 } else if (founders.length === 2) {
                     foundersGridHome.style.display = '';
-                    foundersGridHome.innerHTML = twoFounderLayoutHTML(founders[0], founders[1], 'Home');
+                    foundersGridHome.innerHTML = twoFounderLayoutHTML(founders[0], founders[1]);
                     bindInteractivePOVHome();
                 } else {
                     // 1 or 3+ founders — render all as cards (no POV box)
@@ -546,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     foundersGridAbout.style.display = 'none';
                 } else if (founders.length === 2) {
                     foundersGridAbout.style.display = '';
-                    foundersGridAbout.innerHTML = twoFounderLayoutHTML(founders[0], founders[1], 'About');
+                    foundersGridAbout.innerHTML = twoFounderLayoutHTML(founders[0], founders[1]);
                     bindInteractivePOVAbout();
                 } else {
                     // 1 or 3+ founders — render all as simple cards

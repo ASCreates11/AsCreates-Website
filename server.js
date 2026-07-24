@@ -91,6 +91,32 @@ app.get('/maintenance', (req, res) => res.sendFile(path.join(__dirname, 'public'
 app.get('/admin/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'login.html')));
 app.get('/admin/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html')));
 
+// Dynamic Sitemap Route
+app.get('/sitemap.xml', (req, res) => {
+    db.all('SELECT id FROM portfolio WHERE published=1', (err, rows) => {
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+        xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+        
+        // Static Pages
+        const staticPages = ['', 'about', 'services', 'portfolio', 'contact'];
+        staticPages.forEach(p => {
+            const loc = p ? `https://ascreates.vercel.app/${p}` : `https://ascreates.vercel.app/`;
+            xml += `  <url>\n    <loc>${loc}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>${p ? '0.8' : '1.0'}</priority>\n  </url>\n`;
+        });
+        
+        // Dynamic Case Studies
+        if (!err && rows) {
+            rows.forEach(item => {
+                xml += `  <url>\n    <loc>https://ascreates.vercel.app/portfolio?project=${item.id}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+            });
+        }
+        
+        xml += `</urlset>`;
+        res.header('Content-Type', 'application/xml');
+        res.send(xml);
+    });
+});
+
 // 301 Redirect legacy .html extension to clean URLs
 app.get(['/about.html', '/services.html', '/contact.html', '/portfolio.html', '/coming-soon.html', '/maintenance.html', '/admin/login.html', '/admin/dashboard.html'], (req, res) => {
     const cleanPath = req.path.replace(/\.html$/, '');

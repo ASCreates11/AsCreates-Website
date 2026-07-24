@@ -1066,11 +1066,33 @@
             document.body.style.overflow = '';
             // Clear media after transition
             setTimeout(() => { blogArticle.innerHTML = ''; }, 500);
+            
+            // Restore URL to clean path /portfolio if closing manually
+            if (new URLSearchParams(window.location.search).has('project')) {
+                history.pushState({}, "", "/portfolio");
+            }
         }
 
         blogCloseBtn.addEventListener('click', closeModal);
         blogBackdrop.addEventListener('click', closeModal);
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        // Handle back/forward navigation
+        window.addEventListener('popstate', (e) => {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get('project');
+            if (projectId) {
+                // Call openProject but prevent history.pushState loop by checking state
+                openProject(projectId, true);
+            } else {
+                if (blogPanel.classList.contains('open')) {
+                    blogBackdrop.classList.remove('open');
+                    blogPanel.classList.remove('open');
+                    document.body.style.overflow = '';
+                    setTimeout(() => { blogArticle.innerHTML = ''; }, 500);
+                }
+            }
+        });
 
         /* ---- Media renderer ---- */
         function getMediaHTML(project) {
@@ -1263,9 +1285,15 @@
         }
 
         /* ---- Open modal for project ID ---- */
-        async function openProject(id) {
+        async function openProject(id, skipStateUpdate = false) {
             showSkeleton();
             openModal();
+            
+            // Update URL dynamically to make individual cases shareable & crawlable
+            if (!skipStateUpdate) {
+                history.pushState({ projectId: id }, "", `?project=${id}`);
+            }
+            
             try {
                 const res = await fetch(`/api/portfolio/${id}`);
                 if (!res.ok) throw new Error('Not found');
@@ -1430,6 +1458,13 @@
         }
 
         loadPortfolio();
+
+        // Check URL parameters on load to trigger deep linking
+        const params = new URLSearchParams(window.location.search);
+        const initialProjectId = params.get('project');
+        if (initialProjectId) {
+            openProject(initialProjectId, true);
+        }
     });
 </script>
 

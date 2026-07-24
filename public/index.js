@@ -203,8 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Team Section Interactive POV Logic (About Us Page) ---
-    const foundersGrid = document.getElementById('foundersGrid');
-    if (foundersGrid) {
+    function bindInteractivePOVAbout() {
+        const foundersGrid = document.getElementById('foundersGrid');
+        if (!foundersGrid) return;
         const cards = foundersGrid.querySelectorAll('.founder-card');
         const povBox = foundersGrid.querySelector('.pov-box');
         const povContents = povBox ? povBox.querySelectorAll('.pov-content') : [];
@@ -338,8 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Team Section Interactive POV Logic (Home landing Page) ---
-    const foundersGridHome = document.getElementById('foundersGridHome');
-    if (foundersGridHome) {
+    function bindInteractivePOVHome() {
+        const foundersGridHome = document.getElementById('foundersGridHome');
+        if (!foundersGridHome) return;
         const cards = foundersGridHome.querySelectorAll('.founder-card');
         const povBoxHome = foundersGridHome.querySelector('.pov-box');
         const povContentsHome = povBoxHome ? povBoxHome.querySelectorAll('.pov-content') : [];
@@ -447,34 +449,64 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hydrate homepage if elements exist
             const foundersGridHome = document.getElementById('foundersGridHome');
             if (foundersGridHome) {
-                const cards = foundersGridHome.querySelectorAll('.founder-card');
-                const povBoxEl = foundersGridHome.querySelector('.pov-box');
-                const povContents = povBoxEl ? povBoxEl.querySelectorAll('.pov-content') : [];
+                if (founders.length === 0) {
+                    foundersGridHome.style.display = 'none';
+                    const parentSec = foundersGridHome.closest('section');
+                    if (parentSec) parentSec.style.display = 'none';
+                } else if (founders.length === 1) {
+                    foundersGridHome.style.display = 'grid';
+                    foundersGridHome.innerHTML = `
+                        <div class="founder-card" style="grid-column: span 12; max-width: 400px; margin: 0 auto;">
+                            <div class="founder-img-container">
+                                <img alt="${founders[0].name}" src="${founders[0].photo || founders[0].image_url || ''}" width="400" height="400" />
+                            </div>
+                            <h3 class="headline-sm">${founders[0].name}</h3>
+                            <p class="founder-role">${founders[0].role || ''}</p>
+                            <p class="founder-bio">${founders[0].bio || ''}</p>
+                        </div>
+                    `;
+                } else {
+                    foundersGridHome.style.display = 'grid';
+                    const f1 = founders[0];
+                    const f2 = founders[1];
+                    foundersGridHome.innerHTML = `
+                        <!-- Founder 1 -->
+                        <div class="founder-card" id="founderCardSriyankaHome">
+                            <div class="founder-img-container">
+                                <img alt="${f1.name}" src="${f1.photo || f1.image_url || ''}" width="400" height="400" />
+                            </div>
+                            <h3 class="headline-sm">${f1.name}</h3>
+                            <p class="founder-role">${f1.role || ''}</p>
+                            <p class="founder-bio">${f1.bio || ''}</p>
+                        </div>
 
-                founders.forEach((f, idx) => {
-                    const card = cards[idx];
-                    if (card) {
-                        const img = card.querySelector('img');
-                        if (img && (f.photo || f.image_url)) img.src = f.photo || f.image_url;
-                        if (img) img.alt = `${f.name}, ${f.role} at AS Creates`;
-                        const h3 = card.querySelector('h3');
-                        if (h3) h3.textContent = f.name || '';
-                        const role = card.querySelector('.founder-role');
-                        if (role) role.textContent = f.role || '';
-                        const bio = card.querySelector('.founder-bio');
-                        if (bio) bio.textContent = f.bio || '';
-                    }
+                        <!-- Center POV Box -->
+                        <div class="pov-box" id="povBoxHome">
+                            <div class="pov-content" id="povContentSriyankaHome">
+                                <span class="pov-pre-heading">${f1.pov_pre_heading || 'Shaping the Future'}</span>
+                                <h3 class="pov-title">${f1.pov_title || 'Vision'}</h3>
+                                <p class="pov-text">"${(f1.pov_text || '').replace(/^"|"$/g, '')}"</p>
+                            </div>
+                            <div class="pov-content" id="povContentAsishHome">
+                                <span class="pov-pre-heading">${f2.pov_pre_heading || 'Architecting Scale'}</span>
+                                <h3 class="pov-title">${f2.pov_title || 'Engineering'}</h3>
+                                <p class="pov-text">"${(f2.pov_text || '').replace(/^"|"$/g, '')}"</p>
+                            </div>
+                        </div>
 
-                    const pov = povContents[idx];
-                    if (pov) {
-                        const pre = pov.querySelector('.pov-pre-heading');
-                        if (pre) pre.textContent = f.pov_pre_heading || '';
-                        const title = pov.querySelector('.pov-title');
-                        if (title) title.textContent = f.pov_title || '';
-                        const text = pov.querySelector('.pov-text');
-                        if (text) text.textContent = f.pov_text ? `"${f.pov_text.replace(/^"|"$/g, '')}"` : '""';
-                    }
-                });
+                        <!-- Founder 2 -->
+                        <div class="founder-card" id="founderCardAsishHome">
+                            <div class="founder-img-container">
+                                <img alt="${f2.name}" src="${f2.photo || f2.image_url || ''}" width="400" height="400" />
+                            </div>
+                            <h3 class="headline-sm">${f2.name}</h3>
+                            <p class="founder-role">${f2.role || ''}</p>
+                            <p class="founder-bio">${f2.bio || ''}</p>
+                        </div>
+                    `;
+                    
+                    bindInteractivePOVHome();
+                }
 
                 const teamGridHome = document.getElementById('teamMembersGridHome');
                 if (teamGridHome) {
@@ -529,34 +561,64 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hydrate about page if elements exist
             const foundersGridAbout = document.getElementById('foundersGrid');
             if (foundersGridAbout) {
-                const cards = foundersGridAbout.querySelectorAll('.founder-card');
-                const povBoxEl = foundersGridAbout.querySelector('.pov-box');
-                const povContents = povBoxEl ? povBoxEl.querySelectorAll('.pov-content') : [];
+                if (founders.length === 0) {
+                    foundersGridAbout.style.display = 'none';
+                    const parentSec = foundersGridAbout.closest('section');
+                    if (parentSec) parentSec.style.display = 'none';
+                } else if (founders.length === 1) {
+                    foundersGridAbout.style.display = 'grid';
+                    foundersGridAbout.innerHTML = `
+                        <div class="founder-card" style="grid-column: span 12; max-width: 400px; margin: 0 auto;">
+                            <div class="founder-img-container">
+                                <img alt="${founders[0].name}" src="${founders[0].photo || founders[0].image_url || ''}" width="400" height="400" />
+                            </div>
+                            <h3 class="headline-sm">${founders[0].name}</h3>
+                            <p class="founder-role">${founders[0].role || ''}</p>
+                            <p class="founder-bio">${founders[0].bio || ''}</p>
+                        </div>
+                    `;
+                } else {
+                    foundersGridAbout.style.display = 'grid';
+                    const f1 = founders[0];
+                    const f2 = founders[1];
+                    foundersGridAbout.innerHTML = `
+                        <!-- Founder 1 -->
+                        <div class="founder-card" id="founderCardSriyanka">
+                            <div class="founder-img-container">
+                                <img alt="${f1.name}" src="${f1.photo || f1.image_url || ''}" width="400" height="400" />
+                            </div>
+                            <h3 class="headline-sm">${f1.name}</h3>
+                            <p class="founder-role">${f1.role || ''}</p>
+                            <p class="founder-bio">${f1.bio || ''}</p>
+                        </div>
 
-                founders.forEach((f, idx) => {
-                    const card = cards[idx];
-                    if (card) {
-                        const img = card.querySelector('img');
-                        if (img && (f.photo || f.image_url)) img.src = f.photo || f.image_url;
-                        if (img) img.alt = `${f.name}, ${f.role} at AS Creates`;
-                        const h3 = card.querySelector('h3');
-                        if (h3) h3.textContent = f.name || '';
-                        const role = card.querySelector('.founder-role');
-                        if (role) role.textContent = f.role || '';
-                        const bio = card.querySelector('.founder-bio');
-                        if (bio) bio.textContent = f.bio || '';
-                    }
+                        <!-- Center POV Box -->
+                        <div class="pov-box" id="povBox">
+                            <div class="pov-content" id="povContentSriyanka">
+                                <span class="pov-pre-heading">${f1.pov_pre_heading || 'Shaping the Future'}</span>
+                                <h3 class="pov-title">${f1.pov_title || 'Vision'}</h3>
+                                <p class="pov-text">"${(f1.pov_text || '').replace(/^"|"$/g, '')}"</p>
+                            </div>
+                            <div class="pov-content" id="povContentAsish">
+                                <span class="pov-pre-heading">${f2.pov_pre_heading || 'Architecting Scale'}</span>
+                                <h3 class="pov-title">${f2.pov_title || 'Engineering'}</h3>
+                                <p class="pov-text">"${(f2.pov_text || '').replace(/^"|"$/g, '')}"</p>
+                            </div>
+                        </div>
 
-                    const pov = povContents[idx];
-                    if (pov) {
-                        const pre = pov.querySelector('.pov-pre-heading');
-                        if (pre) pre.textContent = f.pov_pre_heading || '';
-                        const title = pov.querySelector('.pov-title');
-                        if (title) title.textContent = f.pov_title || '';
-                        const text = pov.querySelector('.pov-text');
-                        if (text) text.textContent = f.pov_text ? `"${f.pov_text.replace(/^"|"$/g, '')}"` : '""';
-                    }
-                });
+                        <!-- Founder 2 -->
+                        <div class="founder-card" id="founderCardAsish">
+                            <div class="founder-img-container">
+                                <img alt="${f2.name}" src="${f2.photo || f2.image_url || ''}" width="400" height="400" />
+                            </div>
+                            <h3 class="headline-sm">${f2.name}</h3>
+                            <p class="founder-role">${f2.role || ''}</p>
+                            <p class="founder-bio">${f2.bio || ''}</p>
+                        </div>
+                    `;
+                    
+                    bindInteractivePOVAbout();
+                }
 
                 const teamGridAbout = document.getElementById('teamMembersGrid');
                 if (teamGridAbout) {

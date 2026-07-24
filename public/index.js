@@ -451,8 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (foundersGridHome) {
                 if (founders.length === 0) {
                     foundersGridHome.style.display = 'none';
-                    const parentSec = foundersGridHome.closest('section');
-                    if (parentSec) parentSec.style.display = 'none';
                 } else if (founders.length === 1) {
                     foundersGridHome.style.display = 'grid';
                     foundersGridHome.innerHTML = `
@@ -563,8 +561,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (foundersGridAbout) {
                 if (founders.length === 0) {
                     foundersGridAbout.style.display = 'none';
-                    const parentSec = foundersGridAbout.closest('section');
-                    if (parentSec) parentSec.style.display = 'none';
                 } else if (founders.length === 1) {
                     foundersGridAbout.style.display = 'grid';
                     foundersGridAbout.innerHTML = `

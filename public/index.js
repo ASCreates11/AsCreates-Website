@@ -1145,8 +1145,9 @@ document.addEventListener('DOMContentLoaded', () => {
             renderSectionMedia('our_agency', '[data-media-section="our_agency"]');
             renderSectionMedia('our_journey', '[data-media-section="our_journey"]');
             renderSectionMedia('methodology', '[data-media-section="methodology"]');
-        } }
-}
+        }
+    }
+});
 
 document.addEventListener('DOMContentLoaded', loadGlobalDynamicSettings);
 

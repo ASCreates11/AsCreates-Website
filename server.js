@@ -58,6 +58,33 @@ app.use((req, res, next) => {
     });
 });
 
+// Helper to serve HTML with dynamic canonical headers matching the active host domain
+function sendHtmlWithDynamicCanonical(req, res, pageName) {
+    const filePath = path.join(__dirname, 'public', pageName);
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).send('Not Found');
+    }
+    let html = fs.readFileSync(filePath, 'utf8');
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
+    
+    // Replace placeholder domain with actual domain in canonical tags
+    html = html.replace(/https:\/\/ascreates\.vercel\.app/g, baseUrl);
+    
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.send(html);
+}
+
+// Serve public HTML pages with dynamic canonical tags
+app.get(['/', '/index.html'], (req, res) => sendHtmlWithDynamicCanonical(req, res, 'index.html'));
+app.get('/about', (req, res) => sendHtmlWithDynamicCanonical(req, res, 'about.html'));
+app.get('/services', (req, res) => sendHtmlWithDynamicCanonical(req, res, 'services.html'));
+app.get('/contact', (req, res) => sendHtmlWithDynamicCanonical(req, res, 'contact.html'));
+app.get('/portfolio', (req, res) => sendHtmlWithDynamicCanonical(req, res, 'portfolio.html'));
+app.get('/coming-soon', (req, res) => sendHtmlWithDynamicCanonical(req, res, 'coming-soon.html'));
+app.get('/maintenance', (req, res) => sendHtmlWithDynamicCanonical(req, res, 'maintenance.html'));
+
 // Serve static files (Frontend & Admin UI) with 1-year caching for assets, but NO CACHE for HTML
 app.use(express.static(path.join(__dirname, 'public'), {
     maxAge: '1y',
@@ -81,13 +108,7 @@ app.get(['/favicon.ico', '/favicon.png'], (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'favicon.png'));
 });
 
-// Clean Extensionless Routes
-app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'public', 'about.html')));
-app.get('/services', (req, res) => res.sendFile(path.join(__dirname, 'public', 'services.html')));
-app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'public', 'contact.html')));
-app.get('/portfolio', (req, res) => res.sendFile(path.join(__dirname, 'public', 'portfolio.html')));
-app.get('/coming-soon', (req, res) => res.sendFile(path.join(__dirname, 'public', 'coming-soon.html')));
-app.get('/maintenance', (req, res) => res.sendFile(path.join(__dirname, 'public', 'maintenance.html')));
+// Admin panel HTML routes
 app.get('/admin/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'login.html')));
 app.get('/admin/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html')));
 

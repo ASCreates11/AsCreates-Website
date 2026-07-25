@@ -35,8 +35,12 @@ const optimizeCloudinaryUrl = (url, baseUrl = 'https://ascreates.vercel.app') =>
         }
     }
     if (url.includes('googleusercontent.com')) {
-        // Return original URL to preserve full high-resolution background quality
-        return url;
+        // Append =s0 to request the original high-resolution, uncompressed source image from Google
+        if (url.includes('=')) {
+            return url.replace(/=[ws]\d+/, '=s0');
+        } else {
+            return url + '=s0';
+        }
     }
     if (url.includes('images.unsplash.com') && !url.includes('auto=format')) {
         return url + (url.includes('?') ? '&' : '?') + 'auto=format&fit=crop&q=95';

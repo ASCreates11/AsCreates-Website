@@ -486,7 +486,8 @@ section  {
   padding-top:180px;
   padding-bottom:var(--spacing-section-gap-desktop);
   overflow:hidden;
-  background-image:url('Images/hero background.jpeg');
+  background-image:url('Images/hero background.webp');
+  background-image:image-set(url('Images/hero background.webp') type('image/webp'), url('Images/hero background.jpeg') type('image/jpeg'));
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
@@ -2344,7 +2345,8 @@ section  {
   padding-top:180px;
   padding-bottom:var(--spacing-section-gap-desktop);
   overflow:hidden;
-  background-image:url('Images/About background.jpeg');
+  background-image:url('Images/About background.webp');
+  background-image:image-set(url('Images/About background.webp') type('image/webp'), url('Images/About background.jpeg') type('image/jpeg'));
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
@@ -2471,7 +2473,8 @@ section  {
   padding-top:180px;
   padding-bottom:var(--spacing-section-gap-desktop);
   overflow:hidden;
-  background-image:url('Images/Service background.jpeg');
+  background-image:url('Images/Service background.webp');
+  background-image:image-set(url('Images/Service background.webp') type('image/webp'), url('Images/Service background.jpeg') type('image/jpeg'));
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
@@ -2638,7 +2641,8 @@ section  {
   .services-hero  {
     padding-top:140px;
     padding-bottom:60px;
-    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),url('Images/Service background mobile.jpeg');
+    background-image:url('Images/Service background mobile.webp');
+    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),image-set(url('Images/Service background mobile.webp') type('image/webp'), url('Images/Service background mobile.jpeg') type('image/jpeg'));
 
   }
 
@@ -2655,7 +2659,8 @@ section  {
   padding-top:180px;
   padding-bottom:var(--spacing-section-gap-desktop);
   overflow:hidden;
-  background-image:url('Images/Contact page.jpeg');
+  background-image:url('Images/Contact page.webp');
+  background-image:image-set(url('Images/Contact page.webp') type('image/webp'), url('Images/Contact page.jpeg') type('image/jpeg'));
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
@@ -3099,7 +3104,8 @@ section  {
   .contact-hero  {
     padding-top:140px;
     padding-bottom:40px;
-    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),url('Images/Contact page mobile.jpeg');
+    background-image:url('Images/Contact page mobile.webp');
+    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),image-set(url('Images/Contact page mobile.webp') type('image/webp'), url('Images/Contact page mobile.jpeg') type('image/jpeg'));
 
   }
 
@@ -3157,7 +3163,8 @@ section  {
   padding-top:180px;
   padding-bottom:var(--spacing-section-gap-desktop);
   overflow:hidden;
-  background-image:url('Images/Portfolio background.jpeg');
+  background-image:url('Images/Portfolio background.webp');
+  background-image:image-set(url('Images/Portfolio background.webp') type('image/webp'), url('Images/Portfolio background.jpeg') type('image/jpeg'));
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
@@ -4203,21 +4210,24 @@ button.promotion-bar-btn  {
   }
 
   .hero  {
-    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),url('Images/hero background mobile.jpeg') !important;
+    background-image:url('Images/hero background mobile.webp') !important;
+    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),image-set(url('Images/hero background mobile.webp') type('image/webp'), url('Images/hero background mobile.jpeg') type('image/jpeg')) !important;
     background-position:center center !important;
     background-size:cover !important;
 
   }
 
   .about-hero  {
-    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),url('Images/about background mobile.jpeg') !important;
+    background-image:url('Images/about background mobile.webp') !important;
+    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),image-set(url('Images/about background mobile.webp') type('image/webp'), url('Images/about background mobile.jpeg') type('image/jpeg')) !important;
     background-position:center center !important;
     background-size:cover !important;
 
   }
 
   .portfolio-hero  {
-    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),url('Images/Portfolio background mobile.jpeg') !important;
+    background-image:url('Images/Portfolio background mobile.webp') !important;
+    background-image:linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4)),image-set(url('Images/Portfolio background mobile.webp') type('image/webp'), url('Images/Portfolio background mobile.jpeg') type('image/jpeg')) !important;
     background-position:center center !important;
     background-size:cover !important;
 

@@ -19,8 +19,9 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://ascreates.vercel.app/services" />
 
-    <!-- Preload above-the-fold hero background -->
-    <link rel="preload" href="/Images/Service background.webp" as="image" type="image/webp" />
+    <!-- Preload above-the-fold hero background: desktop & mobile -->
+    <link rel="preload" href="/Images/Service background.webp" as="image" type="image/webp" media="(min-width: 769px)" />
+    <link rel="preload" href="/Images/Service background mobile.webp" as="image" type="image/webp" media="(max-width: 768px)" />
 
     <!-- Custom Style Sheet -->
     <link href="/tailwind.css" rel="stylesheet" />

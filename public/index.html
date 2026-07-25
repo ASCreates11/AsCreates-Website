@@ -22,8 +22,9 @@
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="lz8dKBYuo-ya5nnts4Clx7MC1VP40JPTVkSetZlzAHo" />
 
-    <!-- Preload above-the-fold hero background -->
-    <link rel="preload" href="/Images/hero background.webp" as="image" type="image/webp" />
+    <!-- Preload above-the-fold hero background: desktop & mobile -->
+    <link rel="preload" href="/Images/hero background.webp" as="image" type="image/webp" media="(min-width: 769px)" />
+    <link rel="preload" href="/Images/hero background mobile.webp" as="image" type="image/webp" media="(max-width: 768px)" />
 
     <!-- Custom Style Sheet -->
     <link href="/tailwind.css" rel="stylesheet" />

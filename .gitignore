@@ -8,7 +8,3 @@ yarn-error.log*
 .vercel/
 scratch/
 .kilo/
-
-public/tailwind.css
-public/index.min.js
-public/js/socials.min.js

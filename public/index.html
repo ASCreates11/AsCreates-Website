@@ -653,15 +653,16 @@
                     }
 
                     grid.innerHTML = '';
-                    featured.forEach(proj => {
+                    featured.forEach((proj, index) => {
                         const card = document.createElement('a');
                         // Make entire card clickable and link to portfolio detail page
-                        card.href = `/portfolio?id=${proj.id}`;
-                        card.className = 'portfolio-card';
+                        card.href = `/portfolio?project=${proj.id}`;
+                        card.className = 'portfolio-card animate-fade-in';
                         card.style.display = 'block';
                         card.style.textDecoration = 'none';
                         card.style.color = 'inherit';
                         card.style.cursor = 'pointer';
+                        card.style.animationDelay = `${index * 150}ms`;
                         
                         card.innerHTML = `
                             <div class="portfolio-img-container">

@@ -34,11 +34,12 @@ const optimizeCloudinaryUrl = (url, baseUrl = 'https://ascreates.vercel.app') =>
             return url.replace('/upload/', '/upload/f_auto,q_auto:best/');
         }
     }
-    if (url.includes('googleusercontent.com') && !url.includes('=')) {
-        return url + '=w1600';
+    if (url.includes('googleusercontent.com')) {
+        // Return original URL to preserve full high-resolution background quality
+        return url;
     }
-    if (url.includes('images.unsplash.com') && !url.includes('w=')) {
-        return url + (url.includes('?') ? '&' : '?') + 'w=1600&auto=format&fit=crop&q=90';
+    if (url.includes('images.unsplash.com') && !url.includes('auto=format')) {
+        return url + (url.includes('?') ? '&' : '?') + 'auto=format&fit=crop&q=95';
     }
     return url;
 };

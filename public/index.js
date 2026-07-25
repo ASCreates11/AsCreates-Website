@@ -791,7 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadHomeServices();
     loadTestimonials();
-    initWhatsAppWidget()    // Fetch & Initialize Promotion Bar and Promo Popup
+    initWhatsAppWidget();    // Fetch & Initialize Promotion Bar and Promo Popup
     (async function initPromotionSystem() {
         const cachedPromo = localStorage.getItem('as_creates_promotion');
         if (cachedPromo) {
@@ -1150,10 +1150,10 @@ document.addEventListener('DOMContentLoaded', () => {
             renderSectionMedia('our_journey', '[data-media-section="our_journey"]');
             renderSectionMedia('methodology', '[data-media-section="methodology"]');
         }
+        
+        loadGlobalDynamicSettings();
     }
 });
-
-document.addEventListener('DOMContentLoaded', loadGlobalDynamicSettings);
 
 
 // --- Legal Modal Logic ---

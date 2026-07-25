@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return `
                         <div class="team-member-card"${hide ? ' data-hidden="true" style="display:none;"' : ''}>
                             <div class="member-img-container">
-                                <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
+                                <img src="${m.photo || m.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}" class="member-img" alt="${m.name}" width="140" height="140" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80';">
                             </div>
                             <h4>${m.name}</h4>
                             <div class="member-role">${m.role || ''}</div>
@@ -771,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="color: var(--color-warning); font-size: 14px; margin: 6px 0 14px;">${'★'.repeat(item.rating || 5)}</div>
                     <div class="testimonial-author">
                         <div class="author-img">
-                            <img alt="${item.name || 'Client'} portrait" src="${item.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'" />
+                            <img alt="${item.name || 'Client'} portrait" src="${item.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}" width="48" height="48" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'" />
                         </div>
                         <div class="author-details">
                             <h4>${item.name || 'Client'}</h4>
@@ -830,14 +830,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!overlay) {
             overlay = document.createElement('div');
             overlay.id = 'promoPopup';
-            overlay.className = 'promo-popup-overlay';
+            overlay.className = 'floating-offer-overlay';
             overlay.style.display = 'none';
             overlay.setAttribute('role', 'dialog');
             overlay.setAttribute('aria-modal', 'true');
             overlay.setAttribute('aria-label', 'Special Offer');
             overlay.innerHTML = `
-                <div class="promo-popup-card">
-                    <button class="promo-popup-close" id="promoPopupClose" aria-label="Close popup">&times;</button>
+                <div class="floating-offer-modal">
+                    <button class="floating-offer-close" id="promoPopupClose" aria-label="Close popup">&times;</button>
                     <a id="promoPopupLink" href="/contact" class="promo-popup-image-link">
                         <picture>
                             <source media="(max-width: 768px)" id="promoPopupMobileSource" srcset="">
@@ -1129,7 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (showImage && imageUrl) {
-                    mediaHtml += `<img src="${imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" class="media-fallback-img" onerror="this.style.display='none'">`;
+                    mediaHtml += `<img src="${imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" class="media-fallback-img" width="800" height="533" onerror="this.style.display='none'">`;
                 }
 
                 if (mediaHtml) {

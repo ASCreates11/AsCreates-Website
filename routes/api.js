@@ -23,6 +23,46 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage });
 
+const optimizeCloudinaryUrl = (url, baseUrl = 'https://ascreates.vercel.app') => {
+    if (typeof url !== 'string') return url;
+    if (url.startsWith('/uploads/')) {
+        const publicBase = baseUrl.includes('localhost') ? 'https://ascreates.vercel.app' : baseUrl;
+        return `https://res.cloudinary.com/nsqqegj1/image/fetch/f_auto,q_auto/${publicBase}${url}`;
+    }
+    if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
+        if (!url.includes('/f_auto') && !url.includes('/q_auto')) {
+            return url.replace('/upload/', '/upload/f_auto,q_auto/');
+        }
+    }
+    if (url.includes('googleusercontent.com') && !url.includes('=')) {
+        return url + '=w800';
+    }
+    if (url.includes('images.unsplash.com') && !url.includes('w=')) {
+        return url + (url.includes('?') ? '&' : '?') + 'w=800&auto=format&fit=crop&q=80';
+    }
+    return url;
+};
+
+const optimizeCloudinaryUrlsInObject = (obj, baseUrl) => {
+    if (!obj) return obj;
+    if (typeof obj === 'string') {
+        return optimizeCloudinaryUrl(obj, baseUrl);
+    }
+    if (Array.isArray(obj)) {
+        return obj.map(x => optimizeCloudinaryUrlsInObject(x, baseUrl));
+    }
+    if (typeof obj === 'object') {
+        const optimized = {};
+        for (const key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                optimized[key] = optimizeCloudinaryUrlsInObject(obj[key], baseUrl);
+            }
+        }
+        return optimized;
+    }
+    return obj;
+};
+
 // --- SETTINGS.JSON MANAGER ---
 const getSettings = () => {
     return new Promise((resolve) => {
@@ -47,7 +87,7 @@ const getSettings = () => {
                 }
             });
             const merged = deepMerge(fileSettings, dbSettings);
-            resolve(merged);
+            resolve(optimizeCloudinaryUrlsInObject(merged));
         });
     });
 };
@@ -100,11 +140,18 @@ function deepMerge(target, source) {
 
 // GET /api/settings - Public
 router.get('/settings', async (req, res) => {
-    res.json(await getSettings());
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
+    const settings = await getSettings();
+    res.json(optimizeCloudinaryUrlsInObject(settings, baseUrl));
 });
 
 // GET /api/site-images - Public (media settings for hydration)
 router.get('/site-images', async (req, res) => {
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
     const settings = await getSettings();
     const media = settings.media || {};
 
@@ -119,7 +166,7 @@ router.get('/site-images', async (req, res) => {
         about_story_image: { url: (media.our_journey || {}).image },
         services_methodology_image: { url: (media.methodology || {}).image }
     };
-    res.json(response);
+    res.json(optimizeCloudinaryUrlsInObject(response, baseUrl));
 });
 
 // GET /api/socials - Public (visible social platforms)
@@ -154,6 +201,9 @@ router.post('/admin/settings/contact-form', requireAuth, async (req, res) => {
 
 // GET /api/promotion - Public
 router.get('/promotion', async (req, res) => {
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
     const settings = await getSettings();
     const promo = settings.promo || {};
     const popup = (settings.promo && settings.promo.popup) || {};
@@ -174,7 +224,7 @@ router.get('/promotion', async (req, res) => {
             link_url: popup.link_url || '#'
         }
     };
-    res.json(response);
+    res.json(optimizeCloudinaryUrlsInObject(response, baseUrl));
 });
 
 // --- PORTFOLIO ---
@@ -182,7 +232,7 @@ router.get('/promotion', async (req, res) => {
 router.get('/portfolio', (req, res) => {
     db.all('SELECT id, title, category, description, image_url, project_link, col_span, video_url, is_featured, year, gallery_type, gallery_urls FROM portfolio WHERE published=1 ORDER BY is_featured DESC, updated_at DESC, id DESC', (err, rows) => {
         if (err) return res.status(500).json({ error: 'DB Error' });
-        res.json(rows);
+        res.json(optimizeCloudinaryUrlsInObject(rows));
     });
 });
 // GET /api/portfolio/categories (Public)
@@ -204,14 +254,14 @@ router.get('/portfolio/:id', (req, res) => {
     db.get('SELECT * FROM portfolio WHERE id=? AND published=1', [req.params.id], (err, row) => {
         if (err) return res.status(500).json({ error: 'DB Error' });
         if (!row) return res.status(404).json({ error: 'Not found' });
-        res.json(row);
+        res.json(optimizeCloudinaryUrlsInObject(row));
     });
 });
 // GET /api/admin/portfolio (Admin - all)
 router.get('/admin/portfolio', requireAuth, (req, res) => {
     db.all('SELECT * FROM portfolio ORDER BY is_featured DESC, updated_at DESC, id DESC', (err, rows) => {
         if (err) return res.status(500).json({ error: 'DB Error' });
-        res.json(rows);
+        res.json(optimizeCloudinaryUrlsInObject(rows));
     });
 });
 // POST /api/admin/portfolio
@@ -350,11 +400,11 @@ router.get('/testimonials', (req, res) => {
         if (!rows || rows.length === 0) {
             seedDefaultTestimonialsIfNeeded(() => {
                 db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, display_order FROM testimonials WHERE published = 1 ORDER BY display_order ASC, id DESC', (err2, rows2) => {
-                    res.json(rows2 || []);
+                    res.json(optimizeCloudinaryUrlsInObject(rows2 || []));
                 });
             });
         } else {
-            res.json(rows);
+            res.json(optimizeCloudinaryUrlsInObject(rows));
         }
     });
 });
@@ -366,11 +416,11 @@ router.get('/admin/testimonials', requireAuth, (req, res) => {
         if (!rows || rows.length === 0) {
             seedDefaultTestimonialsIfNeeded(() => {
                 db.all('SELECT id, author_name as name, author_role as role, quote, rating, author_image as avatar, published, display_order FROM testimonials ORDER BY display_order ASC, id DESC', (err2, rows2) => {
-                    res.json(rows2 || []);
+                    res.json(optimizeCloudinaryUrlsInObject(rows2 || []));
                 });
             });
         } else {
-            res.json(rows);
+            res.json(optimizeCloudinaryUrlsInObject(rows));
         }
     });
 });
@@ -437,7 +487,7 @@ router.delete('/admin/testimonials/:id', requireAuth, (req, res) => {
 router.get('/team', (req, res) => {
     db.all('SELECT id, name, role, bio, image_url, pov_pre_heading, pov_title, pov_text, display_order, photo, visible, is_founder FROM team WHERE visible = 1 ORDER BY display_order ASC, id ASC', (err, rows) => {
         if (err) return res.status(500).json({ error: 'DB Error' });
-        res.json(rows);
+        res.json(optimizeCloudinaryUrlsInObject(rows));
     });
 });
 
@@ -455,11 +505,11 @@ router.get('/admin/team', requireAuth, (req, res) => {
             defaults.forEach(d => stmt.run(d));
             stmt.finalize(() => {
                 db.all('SELECT * FROM team ORDER BY is_founder DESC, display_order ASC, id ASC', (err2, rows2) => {
-                    res.json(rows2 || rows);
+                    res.json(optimizeCloudinaryUrlsInObject(rows2 || rows));
                 });
             });
         } else {
-            res.json(rows);
+            res.json(optimizeCloudinaryUrlsInObject(rows));
         }
     });
 });

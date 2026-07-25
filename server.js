@@ -72,8 +72,61 @@ function sendHtmlWithDynamicCanonical(req, res, pageName) {
     // Replace placeholder domain with actual domain in canonical tags
     html = html.replace(/https:\/\/ascreates\.vercel\.app/g, baseUrl);
     
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.send(html);
+    // Server-side inject active promo settings to eliminate Cumulative Layout Shift (CLS)
+    db.get("SELECT value FROM settings WHERE key = 'promo'", (err, row) => {
+        let promo = {};
+        if (!err && row && row.value) {
+            try {
+                promo = JSON.parse(row.value);
+            } catch (e) {}
+        } else {
+            try {
+                const localSettings = JSON.parse(fs.readFileSync(path.join(__dirname, 'settings.json'), 'utf8'));
+                promo = localSettings.promo || {};
+            } catch (e) {}
+        }
+
+        if (promo && promo.enabled) {
+            // 1. Add 'has-promo-bar' class to body
+            if (html.includes('<body')) {
+                html = html.replace(/<body([^>]*)>/, (match, attrs) => {
+                    if (attrs.includes('class=')) {
+                        return `<body${attrs.replace(/class=["']([^"']*)["']/, 'class="$1 has-promo-bar"')}>`;
+                    } else {
+                        return `<body class="has-promo-bar"${attrs}>`;
+                    }
+                });
+            }
+
+
+            // 3. Pre-fill marquee content and set speed style
+            if (promo.text) {
+                const escapeHtml = (unsafe) => {
+                    return unsafe
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                };
+                const escapedText = escapeHtml(promo.text);
+                const escapedLinkText = escapeHtml(promo.btnText || "Today's Exclusive Pricing");
+                const escapedLinkUrl = escapeHtml(promo.btnUrl || "/contact");
+                
+                const innerHtml = `<span class="promo-text-node">${escapedText}</span><a href="${escapedLinkUrl}" class="promo-link-node promotion-bar-btn">${escapedLinkText}</a>`;
+                let marqueeHtml = '';
+                for (let i = 0; i < 20; i++) {
+                    marqueeHtml += `<div class="promotion-bar-inner" ${i > 0 ? 'aria-hidden="true"' : ''}>${innerHtml}</div>`;
+                }
+
+                html = html.replace(/<div class="promotion-marquee"[^>]*>([\s\S]*?)<\/div>/, `<div class="promotion-marquee" id="promotionMarquee" style="animation-duration: ${(promo.speed || 15) * 10}s;">${marqueeHtml}</div>`);
+            }
+        }
+
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('X-Robots-Tag', 'index, follow');
+        res.send(html);
+    });
 }
 
 // Serve public HTML pages with dynamic canonical tags
@@ -87,7 +140,7 @@ app.get('/maintenance', (req, res) => sendHtmlWithDynamicCanonical(req, res, 'ma
 
 // Serve static files (Frontend & Admin UI) with 1-year caching for assets, but NO CACHE for HTML
 app.use(express.static(path.join(__dirname, 'public'), {
-    maxAge: '1y',
+    maxAge: 31536000000,
     etag: true,
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.html')) {
@@ -137,7 +190,8 @@ app.get('/sitemap.xml', (req, res) => {
         }
         
         xml += `</urlset>`;
-        res.header('Content-Type', 'application/xml');
+        res.header('Content-Type', 'application/xml; charset=utf-8');
+        res.header('X-Robots-Tag', 'index, follow');
         res.send(xml);
     });
 });

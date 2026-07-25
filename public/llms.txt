@@ -1,0 +1,10 @@
+# AS Creates
+> Premium digital agency and technology solutions studio.
+
+## Core Pages
+
+- [Home Page](https://ascreates.vercel.app/): Main landing page detailing services, featured work, and client testimonials.
+- [About Us](https://ascreates.vercel.app/about): Company journey, core values, mission, and leadership team.
+- [Services](https://ascreates.vercel.app/services): Overview of our design, development, and marketing capabilities.
+- [Portfolio](https://ascreates.vercel.app/portfolio): Filterable projects and case studies showcasing our engineering expertise.
+- [Contact](https://ascreates.vercel.app/contact): Get in touch with our team and submit business inquiries.

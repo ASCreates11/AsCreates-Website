@@ -27,18 +27,18 @@ const optimizeCloudinaryUrl = (url, baseUrl = 'https://ascreates.vercel.app') =>
     if (typeof url !== 'string') return url;
     if (url.startsWith('/uploads/')) {
         const publicBase = baseUrl.includes('localhost') ? 'https://ascreates.vercel.app' : baseUrl;
-        return `https://res.cloudinary.com/nsqqegj1/image/fetch/f_auto,q_auto/${publicBase}${url}`;
+        return `https://res.cloudinary.com/nsqqegj1/image/fetch/f_auto,q_auto:best/${publicBase}${url}`;
     }
     if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
-        if (!url.includes('/f_auto') && !url.includes('/q_auto')) {
-            return url.replace('/upload/', '/upload/f_auto,q_auto/');
+        if (!url.includes('/f_auto')) {
+            return url.replace('/upload/', '/upload/f_auto,q_auto:best/');
         }
     }
     if (url.includes('googleusercontent.com') && !url.includes('=')) {
-        return url + '=w800';
+        return url + '=w1600';
     }
     if (url.includes('images.unsplash.com') && !url.includes('w=')) {
-        return url + (url.includes('?') ? '&' : '?') + 'w=800&auto=format&fit=crop&q=80';
+        return url + (url.includes('?') ? '&' : '?') + 'w=1600&auto=format&fit=crop&q=90';
     }
     return url;
 };

@@ -165,8 +165,17 @@ app.get(['/favicon.ico', '/favicon.png'], (req, res) => {
 app.get('/admin/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'login.html')));
 app.get('/admin/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html')));
 
-// Dynamic Sitemap Route
+// Serve pre-built static sitemap.xml (generated at build time via scripts/generate-sitemap.js)
+// This avoids serverless cold-start DB timeouts that cause Google Search Console "Couldn't fetch" errors
 app.get('/sitemap.xml', (req, res) => {
+    const sitemapPath = path.join(__dirname, 'public', 'sitemap.xml');
+    if (fs.existsSync(sitemapPath)) {
+        res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+        res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours
+        res.setHeader('X-Robots-Tag', 'index, follow');
+        return res.sendFile(sitemapPath);
+    }
+    // Fallback: generate dynamically if static file is missing
     const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
     const host = req.get('host');
     const baseUrl = `${protocol}://${host}`;
@@ -174,21 +183,16 @@ app.get('/sitemap.xml', (req, res) => {
     db.all('SELECT id FROM portfolio WHERE published=1', (err, rows) => {
         let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
         xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-        
-        // Static Pages
         const staticPages = ['', 'about', 'services', 'portfolio', 'contact'];
         staticPages.forEach(p => {
             const loc = p ? `${baseUrl}/${p}` : `${baseUrl}/`;
             xml += `  <url>\n    <loc>${loc}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>${p ? '0.8' : '1.0'}</priority>\n  </url>\n`;
         });
-        
-        // Dynamic Case Studies
         if (!err && rows) {
             rows.forEach(item => {
                 xml += `  <url>\n    <loc>${baseUrl}/portfolio?project=${item.id}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
             });
         }
-        
         xml += `</urlset>`;
         res.header('Content-Type', 'application/xml; charset=utf-8');
         res.header('X-Robots-Tag', 'index, follow');

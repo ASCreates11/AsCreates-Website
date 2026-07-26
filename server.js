@@ -22,14 +22,49 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 
-// === SITEMAP - Served BEFORE any middleware (no DB queries, instant response) ===
+// === SITEMAP - Hardcoded in-memory (zero I/O, zero DB, instant on cold start) ===
+// Generated at build time - update this string by running: node scripts/generate-sitemap.js
+const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ascreates.vercel.app/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=2</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>`;
+
 app.get('/sitemap.xml', (req, res) => {
-    const sitemapPath = path.join(__dirname, 'public', 'sitemap.xml');
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=86400');
     res.setHeader('X-Robots-Tag', 'index, follow');
-    return res.sendFile(sitemapPath);
+    res.send(SITEMAP_XML);
 });
+
 
 // Live status & Maintenance mode middleware
 app.use((req, res, next) => {

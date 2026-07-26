@@ -3,11 +3,24 @@
   "cleanUrls": true,
   "builds": [
     {
+      "src": "public/sitemap.xml",
+      "use": "@vercel/static"
+    },
+    {
       "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/sitemap.xml",
+      "dest": "/public/sitemap.xml",
+      "headers": {
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "public, max-age=86400",
+        "X-Robots-Tag": "index, follow"
+      }
+    },
     {
       "src": "/(.*)",
       "dest": "server.js"

@@ -740,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <h3 class="headline-sm">${item.title}</h3>
                     <p class="body-md">${item.description}</p>
-                    <a class="service-link" href="/services">Read about ${item.title}</a>
+                    <a class="service-link" href="/services">Read more</a>
                 `;
                 grid.appendChild(card);
             });

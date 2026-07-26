@@ -22,6 +22,15 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 
+// === SITEMAP - Served BEFORE any middleware (no DB queries, instant response) ===
+app.get('/sitemap.xml', (req, res) => {
+    const sitemapPath = path.join(__dirname, 'public', 'sitemap.xml');
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.setHeader('X-Robots-Tag', 'index, follow');
+    return res.sendFile(sitemapPath);
+});
+
 // Live status & Maintenance mode middleware
 app.use((req, res, next) => {
     db.get("SELECT value FROM settings WHERE key = 'general'", (err, row) => {

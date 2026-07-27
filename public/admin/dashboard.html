@@ -4152,9 +4152,6 @@ async function loadAll() {
                     `).join('');
                 }
             }
-            // Fire a direct portfolio fetch in background to guarantee fresh data
-            // (summary portfolio can be empty/stale; direct fetch is always accurate)
-            loadPortfolio();
             return;
         }
     } catch(e) {

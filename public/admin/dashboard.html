@@ -2131,17 +2131,19 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
     let portfolioLoading = false;
 
     async function loadPortfolio() {
-        // Cached data available — render instantly, no skeleton needed
-        if (Array.isArray(portfolioData) && portfolioData.length > 0) {
-            renderPortfolio(portfolioData);
-            return;
-        }
-        // Already fetching — skip duplicate call
+        // Guard against concurrent fetches
         if (portfolioLoading) return;
         portfolioLoading = true;
 
-        // Show skeleton for exactly as long as the network takes (no artificial delay)
-        renderPortfolioSkeletons(6);
+        // If we already have data, show it instantly (no skeleton flash on revisit)
+        // then fetch fresh in the background silently
+        const hasCached = Array.isArray(portfolioData) && portfolioData.length > 0;
+        if (hasCached) {
+            renderPortfolio(portfolioData);
+        } else {
+            // No data yet — show skeleton while fetching
+            renderPortfolioSkeletons(6);
+        }
 
         try {
             const res  = await fetch('/api/admin/portfolio', { credentials: 'same-origin' });
@@ -2150,9 +2152,8 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
             renderPortfolio(portfolioData);
             document.getElementById('stat-portfolio').textContent = portfolioData.length;
         } catch (_) {
-            if (!Array.isArray(portfolioData) || portfolioData.length === 0) {
-                renderPortfolio([]);
-            }
+            // On error, keep whatever we showed (cached or skeleton stays if no data)
+            if (!hasCached) renderPortfolio([]);
         } finally {
             portfolioLoading = false;
         }
@@ -4025,7 +4026,9 @@ async function loadAll() {
             
             // Instantly populate all sections from summary payload (0ms tab switching)
             if (summary.leads) { leadsData = summary.leads; renderLeads(leadsData); }
-            if (summary.portfolio && summary.portfolio.length > 0) { portfolioData = summary.portfolio; renderPortfolio(portfolioData); }
+            // Always render portfolio from summary (even empty) so badge/overview update immediately
+            portfolioData = Array.isArray(summary.portfolio) ? summary.portfolio : [];
+            renderPortfolio(portfolioData);
             if (summary.services) { servicesData = summary.services; renderServices(servicesData); }
             if (summary.homeServices) { homeServicesData = summary.homeServices; renderHomeServices(homeServicesData); }
             if (summary.testimonials) { testimonialsData = summary.testimonials; renderTestimonials(testimonialsData); }
@@ -4094,6 +4097,9 @@ async function loadAll() {
                     });
                 }
             }
+            // Fire a direct portfolio fetch in background to guarantee fresh data
+            // (summary portfolio can be empty/stale; direct fetch is always accurate)
+            loadPortfolio();
             return;
         }
     } catch(e) {

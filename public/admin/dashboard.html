@@ -2101,6 +2101,8 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
         `).join('');
     }
 
+    let portfolioLoading = false;
+
     async function loadPortfolio() {
         // Cached data available — render instantly, no skeleton needed
         if (Array.isArray(portfolioData) && portfolioData.length > 0) {

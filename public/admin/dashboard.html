@@ -1919,13 +1919,7 @@ function renderPortfolio(items) {
     const projectsContainer = document.getElementById('overviewProjectsContainer');
     if (projectsContainer) {
         const recentProjects = items.slice(0, 5);
-        if (recentProjects.length === 0) {
-            projectsContainer.innerHTML = `
-                <div class="empty-state" style="padding: 20px 0;">
-                    <div class="empty-state-icon"><span class="material-symbols-outlined">photo_library</span></div>
-                    <div class="empty-state-title">No projects yet</div>
-                </div>`;
-        } else {
+        if (recentProjects.length > 0) {
             projectsContainer.innerHTML = recentProjects.map(p => `
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-border-light);">
                     <div style="display:flex;align-items:center;gap:8px;">
@@ -4152,6 +4146,9 @@ async function loadAll() {
                     `).join('');
                 }
             }
+            // Fire a direct portfolio fetch in background to guarantee fresh data
+            // (summary portfolio can be empty/stale; direct fetch is always accurate)
+            loadPortfolio();
             return;
         }
     } catch(e) {

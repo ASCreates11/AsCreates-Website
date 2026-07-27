@@ -6,7 +6,7 @@
     <title>AS Creates | Admin Dashboard</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="/favicon.png" type="image/png">
-    <link rel="stylesheet" href="admin.css?v=2">
+    <link rel="stylesheet" href="admin.css?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
@@ -2102,15 +2102,23 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
         `).join('');
     }
 
+    let portfolioLoading = false;
+
     async function loadPortfolio() {
-        // Always show skeleton immediately — no flash, no empty state
+        // If already loaded and cached, render instantly — no skeleton flash
+        if (Array.isArray(portfolioData) && portfolioData.length > 0) {
+            renderPortfolio(portfolioData);
+            return;
+        }
+        // Guard: prevent double-fetch (called from both loadAll & navigate)
+        if (portfolioLoading) return;
+        portfolioLoading = true;
+
+        // Show skeleton immediately — no empty-state flash
         renderPortfolioSkeletons(6);
+
         try {
-            // Guarantee skeleton visible for at least 400ms even on fast connections
-            const [res] = await Promise.all([
-                fetch('/api/admin/portfolio', { credentials: 'same-origin' }),
-                new Promise(r => setTimeout(r, 400))
-            ]);
+            const res  = await fetch('/api/admin/portfolio', { credentials: 'same-origin' });
             const data = await res.json();
             portfolioData = Array.isArray(data) ? data : (data.items || []);
             renderPortfolio(portfolioData);
@@ -2119,6 +2127,8 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
             if (!Array.isArray(portfolioData) || portfolioData.length === 0) {
                 renderPortfolio([]);
             }
+        } finally {
+            portfolioLoading = false;
         }
     }
 

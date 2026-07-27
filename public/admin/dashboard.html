@@ -1806,14 +1806,14 @@ const Nav = (() => {
         topbarTitle.textContent   = title;
         topbarSection.textContent = title;
 
-        // Lazy load specific section data
-        if (sectionId === 'leads') loadLeads();
-        if (sectionId === 'services') loadServices();
-        if (sectionId === 'portfolio') loadPortfolio();
-        if (sectionId === 'media') loadMediaLibrary();
-        if (sectionId === 'home-services') loadHomeServices();
-        if (sectionId === 'testimonials') loadTestimonials();
-        if (sectionId === 'team') loadTeam();
+         // Lazy load specific section data
+         if (sectionId === 'overview' || sectionId === 'portfolio') loadPortfolio();
+         if (sectionId === 'leads') loadLeads();
+         if (sectionId === 'services') loadServices();
+         if (sectionId === 'media') loadMediaLibrary();
+         if (sectionId === 'home-services') loadHomeServices();
+         if (sectionId === 'testimonials') loadTestimonials();
+         if (sectionId === 'team') loadTeam();
     }
 
     navItems.forEach(item => {

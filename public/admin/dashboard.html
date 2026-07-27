@@ -3912,6 +3912,8 @@ async function loadOverview() {
                     <span class="tag" style="font-size: 10px;">${p.category || 'Standard'}</span>
                 </div>
             `).join('');
+        } else {
+            projectsContainer.innerHTML = '';
         }
     } catch (_) {
         document.getElementById('stat-leads-received').textContent = '—';
@@ -4134,6 +4136,8 @@ async function loadAll() {
                             <span class="tag" style="font-size: 10px;">${p.category || 'Standard'}</span>
                         </div>
                     `).join('');
+                } else {
+                    projectsContainer.innerHTML = '';
                 }
             }
             // Fire a direct portfolio fetch in background to guarantee fresh data

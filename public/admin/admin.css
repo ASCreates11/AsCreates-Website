@@ -1004,6 +1004,63 @@ input, textarea, select { font-family: inherit; }
     overflow: hidden;
 }
 
+/* Portfolio skeleton loading cards */
+@keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+}
+.skeleton-card {
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.skeleton-block {
+    background: linear-gradient(
+        90deg,
+        var(--color-surface-low) 25%,
+        var(--color-border-light) 50%,
+        var(--color-surface-low) 75%
+    );
+    background-size: 600px 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+.skeleton-media {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 0;
+}
+.skeleton-body {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+.skeleton-line-sm { height: 10px; width: 35%; }
+.skeleton-line-md { height: 16px; width: 75%; }
+.skeleton-line-lg { height: 12px; width: 90%; }
+.skeleton-footer {
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--color-border-light);
+    display: flex;
+    gap: var(--space-2);
+}
+.skeleton-badge { height: 18px; width: 60px; border-radius: 999px; }
+
+/* Portfolio card enter animation */
+@keyframes cardFadeUp {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.item-card-animate {
+    opacity: 0;
+    animation: cardFadeUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 .item-card-footer {
     padding: var(--space-3) var(--space-4);
     border-top: 1px solid var(--color-border-light);

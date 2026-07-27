@@ -2082,9 +2082,33 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
     }
 });
 
+    function renderPortfolioSkeletons(count = 6) {
+        const grid  = document.getElementById('portfolioGrid');
+        const empty = document.getElementById('portfolioEmpty');
+        empty.style.display = 'none';
+        grid.style.display  = '';
+        grid.innerHTML = Array.from({ length: count }, () => `
+            <div class="skeleton-card">
+                <div class="skeleton-block skeleton-media"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-block skeleton-line-sm"></div>
+                    <div class="skeleton-block skeleton-line-md"></div>
+                    <div class="skeleton-block skeleton-line-lg"></div>
+                </div>
+                <div class="skeleton-footer">
+                    <div class="skeleton-block skeleton-badge"></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
     async function loadPortfolio() {
+        // If we already have cached data, render immediately (no flash)
         if (Array.isArray(portfolioData) && portfolioData.length > 0) {
             renderPortfolio(portfolioData);
+        } else {
+            // Show skeleton placeholders right away — no empty flash
+            renderPortfolioSkeletons(6);
         }
         try {
             const res  = await fetch('/api/admin/portfolio', { credentials: 'same-origin' });

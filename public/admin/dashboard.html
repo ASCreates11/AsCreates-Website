@@ -1929,6 +1929,8 @@ function renderPortfolio(items) {
                     <span class="tag" style="font-size:10px;">${p.category || 'Standard'}</span>
                 </div>
             `).join('');
+        } else {
+            projectsContainer.innerHTML = '';
         }
     }
 

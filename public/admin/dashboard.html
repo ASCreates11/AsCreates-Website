@@ -2101,28 +2101,6 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
         `).join('');
     }
 
-    let portfolioLoading = false;
-
-    function renderPortfolioSkeletons(count = 6) {
-        const grid  = document.getElementById('portfolioGrid');
-        const empty = document.getElementById('portfolioEmpty');
-        empty.style.display = 'none';
-        grid.style.display  = '';
-        grid.innerHTML = Array.from({ length: count }, () => `
-            <div class="skeleton-card">
-                <div class="skeleton-block skeleton-media"></div>
-                <div class="skeleton-body">
-                    <div class="skeleton-block skeleton-line-sm"></div>
-                    <div class="skeleton-block skeleton-line-md"></div>
-                    <div class="skeleton-block skeleton-line-lg"></div>
-                </div>
-                <div class="skeleton-footer">
-                    <div class="skeleton-block skeleton-badge"></div>
-                </div>
-            </div>
-        `).join('');
-    }
-
     async function loadPortfolio() {
         // Cached data available — render instantly, no skeleton needed
         if (Array.isArray(portfolioData) && portfolioData.length > 0) {
@@ -4031,8 +4009,12 @@ async function loadAll() {
                 document.getElementById('stat-leads-received').textContent = totalLeads;
                 document.getElementById('stat-leads-unread').textContent = unreadLeads;
                 
+                const portfolioCount = summary.stats.portfolioCount || 0;
                 const statPort = document.getElementById('stat-portfolio');
-                if (statPort) statPort.textContent = summary.stats.portfolioCount || 0;
+                if (statPort) statPort.textContent = portfolioCount;
+                // Also update the nav badge immediately
+                const badge = document.getElementById('portfolioBadge');
+                if (badge) badge.textContent = portfolioCount;
                 
                 const statServ = document.getElementById('stat-services');
                 if (statServ) statServ.textContent = summary.stats.servicesCount || 0;
@@ -4046,6 +4028,29 @@ async function loadAll() {
                 populateSettingsFromData(summary.settings);
             }
             
+            // Render top 5 recent projects on overview page
+            const projectsContainer = document.getElementById('overviewProjectsContainer');
+            if (projectsContainer && Array.isArray(summary.portfolio)) {
+                const recentProjects = summary.portfolio.slice(0, 5);
+                if (recentProjects.length === 0) {
+                    projectsContainer.innerHTML = `
+                        <div class="empty-state" style="padding: 20px 0;">
+                            <div class="empty-state-icon"><span class="material-symbols-outlined">photo_library</span></div>
+                            <div class="empty-state-title">No projects yet</div>
+                        </div>`;
+                } else {
+                    projectsContainer.innerHTML = recentProjects.map(p => `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-border-light);">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--color-primary);">image</span>
+                                <span style="font-size: 13px; font-weight: 600; color: var(--color-text-secondary);">${p.title}</span>
+                            </div>
+                            <span class="tag" style="font-size: 10px;">${p.category || 'Standard'}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
             // Render top 3 recent leads on overview page
             const leadsContainer = document.getElementById('overviewLeadsContainer');
             if (leadsContainer && summary.leads) {

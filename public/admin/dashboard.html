@@ -395,15 +395,8 @@ window.addEventListener("unhandledrejection", function(event) {
                 </div>
             </div>
 
-            <!-- Portfolio Grid — skeleton cards pre-baked for instant load feel -->
-            <div class="grid-auto" id="portfolioGrid">
-                <div class="skeleton-card"><div class="skeleton-block skeleton-media"></div><div class="skeleton-body"><div class="skeleton-block skeleton-line-sm"></div><div class="skeleton-block skeleton-line-md"></div><div class="skeleton-block skeleton-line-lg"></div></div><div class="skeleton-footer"><div class="skeleton-block skeleton-badge"></div></div></div>
-                <div class="skeleton-card"><div class="skeleton-block skeleton-media"></div><div class="skeleton-body"><div class="skeleton-block skeleton-line-sm"></div><div class="skeleton-block skeleton-line-md"></div><div class="skeleton-block skeleton-line-lg"></div></div><div class="skeleton-footer"><div class="skeleton-block skeleton-badge"></div></div></div>
-                <div class="skeleton-card"><div class="skeleton-block skeleton-media"></div><div class="skeleton-body"><div class="skeleton-block skeleton-line-sm"></div><div class="skeleton-block skeleton-line-md"></div><div class="skeleton-block skeleton-line-lg"></div></div><div class="skeleton-footer"><div class="skeleton-block skeleton-badge"></div></div></div>
-                <div class="skeleton-card"><div class="skeleton-block skeleton-media"></div><div class="skeleton-body"><div class="skeleton-block skeleton-line-sm"></div><div class="skeleton-block skeleton-line-md"></div><div class="skeleton-block skeleton-line-lg"></div></div><div class="skeleton-footer"><div class="skeleton-block skeleton-badge"></div></div></div>
-                <div class="skeleton-card"><div class="skeleton-block skeleton-media"></div><div class="skeleton-body"><div class="skeleton-block skeleton-line-sm"></div><div class="skeleton-block skeleton-line-md"></div><div class="skeleton-block skeleton-line-lg"></div></div><div class="skeleton-footer"><div class="skeleton-block skeleton-badge"></div></div></div>
-                <div class="skeleton-card"><div class="skeleton-block skeleton-media"></div><div class="skeleton-body"><div class="skeleton-block skeleton-line-sm"></div><div class="skeleton-block skeleton-line-md"></div><div class="skeleton-block skeleton-line-lg"></div></div><div class="skeleton-footer"><div class="skeleton-block skeleton-badge"></div></div></div>
-            </div>
+            <!-- Portfolio Grid — populated by JS -->
+            <div class="grid-auto" id="portfolioGrid"></div>
             <div id="portfolioEmpty" class="card" style="display:none;">
                 <div class="empty-state">
                     <div class="empty-state-icon"><span class="material-symbols-outlined">photo_library</span></div>
@@ -2078,6 +2071,7 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
         if (!res.ok) throw new Error('Failed to save project.');
         Modal.close('portfolioModal');
         Toast.show(id ? 'Project updated!' : 'Project added!', 'success');
+        portfolioData = []; // clear cache so loadPortfolio always fetches fresh
         loadPortfolio();
     } catch (err) {
         Toast.show(err.message, 'error');
@@ -2109,17 +2103,37 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
 
     let portfolioLoading = false;
 
+    function renderPortfolioSkeletons(count = 6) {
+        const grid  = document.getElementById('portfolioGrid');
+        const empty = document.getElementById('portfolioEmpty');
+        empty.style.display = 'none';
+        grid.style.display  = '';
+        grid.innerHTML = Array.from({ length: count }, () => `
+            <div class="skeleton-card">
+                <div class="skeleton-block skeleton-media"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-block skeleton-line-sm"></div>
+                    <div class="skeleton-block skeleton-line-md"></div>
+                    <div class="skeleton-block skeleton-line-lg"></div>
+                </div>
+                <div class="skeleton-footer">
+                    <div class="skeleton-block skeleton-badge"></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
     async function loadPortfolio() {
-        // If already loaded and cached, render instantly — no skeleton flash
+        // Cached data available — render instantly, no skeleton needed
         if (Array.isArray(portfolioData) && portfolioData.length > 0) {
             renderPortfolio(portfolioData);
             return;
         }
-        // Guard: prevent double-fetch (called from both loadAll & navigate)
+        // Already fetching — skip duplicate call
         if (portfolioLoading) return;
         portfolioLoading = true;
 
-        // Show skeleton immediately — no empty-state flash
+        // Show skeleton for exactly as long as the network takes (no artificial delay)
         renderPortfolioSkeletons(6);
 
         try {

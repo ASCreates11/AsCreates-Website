@@ -81,6 +81,29 @@
             animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
         }
+        /* Skeleton Loading */
+        .skel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .skel-line {
+            height: 14px;
+            border-radius: 4px;
+            background: linear-gradient(90deg,
+                rgba(62,85,177,0.06) 0%,
+                rgba(62,85,177,0.14) 50%,
+                rgba(62,85,177,0.06) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 0.7s ease-in-out infinite;
+        }
+        .skel-line.w-40 { width: 40%; }
+        .skel-line.w-60 { width: 60%; }
+        .skel-line.w-80 { width: 80%; }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body style="opacity:0; transition: opacity 0.3s ease;">
@@ -342,10 +365,15 @@ window.addEventListener("unhandledrejection", function(event) {
                         <button class="btn btn-ghost btn-sm" data-goto="leads" style="font-size:12px; font-weight:600;">View All</button>
                     </div>
                     <div class="card-body" id="overviewLeadsContainer" style="display: flex; flex-direction: column; gap: var(--space-4); min-height: 220px; padding: 20px;">
-                        <!-- Loaded dynamically -->
-                        <div class="empty-state" style="padding: 20px 0;">
-                            <div class="empty-state-icon"><span class="material-symbols-outlined">inbox</span></div>
-                            <div class="empty-state-title">No messages yet</div>
+                        <div class="skel-list">
+                            <div class="skel-line w-60"></div>
+                            <div class="skel-line w-40"></div>
+                            <div class="skel-line w-80"></div>
+                            <div class="skel-line w-60"></div>
+                            <div class="skel-line w-40"></div>
+                            <div class="skel-line w-80"></div>
+                            <div class="skel-line w-60"></div>
+                            <div class="skel-line w-40"></div>
                         </div>
                     </div>
                 </div>
@@ -360,10 +388,12 @@ window.addEventListener("unhandledrejection", function(event) {
                         <button class="btn btn-ghost btn-sm" data-goto="portfolio" style="font-size:12px; font-weight:600;">View Portfolio</button>
                     </div>
                     <div class="card-body" id="overviewProjectsContainer" style="display: flex; flex-direction: column; gap: var(--space-3); min-height: 220px; padding: 20px;">
-                        <!-- Loaded dynamically -->
-                        <div class="empty-state" style="padding: 20px 0;">
-                            <div class="empty-state-icon"><span class="material-symbols-outlined">photo_library</span></div>
-                            <div class="empty-state-title">No projects yet</div>
+                        <div class="skel-list">
+                            <div class="skel-line w-60"></div>
+                            <div class="skel-line w-40"></div>
+                            <div class="skel-line w-80"></div>
+                            <div class="skel-line w-60"></div>
+                            <div class="skel-line w-40"></div>
                         </div>
                     </div>
                 </div>
@@ -3813,19 +3843,23 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 /* --- LOAD OVERVIEW AND STATS --- */
 async function loadOverview() {
     try {
-        const leadsRes = await fetch('/api/admin/leads', { credentials: 'same-origin' });
+        const [leadsRes, portfolioRes] = await Promise.all([
+            fetch('/api/admin/leads', { credentials: 'same-origin' }),
+            fetch('/api/admin/portfolio', { credentials: 'same-origin' })
+        ]);
         const leads = await leadsRes.json();
-        
+        const projects = await portfolioRes.json();
+
         const totalLeads = Array.isArray(leads) ? leads.length : 0;
         const unreadLeads = Array.isArray(leads) ? leads.filter(l => !l.is_read).length : 0;
-        
+
         document.getElementById('stat-leads-received').textContent = totalLeads;
         document.getElementById('stat-leads-unread').textContent = unreadLeads;
 
         // Render top 3 leads
         const leadsContainer = document.getElementById('overviewLeadsContainer');
         const recentLeads = Array.isArray(leads) ? leads.slice(0, 3) : [];
-        
+
         if (recentLeads.length === 0) {
             leadsContainer.innerHTML = `
                 <div class="empty-state" style="padding: 20px 0;">
@@ -3861,23 +3895,17 @@ async function loadOverview() {
                     </div>
                 </div>`;
             }).join('');
+            leadsContainer.querySelectorAll('.overview-view-btn').forEach(btn => {
+                btn.addEventListener('click', () => openLeadView(btn.dataset.id));
+            });
         }
-    } catch (_) {
-        document.getElementById('stat-leads-received').textContent = '—';
-        document.getElementById('stat-leads-unread').textContent = '—';
-    }
 
-    try {
-        const portfolioRes = await fetch('/api/admin/portfolio', { credentials: 'same-origin' });
-        const projects = await portfolioRes.json();
-        const portfolioDataList = Array.isArray(projects) ? projects : [];
-        
-        document.getElementById('stat-portfolio').textContent = portfolioDataList.length;
-
-        // Render project names
+        // Render top 5 recent projects
         const projectsContainer = document.getElementById('overviewProjectsContainer');
+        const portfolioDataList = Array.isArray(projects) ? projects : [];
+        document.getElementById('stat-portfolio').textContent = portfolioDataList.length;
         const recentProjects = portfolioDataList.slice(0, 5);
-        
+
         if (recentProjects.length === 0) {
             projectsContainer.innerHTML = `
                 <div class="empty-state" style="padding: 20px 0;">
@@ -3896,6 +3924,8 @@ async function loadOverview() {
             `).join('');
         }
     } catch (_) {
+        document.getElementById('stat-leads-received').textContent = '—';
+        document.getElementById('stat-leads-unread').textContent = '—';
         document.getElementById('stat-portfolio').textContent = '—';
     }
 
@@ -4041,6 +4071,9 @@ async function loadAll() {
                 document.getElementById('stat-leads-received').textContent = totalLeads;
                 document.getElementById('stat-leads-unread').textContent = unreadLeads;
                 
+                const statPort = document.getElementById('stat-portfolio');
+                if (statPort) statPort.textContent = summary.stats.portfolioCount || 0;
+                
                 const statServ = document.getElementById('stat-services');
                 if (statServ) statServ.textContent = summary.stats.servicesCount || 0;
                 
@@ -4095,6 +4128,28 @@ async function loadAll() {
                     leadsContainer.querySelectorAll('.overview-view-btn').forEach(btn => {
                         btn.addEventListener('click', () => openLeadView(btn.dataset.id));
                     });
+                }
+            }
+            // Render top 5 recent projects on overview page
+            const projectsContainer = document.getElementById('overviewProjectsContainer');
+            if (projectsContainer && summary.portfolio) {
+                const recentProjects = summary.portfolio.slice(0, 5);
+                if (recentProjects.length === 0) {
+                    projectsContainer.innerHTML = `
+                        <div class="empty-state" style="padding: 20px 0;">
+                            <div class="empty-state-icon"><span class="material-symbols-outlined">photo_library</span></div>
+                            <div class="empty-state-title">No projects yet</div>
+                        </div>`;
+                } else {
+                    projectsContainer.innerHTML = recentProjects.map(p => `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-border-light);">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="material-symbols-outlined" style="font-size: 16px; color: var(--color-primary);">image</span>
+                                <span style="font-size: 13px; font-weight: 600; color: var(--color-text-secondary);">${p.title}</span>
+                            </div>
+                            <span class="tag" style="font-size: 10px;">${p.category || 'Standard'}</span>
+                        </div>
+                    `).join('');
                 }
             }
             // Fire a direct portfolio fetch in background to guarantee fresh data

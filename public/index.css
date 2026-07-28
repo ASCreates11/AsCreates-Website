@@ -1,4 +1,4 @@
-:root  {
+﻿:root  {
   --color-background:#fbf8ff;
   --color-on-background:#1a1b22;
   --color-surface:#fbf8ff;
@@ -940,7 +940,7 @@ section  {
 }
 
 .service-link::after  {
-  content:' →';
+  content:' â†’';
   transition:transform 0.3s ease;
 
 }
@@ -4616,7 +4616,7 @@ button.promotion-bar-btn  {
 }
 
 .legal-modal-body li::before  {
-  content:'→';
+  content:'â†’';
   position:absolute;
   left:0;
   color:var(--color-primary,#4facfe);
@@ -4728,13 +4728,16 @@ button.promotion-bar-btn  {
   opacity: 0;
 }
 
+
 /* --- Portfolio Show More / Show Less Button --- */
 .portfolio-showmore {
-  display: block;
-  text-align: center;
-  margin-top: 56px;
-  margin-bottom: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  margin-bottom: 60px;
   position: relative;
+  width: 100%;
 }
 
 /* Decorative horizontal rule */
@@ -4742,10 +4745,10 @@ button.promotion-bar-btn  {
   content: '';
   position: absolute;
   top: 50%;
-  left: 10%;
-  right: 10%;
+  left: 8%;
+  right: 8%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  background: linear-gradient(90deg, transparent, var(--color-outline-variant), transparent);
   z-index: 0;
   pointer-events: none;
 }
@@ -4755,70 +4758,39 @@ button.promotion-bar-btn  {
   z-index: 1;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 0.8rem 2.5rem;
-  margin: 0 auto;
+  gap: 8px;
+  padding: 0.75rem 2.25rem;
   font-family: 'Hanken Grotesk', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-primary);
-  background: rgba(99, 102, 241, 0.06);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
   border-radius: 999px;
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-  transition:
-    background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
   text-decoration: none;
-}
-
-.portfolio-showmore .btn-showmore {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0.8rem 2.5rem;
-  font-family: 'Hanken Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-primary);
-  background: rgba(99, 102, 241, 0.06);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 999px;
-  cursor: pointer;
-  outline: none;
-  white-space: nowrap;
   transition:
     background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
 }
 
 .portfolio-showmore .btn-showmore:hover {
-  background: rgba(99, 102, 241, 0.12);
-  border-color: rgba(99, 102, 241, 0.5);
-  color: #ffffff;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-surface-container-lowest);
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.3);
   transform: translateY(-2px);
 }
 
 .portfolio-showmore .btn-showmore:active {
   transform: translateY(0);
-  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
 }
 
 .portfolio-showmore .btn-showmore:focus-visible {
@@ -4827,11 +4799,11 @@ button.promotion-bar-btn  {
 }
 
 .portfolio-showmore .btn-showmore .showmore-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  color: var(--color-primary);
+  color: inherit;
 }
 
 .portfolio-showmore .btn-showmore.show-less .showmore-icon {
@@ -4840,19 +4812,17 @@ button.promotion-bar-btn  {
 
 @media (max-width: 768px) {
   .portfolio-showmore {
-    margin-top: 44px;
-    margin-bottom: 44px;
+    margin-top: 40px;
+    margin-bottom: 40px;
   }
-
   .portfolio-showmore .btn-showmore {
-    padding: 0.7rem 2rem;
-    font-size: 12px;
-    letter-spacing: 0.08em;
+    padding: 0.65rem 1.75rem;
+    font-size: 11px;
+    letter-spacing: 0.1em;
   }
-
   .portfolio-showmore .btn-showmore .showmore-icon {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -4861,15 +4831,9 @@ button.promotion-bar-btn  {
     margin-top: 32px;
     margin-bottom: 32px;
   }
-
   .portfolio-showmore .btn-showmore {
-    padding: 0.65rem 1.75rem;
-    font-size: 11px;
-    gap: 8px;
-  }
-
-  .portfolio-showmore .btn-showmore .showmore-icon {
-    width: 15px;
-    height: 15px;
+    padding: 0.6rem 1.5rem;
+    font-size: 10px;
+    gap: 6px;
   }
 }

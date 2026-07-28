@@ -1943,12 +1943,8 @@ function renderPortfolio(items) {
     grid.style.display  = '';
     empty.style.display = 'none';
 
-    grid.innerHTML = items.map((item, index) => {
-    const animStyle = portfolioFirstRender ? `style="animation-delay: ${index * 50}ms;"` : 'style="animation: none; opacity: 1;"';
-    return `
-        <div class="item-card item-card-animate" data-id="${item.id}" ${animStyle}>`;
-}).join('');
-    portfolioFirstRender = false;
+    grid.innerHTML = items.map((item, index) => `
+        <div class="item-card item-card-animate" data-id="${item.id}" ${portfolioFirstRender ? `style="animation-delay: ${index * 50}ms;"` : 'style="animation: none; opacity: 1;"'}>
             <div class="item-card-media">
                 ${item.image_url
                     ? `<img src="${item.image_url}" alt="${item.title}" loading="lazy">`
@@ -1977,6 +1973,7 @@ function renderPortfolio(items) {
             </div>
         </div>
     `).join('');
+    portfolioFirstRender = false;
 
     // Bind edit buttons
     grid.querySelectorAll('.portfolio-edit-btn').forEach(btn => {

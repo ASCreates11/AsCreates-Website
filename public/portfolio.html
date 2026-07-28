@@ -1555,15 +1555,6 @@
 
                  setupFiltering(cards, uniqueCategories);
                  setupScrollReveal(cards);
-                 
-                 // Initialize the "All Projects" button click to ensure items are displayed
-                 const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-                 if (allBtn) {
-                     // Slight delay to allow scroll reveal to initialize
-                     setTimeout(() => allBtn.click(), 50);
-                     // Re-apply show/hide state after the filter click overrides display styles
-                     setTimeout(() => applyVisibility(showAll), 250);
-                 }
              } catch (error) {
                  console.error("loadPortfolio Error:", error);
                  const fallback = [...container.querySelectorAll('.project-card')];

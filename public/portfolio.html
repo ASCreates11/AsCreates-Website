@@ -1543,7 +1543,7 @@
                     
                 let uniqueCategories = [];
                 try {
-                    const res = await fetch('/api/admin/portfolio/categories');
+                     const res = await fetch('/api/portfolio/categories');
                     if(res.ok) {
                         uniqueCategories = await res.json();
                     } else {

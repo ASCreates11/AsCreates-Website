@@ -4738,6 +4738,13 @@ button.promotion-bar-btn  {
   position: relative;
   width: 100%;
   text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.portfolio-showmore .btn-showmore {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Decorative horizontal rule */
@@ -4745,8 +4752,8 @@ button.promotion-bar-btn  {
   content: '';
   position: absolute;
   top: 50%;
-  left: 5%;
-  right: 5%;
+  left: 10%;
+  right: 10%;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
   z-index: 0;

@@ -1010,7 +1010,10 @@
 
                 <!-- Show More / Show Less Button -->
                 <div class="portfolio-showmore" id="portfolioShowMore">
-                    <button class="btn btn-secondary" id="btnShowMore">Show More</button>
+                    <button class="btn btn-showmore" id="btnShowMore">
+                        <span>Show More</span>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </button>
                 </div>
 
             </div>
@@ -1506,20 +1509,24 @@
                     const VISIBLE_COUNT = 9;
                     const showMoreBtn = document.getElementById('btnShowMore');
                     const showMoreContainer = document.getElementById('portfolioShowMore');
-                    
+
                     const applyVisibility = (showAll) => {
                         cards.forEach((card, i) => {
                             card.style.display = (!showAll && i >= VISIBLE_COUNT) ? 'none' : '';
                         });
                         if (showMoreContainer) showMoreContainer.style.display = (projects.length > VISIBLE_COUNT) ? 'flex' : 'none';
-                        if (showMoreBtn) showMoreBtn.textContent = showAll ? 'Show Less' : 'Show More';
+                        if (showMoreBtn) {
+                            showMoreBtn.classList.toggle('show-less', showAll);
+                            const label = showMoreBtn.querySelector('span');
+                            if (label) label.textContent = showAll ? 'Show Less' : 'Show More';
+                        }
                     };
-                    
+
                     applyVisibility(false);
-                    
+
                     if (showMoreBtn) {
                         showMoreBtn.addEventListener('click', () => {
-                            const isCurrentlyExpanded = showMoreBtn.textContent === 'Show Less';
+                            const isCurrentlyExpanded = showMoreBtn.classList.contains('show-less');
                             applyVisibility(!isCurrentlyExpanded);
                         });
                     }

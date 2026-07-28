@@ -1011,8 +1011,10 @@
                 <!-- Show More / Show Less Button -->
                 <div class="portfolio-showmore" id="portfolioShowMore">
                     <button class="btn btn-showmore" id="btnShowMore">
-                        <span>Show More</span>
-                        <span class="material-symbols-outlined">expand_more</span>
+                        <span id="btnShowMoreLabel">Show More</span>
+                        <svg id="btnShowMoreIcon" class="showmore-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                 </div>
 
@@ -1517,8 +1519,10 @@
                         if (showMoreContainer) showMoreContainer.style.display = (projects.length > VISIBLE_COUNT) ? 'flex' : 'none';
                         if (showMoreBtn) {
                             showMoreBtn.classList.toggle('show-less', showAll);
-                            const label = showMoreBtn.querySelector('span');
+                            const label = document.getElementById('btnShowMoreLabel');
+                            const icon  = document.getElementById('btnShowMoreIcon');
                             if (label) label.textContent = showAll ? 'Show Less' : 'Show More';
+                            if (icon)  icon.classList.toggle('rotated', showAll);
                         }
                     };
 

@@ -1511,10 +1511,16 @@
                     const VISIBLE_COUNT = 9;
                     const showMoreBtn = document.getElementById('btnShowMore');
                     const showMoreContainer = document.getElementById('portfolioShowMore');
+                    let showAll = false;
 
-                    const applyVisibility = (showAll) => {
+                    const applyVisibility = (isShowAll) => {
+                        showAll = isShowAll;
                         cards.forEach((card, i) => {
-                            card.style.display = (!showAll && i >= VISIBLE_COUNT) ? 'none' : '';
+                            if (!showAll && i >= VISIBLE_COUNT) {
+                                card.style.display = 'none';
+                            } else if (card.style.display === 'none') {
+                                card.style.display = '';
+                            }
                         });
                         if (showMoreContainer) showMoreContainer.style.display = (projects.length > VISIBLE_COUNT) ? 'flex' : 'none';
                         if (showMoreBtn) {
@@ -1530,8 +1536,7 @@
 
                     if (showMoreBtn) {
                         showMoreBtn.addEventListener('click', () => {
-                            const isCurrentlyExpanded = showMoreBtn.classList.contains('show-less');
-                            applyVisibility(!isCurrentlyExpanded);
+                            applyVisibility(!showAll);
                         });
                     }
 
@@ -1548,21 +1553,23 @@
                     uniqueCategories = [...new Set(projects.map(p => p.category).filter(Boolean))];
                 }
 
-                setupFiltering(cards, uniqueCategories);
-                setupScrollReveal(cards);
-                
-                // Initialize the "All Projects" button click to ensure items are displayed
-                const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-                if (allBtn) {
-                    // Slight delay to allow scroll reveal to initialize
-                    setTimeout(() => allBtn.click(), 50);
-                }
-            } catch (error) {
-                console.error("loadPortfolio Error:", error);
-                const fallback = [...container.querySelectorAll('.project-card')];
-                setupFiltering(fallback, ['GYMS', 'Dance and Yoga Studios', 'Creative Production Studios', 'E-commerce']);
-                setupScrollReveal(fallback);
-            }
+                 setupFiltering(cards, uniqueCategories);
+                 setupScrollReveal(cards);
+                 
+                 // Initialize the "All Projects" button click to ensure items are displayed
+                 const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+                 if (allBtn) {
+                     // Slight delay to allow scroll reveal to initialize
+                     setTimeout(() => allBtn.click(), 50);
+                     // Re-apply show/hide state after the filter click overrides display styles
+                     setTimeout(() => applyVisibility(showAll), 250);
+                 }
+             } catch (error) {
+                 console.error("loadPortfolio Error:", error);
+                 const fallback = [...container.querySelectorAll('.project-card')];
+                 setupFiltering(fallback, ['GYMS', 'Dance and Yoga Studios', 'Creative Production Studios', 'E-commerce']);
+                 setupScrollReveal(fallback);
+             }
         }
 
         loadPortfolio();

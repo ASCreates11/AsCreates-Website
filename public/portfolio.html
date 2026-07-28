@@ -1008,6 +1008,11 @@
                     </div>
                 </div>
 
+                <!-- Show More / Show Less Button -->
+                <div class="portfolio-showmore" id="portfolioShowMore">
+                    <button class="btn btn-secondary" id="btnShowMore">Show More</button>
+                </div>
+
             </div>
         </section>
 
@@ -1497,6 +1502,28 @@
                     const cards = projects.map(buildCard);
                     cards.forEach(c => container.appendChild(c));
                     
+                    // Show More / Show Less logic: initially show first 9 items (3 rows × 3 cols)
+                    const VISIBLE_COUNT = 9;
+                    const showMoreBtn = document.getElementById('btnShowMore');
+                    const showMoreContainer = document.getElementById('portfolioShowMore');
+                    
+                    const applyVisibility = (showAll) => {
+                        cards.forEach((card, i) => {
+                            card.style.display = (!showAll && i >= VISIBLE_COUNT) ? 'none' : '';
+                        });
+                        if (showMoreContainer) showMoreContainer.style.display = (projects.length > VISIBLE_COUNT) ? 'flex' : 'none';
+                        if (showMoreBtn) showMoreBtn.textContent = showAll ? 'Show Less' : 'Show More';
+                    };
+                    
+                    applyVisibility(false);
+                    
+                    if (showMoreBtn) {
+                        showMoreBtn.addEventListener('click', () => {
+                            const isCurrentlyExpanded = showMoreBtn.textContent === 'Show Less';
+                            applyVisibility(!isCurrentlyExpanded);
+                        });
+                    }
+
                     
                 let uniqueCategories = [];
                 try {

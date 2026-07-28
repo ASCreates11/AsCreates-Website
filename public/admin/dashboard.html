@@ -1943,8 +1943,12 @@ function renderPortfolio(items) {
     grid.style.display  = '';
     empty.style.display = 'none';
 
-    grid.innerHTML = items.map((item, index) => `
-        <div class="item-card item-card-animate" data-id="${item.id}" style="animation-delay: ${index * 50}ms;">
+    grid.innerHTML = items.map((item, index) => {
+    const animStyle = portfolioFirstRender ? `style="animation-delay: ${index * 50}ms;"` : 'style="animation: none; opacity: 1;"';
+    return `
+        <div class="item-card item-card-animate" data-id="${item.id}" ${animStyle}>`;
+}).join('');
+    portfolioFirstRender = false;
             <div class="item-card-media">
                 ${item.image_url
                     ? `<img src="${item.image_url}" alt="${item.title}" loading="lazy">`
@@ -2155,6 +2159,7 @@ document.getElementById('savePortfolioBtn').addEventListener('click', async () =
     }
 
     let portfolioLoading = false;
+    let portfolioFirstRender = true;
 
     async function loadPortfolio() {
         // Guard against concurrent fetches

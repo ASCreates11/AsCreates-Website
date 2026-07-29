@@ -1,4 +1,4 @@
-﻿:root  {
+:root  {
   --color-background:#fbf8ff;
   --color-on-background:#1a1b22;
   --color-surface:#fbf8ff;
@@ -4734,8 +4734,8 @@ button.promotion-bar-btn  {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 60px;
-  margin-bottom: 60px;
+  margin-top: 100px;
+  margin-bottom: 100px;
   position: relative;
   width: 100%;
 }
@@ -4745,10 +4745,11 @@ button.promotion-bar-btn  {
   content: '';
   position: absolute;
   top: 50%;
-  left: 8%;
-  right: 8%;
+  left: 10%;
+  right: 10%;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-outline-variant), transparent);
+  opacity: 0.6;
   z-index: 0;
   pointer-events: none;
 }
@@ -4758,52 +4759,68 @@ button.promotion-bar-btn  {
   z-index: 1;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 0.75rem 2.25rem;
+  justify-content: center;
+  gap: 10px;
+  padding: 1rem 3rem;
   font-family: 'Hanken Grotesk', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-primary);
-  background: var(--color-surface-container-lowest);
-  border: 1px solid var(--color-outline-variant);
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border: none;
   border-radius: 999px;
   cursor: pointer;
   outline: none;
   white-space: nowrap;
   text-decoration: none;
+  box-shadow: 0 10px 30px rgba(62, 85, 177, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15);
   transition:
-    background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-showmore .btn-showmore::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .portfolio-showmore .btn-showmore:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-surface-container-lowest);
-  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.3);
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.45), 0 6px 20px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+}
+
+.portfolio-showmore .btn-showmore:hover::before {
+  opacity: 1;
 }
 
 .portfolio-showmore .btn-showmore:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 
 .portfolio-showmore .btn-showmore:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
 }
 
 .portfolio-showmore .btn-showmore .showmore-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  color: inherit;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  stroke: #ffffff;
+  stroke-width: 3px;
+  color: #ffffff;
 }
 
 .portfolio-showmore .btn-showmore.show-less .showmore-icon {
@@ -4812,28 +4829,28 @@ button.promotion-bar-btn  {
 
 @media (max-width: 768px) {
   .portfolio-showmore {
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 80px;
+    margin-bottom: 80px;
   }
   .portfolio-showmore .btn-showmore {
-    padding: 0.65rem 1.75rem;
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    padding: 0.85rem 2.5rem;
+    font-size: 12px;
+    letter-spacing: 0.12em;
   }
   .portfolio-showmore .btn-showmore .showmore-icon {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .portfolio-showmore {
-    margin-top: 32px;
-    margin-bottom: 32px;
+    margin-top: 60px;
+    margin-bottom: 60px;
   }
   .portfolio-showmore .btn-showmore {
-    padding: 0.6rem 1.5rem;
-    font-size: 10px;
-    gap: 6px;
+    padding: 0.75rem 2rem;
+    font-size: 11px;
+    gap: 8px;
   }
 }

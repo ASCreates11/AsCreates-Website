@@ -26,7 +26,57 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ascreates.vercel.app/portfolio?project=2</loc>
+    <loc>https://ascreates.vercel.app/portfolio?project=3</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=15</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=16</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=17</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=18</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=19</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=20</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=21</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=22</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=23</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ascreates.vercel.app/portfolio?project=24</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -1,11 +1,11 @@
-const CACHE_NAME = 'ascreates-admin-v1';
+const CACHE_NAME = 'ascreates-admin-v2';
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             return cache.addAll([
-                '/admin/dashboard.html',
-                '/admin/login.html',
+                '/admin/dashboard',
+                '/admin/login',
                 '/admin/admin.css',
                 '/favicon.png'
             ]);

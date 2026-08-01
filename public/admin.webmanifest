@@ -2,7 +2,7 @@
   "name": "AS Creates Admin",
   "short_name": "Admin",
   "description": "Administrative Dashboard for AS Creates",
-  "start_url": "/admin/dashboard.html",
+  "start_url": "/admin/dashboard",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#0d1117",

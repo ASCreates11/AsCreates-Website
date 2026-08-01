@@ -1,0 +1,21 @@
+{
+  "name": "AS Creates Admin",
+  "short_name": "Admin",
+  "description": "Administrative Dashboard for AS Creates",
+  "start_url": "/admin/dashboard.html",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

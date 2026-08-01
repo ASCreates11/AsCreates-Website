@@ -6,6 +6,7 @@
     <title>AS Creates | Admin Dashboard</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="manifest" href="/admin.webmanifest">
     <link rel="stylesheet" href="admin.css?v=4">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap">
@@ -4270,6 +4271,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('SW registered: ', registration);
+        }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+        });
+    });
+}
 </script>
 </body>
 </html>

@@ -940,7 +940,7 @@ section  {
 }
 
 .service-link::after  {
-  content:' â†’';
+  content:' \2192';
   transition:transform 0.3s ease;
 
 }
@@ -4616,7 +4616,7 @@ button.promotion-bar-btn  {
 }
 
 .legal-modal-body li::before  {
-  content:'â†’';
+  content:'\2192';
   position:absolute;
   left:0;
   color:var(--color-primary,#4facfe);
